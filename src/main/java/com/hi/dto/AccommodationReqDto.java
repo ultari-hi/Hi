@@ -14,5 +14,7 @@ public class AccommodationReqDto {
     private String address;
     private String location;
     private String introduction;
+    private int numberOfPeople;
+    private int price;
     private String filtering;
 }

@@ -20,7 +20,7 @@ public class AccommodationRepository {
 
     public Optional<Accommodation> findDetail(Long id) {
         return Optional.ofNullable(em.createQuery("select a from Accommodation a " +
-                        "join a.room r, a.accommodationImage acmi, r.roomImage ri where a.id =:id",Accommodation.class)
+                        "where a.id = :id",Accommodation.class)
                 .setParameter("id", id)
                 .getSingleResult());
     }

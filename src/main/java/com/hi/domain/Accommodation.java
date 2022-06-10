@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -19,16 +17,6 @@ public class Accommodation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "accommodation_id")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @OneToMany(mappedBy = "accommodation")
-    private List<Room> room = new ArrayList<>();
-
-    @OneToMany(mappedBy = "accommodation")
-    private List<AccommodationImage> accommodationImage = new ArrayList<>();
 
     @Column(name = "name_kor")
     private String nameKor;
@@ -54,13 +42,11 @@ public class Accommodation {
     @ColumnDefault("0.0")
     private Float rating;
 
-    private String region;
 
     private String filtering;
 
     @Builder
-    public Accommodation(User user, String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, int price, Float rating, String region, String filtering) {
-        this.user = user;
+    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, int price, Float rating, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
@@ -70,7 +56,6 @@ public class Accommodation {
         this.numberOfPeople = numberOfPeople;
         this.price = price;
         this.rating = rating;
-        this.region = region;
         this.filtering = filtering;
     }
 
@@ -82,6 +67,8 @@ public class Accommodation {
                 .address(dto.getAddress())
                 .location(dto.getLocation())
                 .introduction(dto.getIntroduction())
+                .numberOfPeople(dto.getNumberOfPeople())
+                .price(dto.getPrice())
                 .filtering(dto.getFiltering())
                 .build();
     }
@@ -94,6 +81,8 @@ public class Accommodation {
                 .address(dto.getAddress())
                 .location(dto.getLocation())
                 .introduction(dto.getIntroduction())
+                .numberOfPeople(dto.getNumberOfPeople())
+                .price(dto.getPrice())
                 .filtering(dto.getFiltering())
                 .build();
     }
