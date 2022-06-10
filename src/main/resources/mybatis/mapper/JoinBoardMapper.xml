@@ -8,43 +8,48 @@
 
 
     <select id="select" parameterType="int" resultType="com.hi.domain.JoinBoardDto">
-        SELECT * FROM board WHERE board_id = #{board_id};
+        select b.*, u.nickname, u.gender
+        from board b join user u using (user_id) where board_id = #{board_id};
     </select>
 
     <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">
         SELECT * FROM board;
     </select>
 
+    <select id="selectPage" parameterType="com.hi.domain.SearchCondition" resultType="com.hi.domain.JoinBoardDto">
+        select b.*, u.nickname, u.gender
+        from board b join user u using (user_id)
+        ORDER BY updated_at DESC, board_id DESC
+        LIMIT #{offset}, #{pageSize}
+    </select>
+
     <delete id="writerCheck" parameterType="map">
         SELECT * FROM board WHERE board_id = #{board_id} AND user_id = #{nickname};
     </delete>
+
+    <select id="searchTitle" parameterType="String" resultType="com.hi.domain.JoinBoardDto">
+        select b.*, u.nickname, u.gender
+        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%');
+    </select>
+
+    <select id="searchTitCon" parameterType="String" resultType="com.hi.domain.JoinBoardDto">
+        select b.*, u.nickname, u.gender
+        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');
+    </select>
 
     <select id="count" resultType="int">
         SELECT count(*) FROM board;
     </select>
 
-<!--    <insert id="insert" parameterType="com.hi.domain.JoinBoardDto">-->
-<!--        INSERT INTO board-->
-<!--            (user_id, title, content, nickname, gender)-->
-<!--        VALUES-->
-<!--            ("dsd",#{title},#{content},#{nickname},#{gender})-->
-<!--    </insert>-->
+
     <insert id="insert" parameterType="com.hi.domain.JoinBoardDto">
         INSERT INTO board
             (user_id, title, created_at, updated_at, region, go_with_start, go_with_end, content, together)
         VALUES
---             ((select user_id from user where username = #{nickname}),
---              (1,#{title},now(), now(), #{region},"2022-05-17","2022-05-19",#{content},#{together})
-            (1,"#{title}",now(), now(), "#{region}","2022-05-17","2022-05-19","#{content}","#{together}")
+            ((select user_id from user where nickname = #{nickname})
+            ,#{title},now(), now(), #{region},#{go_with_start},#{go_with_end},#{content},#{together})
     </insert>
 
-<!--    <update id="update" parameterType="com.hi.domain.JoinBoardDto">-->
-<!--        UPDATE board-->
-<!--        SET   title = #{title}-->
-<!--          , content = #{content}-->
-<!--          , updated_at = now()-->
-<!--        WHERE board_id = #{board_id} and user_id = #{user_id}-->
-<!--    </update>-->
 
     <update id="update" parameterType="com.hi.domain.JoinBoardDto">
         UPDATE board
@@ -55,7 +60,7 @@
           , go_with_end = #{go_with_end}
           , content = #{content}
           , together = #{together}
-        WHERE board_id = #{board_id}
+        WHERE board_id = #{board_id} AND user_id = (select user_id from user where nickname = #{nickname})
     </update>
 
 
