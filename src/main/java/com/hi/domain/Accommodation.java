@@ -48,6 +48,7 @@ public class Accommodation {
     @Column(name = "number_of_people")
     private int numberOfPeople;
 
+    @ColumnDefault("0")
     private int price;
 
     @ColumnDefault("0.0")
@@ -85,8 +86,8 @@ public class Accommodation {
                 .build();
     }
 
-    public Accommodation modifyAccommodation(AccommodationReqDto dto){
-        return Accommodation.builder()
+    public void modifyAccommodation(AccommodationReqDto dto){
+        Accommodation.builder()
                 .nameKor(dto.getNameKor())
                 .nameEng(dto.getNameEng())
                 .postCode(dto.getPostCode())

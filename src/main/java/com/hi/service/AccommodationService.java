@@ -27,14 +27,14 @@ public class AccommodationService {
     private final ReservationRepository reservationRepository;
 
     //숙소 등록
-    public void saveAccommodation(AccommodationReqDto accommodationReqDto) {
-        Accommodation accommodation = Accommodation.createAccommodation(accommodationReqDto);
+    public void saveAccommodation(AccommodationReqDto dto) {
+        Accommodation accommodation = Accommodation.createAccommodation(dto);
         accommodationRepository.save(accommodation);
     }
 
     //숙소 상세 조회
     public AccommodationResDto findOne(Long accommodationId) {
-        return new AccommodationResDto(accommodationRepository.findById(accommodationId)
+        return new AccommodationResDto(accommodationRepository.findDetail(accommodationId)
                 .orElseThrow(() -> new AccommodationNotFoundException("숙소를 찾을 수 없습니다.")));
     }
 
@@ -49,11 +49,11 @@ public class AccommodationService {
     }
 
     //숙소 수정
-    public Long modifyAccommodation(Long accommodationId, AccommodationReqDto dto) {
+    public void modifyAccommodation(Long accommodationId, AccommodationReqDto dto) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new AccommodationNotFoundException("숙소를 찾을 수 없습니다."));
         accommodation.modifyAccommodation(dto);
-        return accommodationId;
+        accommodationRepository.save(accommodation);
     }
 
 }

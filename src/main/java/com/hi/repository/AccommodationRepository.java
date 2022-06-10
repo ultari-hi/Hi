@@ -18,9 +18,10 @@ public class AccommodationRepository {
             em.persist(accommodation);
     }
 
-    public Optional<Accommodation> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a where a.id =:id",Accommodation.class)
-                .setParameter("id",id)
+    public Optional<Accommodation> findDetail(Long id) {
+        return Optional.ofNullable(em.createQuery("select a from Accommodation a " +
+                        "join a.room r, a.accommodationImage acmi, r.roomImage ri where a.id =:id",Accommodation.class)
+                .setParameter("id", id)
                 .getSingleResult());
     }
 
@@ -31,6 +32,12 @@ public class AccommodationRepository {
                 .setParameter("accommodationIds",accommodationIds)
                 .setParameter("region",region)
                 .getResultList();
+    }
+
+    public Optional<Accommodation> findById(Long id) {
+        return Optional.ofNullable(em.createQuery("select a from Accommodation a where a.id =:id",Accommodation.class)
+                .setParameter("id",id)
+                .getSingleResult());
     }
 
     public List<Accommodation> findName(String keyWord) {
