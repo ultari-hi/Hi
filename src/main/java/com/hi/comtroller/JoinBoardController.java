@@ -1,18 +1,15 @@
 package com.hi.comtroller;
 
 import com.hi.domain.JoinBoardDto;
-import com.hi.domain.TestDto;
+import com.hi.domain.PageHandler;
+import com.hi.domain.SearchCondition;
 import com.hi.service.JoinBoardServiceImpl;
-import com.hi.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,15 +27,7 @@ public class JoinBoardController {
     @GetMapping("/join/{board_id}")
     public ResponseEntity<JoinBoardDto> read(@PathVariable Integer board_id) {         // 동행자 게시글 상세 조회
         try {
-            JoinBoardDto joinBoardDto =  joinBoardService.read(board_id);
-//            JoinBoardDto joinBoardDto =  new JoinBoardDto();
-//            joinBoardDto.setBoard_id(1);
-//            joinBoardDto.setUser_id("109");
-//            joinBoardDto.setTitle("안녕하세요");
-//            joinBoardDto.setRegion("파리");
-//            joinBoardDto.setContent("1월 1일 같이 새해 맞이할 분 구해요");
-//            joinBoardDto.setNickname("sangWon");
-//            joinBoardDto.setGender("남");
+            JoinBoardDto joinBoardDto = joinBoardService.read(board_id);
 
             return new ResponseEntity<JoinBoardDto>(joinBoardDto, HttpStatus.OK);
 
@@ -48,27 +37,53 @@ public class JoinBoardController {
         }
     }
 
-    @GetMapping("/join/list")
-    public ResponseEntity readAll() {         // 동행자 게시글 목록 조회
-        Map mapArr = new HashMap();
+    @GetMapping("/join/search")
+    public ResponseEntity search(
+            @RequestParam(required = false, defaultValue = "1") int type,
+            @RequestParam(required = false, defaultValue = "") String keyword){
+        /*
+            type : 1 -> 제목으로 검색
+            type : 2 -> 제목 + 본문 검색
+        */
 
+        try {
+            List<JoinBoardDto> list = joinBoardService.search(type, keyword);
+
+            return new ResponseEntity<>(list, HttpStatus.OK);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+        }
+    }
+
+    @GetMapping("/join/list")
+    public ResponseEntity readAll(
+            @RequestParam(required = false, defaultValue = "1") int page,
+            @RequestParam(required = false, defaultValue = "20") int pageSize
+    ) {         // 동행자 게시글 목록 조회
+
+        SearchCondition searchCondition = new SearchCondition(page,pageSize,"","");
+        PageHandler pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
+
+        if(pageHandler.getTotalPage()<page) page=pageHandler.getTotalPage();
+
+        Map mapArr = new HashMap();
         try{
-            List<JoinBoardDto> list = joinBoardService.readAll();
-            mapArr.put("success",true);
-            mapArr.put("data",list);
-            mapArr.put("error",false);
+            List<JoinBoardDto> list = joinBoardService.selectPage(searchCondition);
+            pageHandler.setBoardCurCount(list.size());
+
+            mapArr.put("meta",pageHandler);
+            mapArr.put("boards",list);
 
             return new ResponseEntity<>(mapArr,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-
-            mapArr.put("success",false);
-            mapArr.put("error",true);
             return new ResponseEntity<>(mapArr, HttpStatus.BAD_REQUEST);    //상태코드 400
         }
     }
 
-    @PostMapping("/join/{board_id}")
+    @PostMapping("/join")
     public ResponseEntity write(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 생성
         if(!loginCheck(session)){
             resultSet(0);   // error : true 후 반환
@@ -88,21 +103,23 @@ public class JoinBoardController {
         }
     }
 
-    @PatchMapping("/join/{board_id}")
+    @PatchMapping("/join")
     public ResponseEntity modify(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 수정
         // 게시글 정보와 작성자 정보가 일치해야 수정 진행
         if(!writerCheck(dto.getBoard_id(), session)){
             resultSet(0);   // error : true 후 반환
             return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
         }
+        System.out.println(dto);
 
         try{
             int result = joinBoardService.modify(dto);
             System.out.println("================== "+result+" =====================");
 
             resultSet(result);
-            // 수정 성공 시 수정된 게시글 화면을 보여주기 위해 board_id를 전달 -> 프론트에서 해당 board_id로 재호출
-            map.put(data,read(dto.getBoard_id()));
+            // 수정 성공 시 수정된 게시글 화면을 보여주기 위해 joinBoardDto 전달 -> 프론트에서 해당 기존 페이지에서 변경된 정보로 출력
+            JoinBoardDto joinBoardDto = joinBoardService.read(dto.getBoard_id());
+            map.put("data",joinBoardDto);
 
             return new ResponseEntity<Map>(map,HttpStatus.OK);
         }catch (Exception e){
@@ -111,14 +128,14 @@ public class JoinBoardController {
         }
     }
 
-    @DeleteMapping("/join/{board_id}")
-    public ResponseEntity remove(@PathVariable Integer board_id, HttpSession session) {         // 동행자 게시글 삭제
+    @DeleteMapping("/join")
+    public ResponseEntity remove(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 삭제
         // 게시글 정보와 작성자 정보가 일치해야 삭제 진행
-        if(!writerCheck(board_id, session))
+        if(!writerCheck(dto.getBoard_id(), session))
             return new ResponseEntity<>("ERROR",HttpStatus.BAD_REQUEST);
 
         try{
-            int result = joinBoardService.remove(board_id);
+            int result = joinBoardService.remove(dto.getBoard_id());
             System.out.println("================== "+result+" =====================");
 
             resultSet(result);

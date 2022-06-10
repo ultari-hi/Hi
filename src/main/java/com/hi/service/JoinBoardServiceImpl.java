@@ -2,6 +2,7 @@ package com.hi.service;
 
 import com.hi.dao.JoinBoardDaoImpl;
 import com.hi.domain.JoinBoardDto;
+import com.hi.domain.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,11 @@ public class JoinBoardServiceImpl implements JoinBoardService{
         return joinBoardDaoImpl.select(board_id);
     }
 
+    @Override
+    public List<JoinBoardDto> selectPage(SearchCondition searchCondition){
+        return joinBoardDaoImpl.selectPage(searchCondition);
+    }
+
     public JoinBoardDto writerCheck(Integer board_id, String nickname) {      // 게시글, 작성자 일치여부 확인
         return joinBoardDaoImpl.writerCheck(board_id, nickname);
     }
@@ -26,6 +32,12 @@ public class JoinBoardServiceImpl implements JoinBoardService{
    @Override
     public List<JoinBoardDto> readAll() {         // 동행자 게시글 목록 조회
         return joinBoardDaoImpl.selectAll();
+    }
+
+    @Override
+    public List<JoinBoardDto> search(int type, String keyword){
+        if(type==1) return joinBoardDaoImpl.searchTitle(keyword);
+        else return joinBoardDaoImpl.searchTitCon(keyword);
     }
 
     @Override

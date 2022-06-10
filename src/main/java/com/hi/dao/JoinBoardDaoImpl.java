@@ -1,6 +1,7 @@
 package com.hi.dao;
 
 import com.hi.domain.JoinBoardDto;
+import com.hi.domain.SearchCondition;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,12 +31,28 @@ public class JoinBoardDaoImpl implements JoinBoardDao{
     }
 
     @Override
+    public List<JoinBoardDto> selectPage(SearchCondition searchCondition) {      // 게시글 페이징 처리
+        return session.selectList(namespace+"selectPage", searchCondition);
+    }
+
+    @Override
     public List<JoinBoardDto> selectAll() {         // 동행자 게시글 목록 조회
         return session.selectList(namespace+"selectAll");
     }
 
     @Override
+    public List<JoinBoardDto> searchTitle(String keyword) {         // 동행자 게시글 제목 검색
+        return session.selectList(namespace+"searchTitle", keyword);
+    }
+
+    @Override
+    public List<JoinBoardDto> searchTitCon(String keyword) {         // 동행자 게시글 제목+본문 검색
+        return session.selectList(namespace+"searchTitCon", keyword);
+    }
+
+    @Override
     public int insert(JoinBoardDto dto) {         // 동행자 게시글 생성
+        System.out.println("\n DAO ======== "+dto+"\n");
         return session.insert(namespace+"insert" ,dto);
     }
 
@@ -50,6 +67,8 @@ public class JoinBoardDaoImpl implements JoinBoardDao{
 
         return session.delete(namespace+"delete", board_id);
     }
+
+
 
     @Override
     public int count() {         // 전체 동행자 게시글 갯수 조회

@@ -1,33 +1,36 @@
 package com.hi.domain;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor // 자동으로 모든 매개변수를 받는 생성자를 생성
+@JsonInclude(JsonInclude.Include.NON_NULL)  // 응답 시 null인 값을 자동으로 제거
 public class JoinBoardDto {
     private Integer board_id;
     private String title;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private String created_at;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private String updated_at;
     private String region;
-    private LocalDate go_with_start;
-    private LocalDate go_with_end;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String go_with_start;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String go_with_end;
     private String content;
     private String nickname;
     private String gender;
     private Integer together;
 
-    public JoinBoardDto(String title, String region, LocalDate go_with_start, LocalDate go_with_end, String content, String nickname, Integer together) {
+    public JoinBoardDto(String title, String region, String go_with_start, String go_with_end, String content, String nickname, Integer together) {
         this.title = title;
         this.region = region;
         this.go_with_start = go_with_start;
