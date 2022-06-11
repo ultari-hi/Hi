@@ -40,14 +40,16 @@ public class JoinBoardController {
     @GetMapping("/join/search")
     public ResponseEntity search(
             @RequestParam(required = false, defaultValue = "1") int type,
-            @RequestParam(required = false, defaultValue = "") String keyword){
+            @RequestParam(required = false, defaultValue = "") String keyword,
+            @RequestParam(required = false, defaultValue = "") String go_with_start,
+            @RequestParam(required = false, defaultValue = "") String go_with_end){
         /*
             type : 1 -> 제목으로 검색
             type : 2 -> 제목 + 본문 검색
         */
 
         try {
-            List<JoinBoardDto> list = joinBoardService.search(type, keyword);
+            List<JoinBoardDto> list = joinBoardService.search(type, keyword, go_with_start, go_with_end);
 
             return new ResponseEntity<>(list, HttpStatus.OK);
 

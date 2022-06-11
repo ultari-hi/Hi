@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CrawlingAcmList {
+public class CrawlingAcmList {  // 객실 목록 크롤링 -> 객실 정보 수집
     public List<String> crawAcmList(String url)  {
         final String WEB_DRIVER_ID = "webdriver.chrome.driver"; //드라이버 ID
         final String WEB_DRIVER_PATH = "src/main/resources/selenium/chromedriver"; //드라이버 경로
@@ -48,7 +48,7 @@ public class CrawlingAcmList {
         // 스크롤 지속시간 설정
         var stTime = new Date().getTime();
         try {
-            while (new Date().getTime() < stTime + 60000) { //60초 동안 무한스크롤 지속
+            while (new Date().getTime() < stTime + 30000) { //30초 동안 무한스크롤 지속
                 Thread.sleep(500); //리소스 초과 방지
                 // executeScript: 해당 페이지에 JavaScript 명령을 보낸다.
                 ((JavascriptExecutor)driver).executeScript("window.scrollTo(0, document.body.scrollHeight)", scroll);
@@ -63,11 +63,11 @@ public class CrawlingAcmList {
         //HTTP응답속도보다 자바의 컴파일 속도가 더 빠르기 때문에 임의적으로 1초를 대기한다.
         try {Thread.sleep(2000);} catch (InterruptedException e) {}
 
-        List<String> admIdList = new ArrayList<>();
+        List<String> admIdList = new ArrayList<>(); // 숙소 코드들을 저장 후 결과를 반환할 리스트
         try{
-            List<WebElement> admId = driver.findElements(By.cssSelector("#ulStays > li > a"));
+            List<WebElement> admId = driver.findElements(By.cssSelector("#ulStays > li > a"));  // 웹 엘리먼트 객체(숙소 코드 정보)를 리스트에 저장
             for(WebElement element : admId){
-                admIdList.add(element.getAttribute("data-goodsno"));
+                admIdList.add(element.getAttribute("data-goodsno"));    // 반복문 및 속성 값 추출을 통해 숙소 코드 저장
             }
 
         } catch (Exception e){

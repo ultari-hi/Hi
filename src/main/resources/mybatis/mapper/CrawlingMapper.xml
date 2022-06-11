@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace를 통해 DAO와 연결 -->
+<mapper namespace="com.hi.dao.CrawlingMapper">
+
+    <insert id="insertAcm" parameterType="com.hi.crawling.CrawAcmDto">
+        INSERT INTO accommodation
+        VALUE
+            (#{accommodation_id}, #{nameKor},"null",#{post_code},#{address},#{location},#{rating},#{introduction},#{type},#{number_of_people},#{price},#{price_kor},#{publicFacility})
+    </insert>
+
+    <insert id="insertImage" parameterType="map">
+        INSERT INTO accommodation_image
+            (accommodation_id, image)
+        VALUES
+            (#{accommodation_id}, #{image})
+    </insert>
+
+</mapper>

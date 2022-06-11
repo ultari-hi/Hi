@@ -50,6 +50,17 @@ public class JoinBoardDaoImpl implements JoinBoardDao{
         return session.selectList(namespace+"searchTitCon", keyword);
     }
 
+    // 추후 업뎃 예정
+    @Override
+    public List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end) {         // 동행자 게시글 제목+본문+기간 검색
+        Map map = new HashMap<>();
+        map.put("type",type);
+        map.put("keyword",keyword);
+        map.put("go_with_start",go_with_start);
+        map.put("go_with_end", go_with_end);
+        return session.selectList(namespace+"search", map);
+    }
+
     @Override
     public int insert(JoinBoardDto dto) {         // 동행자 게시글 생성
         System.out.println("\n DAO ======== "+dto+"\n");
