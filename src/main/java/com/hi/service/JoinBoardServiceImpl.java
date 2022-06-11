@@ -35,9 +35,10 @@ public class JoinBoardServiceImpl implements JoinBoardService{
     }
 
     @Override
-    public List<JoinBoardDto> search(int type, String keyword){
+    public List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end){
         if(type==1) return joinBoardDaoImpl.searchTitle(keyword);
-        else return joinBoardDaoImpl.searchTitCon(keyword);
+        else if (type==2) return joinBoardDaoImpl.searchTitCon(keyword);
+        else return joinBoardDaoImpl.search(type, keyword, go_with_start, go_with_end);
     }
 
     @Override

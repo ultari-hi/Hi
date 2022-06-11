@@ -37,6 +37,68 @@
         from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');
     </select>
 
+    <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
+    SELECT b.*, u.nickname, u.gender
+    FROM board b JOIN user u USING (user_id)
+    WHERE (title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%'))
+    AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end}) OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
+--     WHERE true
+<!--        <include refid="searchType"/><include refid="searchDate"/>-->
+    </select>
+
+    <!-- SQL 중복으로 별도 SQL문 생성-->
+    <sql id="searchType">
+        <choose>
+            <when test='type==1'>
+                AND title LIKE concat('%', #{keyword}, '%')
+            </when>
+            <when test='type==2'>
+                AND content LIKE concat('%', #{keyword}, '%')
+            </when>
+            <otherwise>
+                AND (title LIKE concat('%', #{keyword}, '%')
+                OR content LIKE concat('%', #{keyword}, '%'))
+            </otherwise>
+        </choose>
+    </sql>
+    <sql id="searchDate">
+        <choose>
+            <when test='go_with_start=="" and go_with_end==""'>
+                AND (go_with_start BETWEEN now() AND 9999-12-31)
+                OR (go_with_end BETWEEN now() AND 9999-12-31);
+            </when>
+            <when test='go_with_start==""'>
+                AND (go_with_start BETWEEN now() AND #{go_with_end})
+                OR (go_with_end BETWEEN now() AND #{go_with_end});
+            </when>
+            <when test='go_with_end==""'>
+                AND (go_with_start BETWEEN #{go_with_start} AND 9999-12-31)
+                OR (go_with_end BETWEEN #{go_with_start} AND 9999-12-31);
+            </when>
+            <otherwise>
+                AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})
+                OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
+            </otherwise>
+        </choose>
+    </sql>
+
+<!--    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">-->
+<!--        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date-->
+<!--        FROM board-->
+<!--        WHERE true-->
+<!--        <include refid="searchCondition"/>-->
+<!--        ORDER BY reg_date DESC, bno DESC-->
+<!--        LIMIT #{offset}, #{pageSize}-->
+<!--    </select>-->
+
+<!--    <select id="searchResultCnt" parameterType="SearchCondition" resultType="int">-->
+<!--        SELECT count(*)-->
+<!--        FROM board-->
+<!--        WHERE true-->
+<!--        <include refid="searchCondition"/>-->
+<!--    </select>-->
+<!--&lt;!&ndash;    ===&ndash;&gt;-->
+
     <select id="count" resultType="int">
         SELECT count(*) FROM board;
     </select>

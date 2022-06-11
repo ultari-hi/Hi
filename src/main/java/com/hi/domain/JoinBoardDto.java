@@ -16,14 +16,10 @@ import java.util.Objects;
 public class JoinBoardDto {
     private Integer board_id;
     private String title;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String created_at;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private String updated_at;
     private String region;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private String go_with_start;
-//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private String go_with_end;
     private String content;
     private String nickname;

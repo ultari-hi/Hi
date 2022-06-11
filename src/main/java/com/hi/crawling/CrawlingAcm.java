@@ -7,12 +7,11 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class CrawlingAcm {
-    public CrawAcmDto crawAcm(String url)  {
+public class CrawlingAcm {  // 각각의 객실정보 수집
+    public CrawAcmDto crawAcm(String admId, String url)  {
         final String WEB_DRIVER_ID = "webdriver.chrome.driver"; //드라이버 ID
         final String WEB_DRIVER_PATH = "src/main/resources/selenium/chromedriver"; //드라이버 경로
 
@@ -47,50 +46,67 @@ public class CrawlingAcm {
         try {Thread.sleep(2000);} catch (InterruptedException e) {}
 
         CrawAcmDto crawlingAcm = new CrawAcmDto();
+        crawlingAcm.setAccommodation_id(admId);     // 숙소 코드
         try{
             // 파싱 할 각 엘리먼트를 적용
-            crawlingAcm.setName(driver.findElement(By.tagName("h1")).getText());    // 숙소 이름
+            crawlingAcm.setNameKor(driver.findElement(By.tagName("h1")).getText());    // 숙소 이름
             try {
-                crawlingAcm.setType(driver.findElement(By.cssSelector("#roomTopNm")).getText());    // 객실 타입
+                crawlingAcm.setType(driver.findElement
+                        (By.cssSelector("div.top_info__retention_information_box > ul > li:nth-child(1) > div.list_item_txt")).getText());    // 객실 타입
             } catch (Exception e) {
-                crawlingAcm.setType("<-- Not Found -->");
+                crawlingAcm.setType("null");
             }
+            crawlingAcm.setNumber_of_people(driver.findElement
+                    (By.cssSelector("div.top_info__retention_information_box > ul > li:nth-child(2) > div.list_item_txt > span")).getText().substring(0,1));    // 최대 수용 인원
 
-            try {
-                crawlingAcm.setPriceKor(driver.findElement(By.cssSelector("#roomTopPrice_kor")).getText());// 원화 가격
-                crawlingAcm.setPrice(driver.findElement(By.cssSelector("#roomTopPrice")).getText());// 현지 가격 (유로, 달러 등)
+            try{    // 원화 가격
+                crawlingAcm.setPrice_kor(driver.findElement(By.cssSelector("#roomTopPrice_kor")).getText().replace(",",""));
+            }catch (Exception e){
+                crawlingAcm.setPrice_kor("0000");
+                e.printStackTrace();
+            }
+            try {   // 현지 가격 (유로, 달러 등)
+                String price=driver.findElement(By.cssSelector("#roomTopPrice")).getText();
+                if(price.contains("$")){
+                    crawlingAcm.setPrice(price.substring(price.indexOf("$"),price.indexOf(")")));
+                }
+                else if (price.contains("€"))
+                    crawlingAcm.setPrice(price.substring(price.indexOf("€"),price.indexOf(")")));
             } catch (Exception e) {
-                crawlingAcm.setPriceKor("<-- Not Found -->");
-                crawlingAcm.setPrice("<-- Not Found -->");
+                crawlingAcm.setPrice("0000");
+                e.printStackTrace();
             }
 
             try {
                 crawlingAcm.setRating(driver.findElement(By.cssSelector("div.top_info__rating_box > span.top_info__rating--review > span")).getText()); //  리뷰 점수
             } catch (Exception e) {
-                crawlingAcm.setRating("<-- Not Found -->");
+                crawlingAcm.setRating("1.0");
             }
 
             try {
                 crawlingAcm.setNum_of_review(driver.findElement(By.cssSelector(" div.top_info__rating_box > span.top_info__rating--review > a")).getText());   // 리뷰 갯수
             } catch (Exception e) {
-                crawlingAcm.setNum_of_review("<-- Not Found -->");
+                crawlingAcm.setNum_of_review("0000");
             }
 
-            List<WebElement> imageList = driver.findElements(By.cssSelector("div.bx-viewport > ul > li > img"));    // 숙소 이미지 목록
-            List<String>image=new ArrayList<>();
-            for(WebElement element : imageList){
-                image.add(element.getAttribute("src"));
+            // 숙소 이미지 목록
+            List<WebElement> imageList = driver.findElements(By.cssSelector("div.bx-viewport > ul > li > img"));
+            String image="";
+            for(int i=0;i<imageList.size();i++){
+                image+=imageList.get(i).getAttribute("src");
+                if(imageList.size()!=i)
+                    image+=",";
             }
             crawlingAcm.setImage(image);     // 숙소 사진
 
             try {
                 crawlingAcm.setIntroduction(driver.findElement(By.cssSelector("#view1 > div > div.column_left > div > p")).getText());    // 숙소 소개글
             } catch (Exception e) {
-                crawlingAcm.setIntroduction("<-- Not Found -->");
+                crawlingAcm.setIntroduction("null");
             }
 
             // 부가 시설 및 서비스
-            List<WebElement> publicFacility = driver.findElements(By.cssSelector("#view6 > div:nth-child(1) > section.introduce1 > div > ul > li > ul > li"));
+            List<WebElement> publicFacilityList = driver.findElements(By.cssSelector("#view6 > div:nth-child(1) > section.introduce1 > div > ul > li > ul > li"));
             List<WebElement> publicFacilityDis = driver.findElements(By.cssSelector(".disabled"));  // 미사용 목록
 
             String disStr="";
@@ -98,17 +114,20 @@ public class CrawlingAcm {
                 disStr+=element.getText()+", ";
             }
 
-//            System.out.println("Disable List : "+disStr);
-//            System.out.println("===========================================");
+            String publicFacility="";
+            for (int i=0;i<publicFacilityList.size();i++) {
+                if (!disStr.contains(publicFacilityList.get(i).getText())) {   // 미사용 목록에 포함되지 않으면 등록
+                    publicFacility += publicFacilityList.get(i).getText();
 
-            List<String> publicFacilityList=new ArrayList<>();
-            for (int i=0;i<publicFacility.size();i++){
-                if(disStr.contains(publicFacility.get(i).getText()))   // 미사용 목록에 포함되면 false
-                    publicFacilityList.add(publicFacility.get(i).getText()+":false");
-                else
-                    publicFacilityList.add(publicFacility.get(i).getText()+":true");
-                crawlingAcm.setPublicFacility(publicFacilityList);
-           } // 부가 시설 및 서비스 끝
+                    if (publicFacilityList.size() != i)
+                        publicFacility += ",";
+                }
+            }
+            if(publicFacility.substring(publicFacility.length()-1,publicFacility.length()).equals(","))
+                publicFacility=publicFacility.substring(0,publicFacility.length()-1);
+
+            crawlingAcm.setPublicFacility(publicFacility);
+            // 부가 시설 및 서비스 끝
 
             List<WebElement> mealList = driver.findElements(By.cssSelector("div.col-xs-6.price_info > dl > dd"));
             crawlingAcm.setBreakfast(mealList.get(0).getText());    // 조식
@@ -117,20 +136,22 @@ public class CrawlingAcm {
             try {
                 crawlingAcm.setSpot(driver.findElement(By.cssSelector("section.introduce3.col-xs-6 > ul > p")).getText());  // 숙소 근처 스팟
             } catch (Exception e) {
-                crawlingAcm.setSpot("<-- Not Found -->");
+                crawlingAcm.setSpot("null");
             }
             crawlingAcm.setRole(driver.findElement(By.cssSelector("section.introduce6.col-xs-6 > ul > p")).getText());  // 숙소 이용 규칙
             try {
                 crawlingAcm.setPaidService(driver.findElement(By.cssSelector("section.introduce4.col-xs-6 > ul > p")).getText());   // 유료 서비스
             } catch (Exception e) {
-                crawlingAcm.setPaidService("<-- Not Found -->");
+                crawlingAcm.setPaidService("null");
             }
             try{
                 crawlingAcm.setPeculiarity(driver.findElement(By.cssSelector("section.introduce5.col-xs-6 > ul > p")).getText());   // 기타 특이사항
             } catch (Exception e){
-                crawlingAcm.setPeculiarity("<-- Not Found -->");
+                crawlingAcm.setPeculiarity("null");
             }
-            crawlingAcm.setLocation(driver.findElement(By.cssSelector("#view3 > section.address1 > ul")).getText());        // 위치
+            crawlingAcm.setAddress(driver.findElement(By.cssSelector("#view3 > section.address1 > ul > li:nth-child(1)")).getText().split(":")[1]);     // 주소
+            crawlingAcm.setPost_code(driver.findElement(By.cssSelector("#view3 > section.address1 > ul > li:nth-child(2)")).getText().split(":")[1]);   // 우편번호
+            crawlingAcm.setLocation(driver.findElement(By.cssSelector("#view3 > section.address1 > ul > li:nth-child(3)")).getText().split(":")[1]);    // 위치
             crawlingAcm.setHowCome(driver.findElement(By.cssSelector("#view3 > section.address3 > div > ul")).getText());         // 오시는 방법
 
             crawlingAcm.setCancel(driver.findElement(By.cssSelector("#view3 > table > tbody")).getText());  // 취소환불규정
