@@ -19,5 +19,21 @@ public class AccommodationImage {
     @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
 
-    private String image;
+    private String url;
+
+    public AccommodationImage(Long id, Accommodation accommodation, String url) {
+        this.id = id;
+        this.accommodation = accommodation;
+        this.url = url;
+    }
+
+    public AccommodationImage(Accommodation accommodation, String url) {
+        this.accommodation = accommodation;
+        this.url = url;
+    }
+
+
+    public static AccommodationImage create(Accommodation accommodation, String url){
+        return new AccommodationImage(accommodation, url);
+    }
 }
