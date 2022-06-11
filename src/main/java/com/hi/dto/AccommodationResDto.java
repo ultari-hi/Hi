@@ -18,6 +18,7 @@ public class AccommodationResDto {
     private String introduction;
     private int numberOfPeople;
     private int price;
+    private int priceKor;
     private Float rating;
     private String filtering;
 

@@ -1,6 +1,8 @@
 package com.hi.domain;
 
+import com.hi.dto.RoomReqDto;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -50,6 +52,7 @@ public class Room {
     @ColumnDefault("TRUE")
     private boolean available;
 
+    @Builder
     public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, List<Reservation> reservation, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople, boolean available) {
         this.id = id;
         this.accommodation = accommodation;
@@ -63,6 +66,19 @@ public class Room {
         this.price = price;
         this.numberOfPeople = numberOfPeople;
         this.available = available;
+    }
+
+    public static Room createRoom(RoomReqDto dto, Accommodation accommodation){
+        return Room.builder()
+                .accommodation(accommodation)
+                .name(dto.getName())
+                .checkInDate(dto.getCheckInDate())
+                .checkOutDate(dto.getCheckOutDate())
+                .information(dto.getInformation())
+                .guide(dto.getGuide())
+                .price(dto.getPrice())
+                .numberOfPeople(dto.getNumberOfPeople())
+                .build();
     }
 
     public Room(LocalDate checkInDate, LocalDate checkOutDate, int numberOfPeople, Accommodation accommodation){

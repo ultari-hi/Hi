@@ -13,11 +13,7 @@ public class RoomRepository {
     private final EntityManager em;
 
     public void save(Room room) {
-        if (room.getId() == null) {
             em.persist(room);
-        } else {
-            em.merge(room);
-        }
     }
 
     public List<Long> findAvailableRoom(List<Long> roomIds, int numberOfPeople) {
@@ -29,8 +25,9 @@ public class RoomRepository {
                 .getResultList();
     }
 
-    public List<Room> findAll() {
-        return em.createQuery("select r from Room r",
-                Room.class).getResultList();
+    public List<Room> findAll(Long accommodationId) {
+        return em.createQuery("select r from Room r where r.accommodation.id = :accommodationId", Room.class)
+                .setParameter("accommodationId", accommodationId)
+                .getResultList();
     }
 }

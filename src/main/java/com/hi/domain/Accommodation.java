@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,6 +19,9 @@ public class Accommodation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "accommodation_id")
     private Long id;
+
+    @OneToMany(mappedBy = "accommodation")
+    private List<Room> room = new ArrayList<>();
 
     @Column(name = "name_kor")
     private String nameKor;
@@ -39,14 +44,16 @@ public class Accommodation {
     @ColumnDefault("0")
     private int price;
 
+    @ColumnDefault("0")
+    private int priceKor;
+
     @ColumnDefault("0.0")
     private Float rating;
-
 
     private String filtering;
 
     @Builder
-    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, int price, Float rating, String filtering) {
+    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, int price, int priceKor, Float rating, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
@@ -55,6 +62,7 @@ public class Accommodation {
         this.introduction = introduction;
         this.numberOfPeople = numberOfPeople;
         this.price = price;
+        this.priceKor = priceKor;
         this.rating = rating;
         this.filtering = filtering;
     }
@@ -69,6 +77,7 @@ public class Accommodation {
                 .introduction(dto.getIntroduction())
                 .numberOfPeople(dto.getNumberOfPeople())
                 .price(dto.getPrice())
+                .priceKor(dto.getPriceKor())
                 .filtering(dto.getFiltering())
                 .build();
     }

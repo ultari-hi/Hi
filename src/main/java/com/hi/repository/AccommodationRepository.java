@@ -18,19 +18,8 @@ public class AccommodationRepository {
             em.persist(accommodation);
     }
 
-    public Optional<Accommodation> findDetail(Long id) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a " +
-                        "where a.id = :id",Accommodation.class)
-                .setParameter("id", id)
-                .getSingleResult());
-    }
-
-    public List<Accommodation> findAccommodationList(List<Long> accommodationIds , String region){
-        return em.createQuery("select a from Accommodation a " +
-                        "where a.id in :accommodationIds " +
-                        "and a.region = :region",Accommodation.class)
-                .setParameter("accommodationIds",accommodationIds)
-                .setParameter("region",region)
+    public List<Accommodation> findAccommodationList(){
+        return em.createQuery("select a from Accommodation a",Accommodation.class)
                 .getResultList();
     }
 
@@ -38,11 +27,5 @@ public class AccommodationRepository {
         return Optional.ofNullable(em.createQuery("select a from Accommodation a where a.id =:id",Accommodation.class)
                 .setParameter("id",id)
                 .getSingleResult());
-    }
-
-    public List<Accommodation> findName(String keyWord) {
-        return em.createQuery("select a from Accommodation a where a.nameKor = :keyWord", Accommodation.class)
-                .setParameter("keyWord",keyWord)
-                .getResultList();
     }
 }

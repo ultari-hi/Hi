@@ -6,7 +6,6 @@ import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -29,11 +28,8 @@ public class AccommodationController {
 
     //숙소 리스트
     @GetMapping("/accommodation/list")
-    public List<AccommodationResDto> accommodationList(@RequestParam LocalDate checkInDate,
-                                                       @RequestParam LocalDate checkOutDate,
-                                                       @RequestParam String region,
-                                                       @RequestParam int number_of_people){
-        return accommodationService.accommodationList(checkInDate, checkOutDate, number_of_people, region);
+    public List<AccommodationResDto> accommodationList(){
+        return accommodationService.accommodationList();
     }
 
     //숙소 수정
