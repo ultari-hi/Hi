@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.'
-version = '0.0.1-SNAPSHOT'
+version = 'v0.0.1'
 sourceCompatibility = '11'
 
 configurations {
@@ -35,8 +35,9 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java - 크롤링 셀레니움
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
