@@ -45,7 +45,7 @@ public class Accommodation {
     private int numberOfPeople;
 
     @ColumnDefault("0")
-    private int price;
+    private String price;
 
     @ColumnDefault("0")
     private int priceKor;
@@ -56,7 +56,7 @@ public class Accommodation {
     private String filtering;
 
     @Builder
-    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, int price, int priceKor, Float rating, String filtering) {
+    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, String price, int priceKor, Float rating, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;

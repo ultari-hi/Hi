@@ -17,7 +17,7 @@ public class AccommodationReqDto {
     private String location;
     private String introduction;
     private int numberOfPeople;
-    private int price;
+    private String price;
     private int priceKor;
     private String filtering;
     List<String> urlList;

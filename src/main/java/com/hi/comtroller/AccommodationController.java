@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController
 @RequiredArgsConstructor
 public class AccommodationController {

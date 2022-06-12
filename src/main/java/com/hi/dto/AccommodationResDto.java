@@ -17,7 +17,7 @@ public class AccommodationResDto {
     private String location;
     private String introduction;
     private int numberOfPeople;
-    private int price;
+    private String price;
     private int priceKor;
     private Float rating;
     private String filtering;
@@ -32,6 +32,7 @@ public class AccommodationResDto {
         this.introduction = accommodation.getIntroduction();
         this.numberOfPeople = accommodation.getNumberOfPeople();
         this.price = accommodation.getPrice();
+        this.priceKor = accommodation.getPriceKor();
         this.rating = accommodation.getRating();
         this.filtering = accommodation.getFiltering();
     }
