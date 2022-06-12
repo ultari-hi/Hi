@@ -20,8 +20,11 @@ public class Accommodation {
     @Column(name = "accommodation_id")
     private Long id;
 
+//    @OneToMany(mappedBy = "accommodation")
+//    private List<Room> room = new ArrayList<>();
+
     @OneToMany(mappedBy = "accommodation")
-    private List<Room> room = new ArrayList<>();
+    private final List<AccommodationImage> accommodationImage = new ArrayList<>();
 
     @Column(name = "name_kor")
     private String nameKor;
@@ -82,18 +85,16 @@ public class Accommodation {
                 .build();
     }
 
-    public void modifyAccommodation(AccommodationReqDto dto){
-        Accommodation.builder()
-                .nameKor(dto.getNameKor())
-                .nameEng(dto.getNameEng())
-                .postCode(dto.getPostCode())
-                .address(dto.getAddress())
-                .location(dto.getLocation())
-                .introduction(dto.getIntroduction())
-                .numberOfPeople(dto.getNumberOfPeople())
-                .price(dto.getPrice())
-                .filtering(dto.getFiltering())
-                .build();
+    public void update(AccommodationReqDto dto){
+        this.nameKor = dto.getNameKor();
+        this.nameEng = dto.getNameEng();
+        this.postCode = dto.getPostCode();
+        this.address = dto.getAddress();
+        this.location = dto.getLocation();
+        this.introduction = dto.getIntroduction();
+        this.numberOfPeople = dto.getNumberOfPeople();
+        this.price = dto.getPrice();
+        this.filtering = dto.getFiltering();
     }
 
 

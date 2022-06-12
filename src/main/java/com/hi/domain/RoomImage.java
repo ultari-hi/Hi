@@ -19,5 +19,20 @@ public class RoomImage {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private String image;
+    private String url;
+
+    public RoomImage(Long id, Room room, String url) {
+        this.id = id;
+        this.room = room;
+        this.url = url;
+    }
+
+    public RoomImage(Room room, String url) {
+        this.room = room;
+        this.url = url;
+    }
+
+    public static RoomImage create(Room room, String url){
+        return new RoomImage(room, url);
+    }
 }

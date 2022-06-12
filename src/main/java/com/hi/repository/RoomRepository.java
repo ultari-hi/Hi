@@ -12,8 +12,9 @@ import java.util.List;
 public class RoomRepository {
     private final EntityManager em;
 
-    public void save(Room room) {
+    public Room save(Room room) {
             em.persist(room);
+        return room;
     }
 
     public List<Long> findAvailableRoom(List<Long> roomIds, int numberOfPeople) {
@@ -29,5 +30,11 @@ public class RoomRepository {
         return em.createQuery("select r from Room r where r.accommodation.id = :accommodationId", Room.class)
                 .setParameter("accommodationId", accommodationId)
                 .getResultList();
+    }
+
+    public Room findById(Long id) {
+        return em.createQuery("select r from Room r where r.id =:id",Room.class)
+                .setParameter("id",id)
+                .getSingleResult();
     }
 }

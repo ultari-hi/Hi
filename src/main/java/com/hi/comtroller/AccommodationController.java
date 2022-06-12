@@ -2,6 +2,7 @@ package com.hi.comtroller;
 
 import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
+import com.hi.dto.ImageDto;
 import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,10 @@ import java.util.List;
 public class AccommodationController {
     private final AccommodationService accommodationService;
 
-    //숙소 등록
+    //숙소, 사진 등록
     @PostMapping("/accommodation/new")
-    public String accommodationSave(@RequestBody AccommodationReqDto dto){
-        accommodationService.saveAccommodation(dto);
+    public String accommodationSave(@RequestBody AccommodationReqDto accommodationReqDto){
+        accommodationService.saveAccommodation(accommodationReqDto);
         return "accommodation/list";
     }
 
@@ -34,9 +35,14 @@ public class AccommodationController {
 
     //숙소 수정
     @PutMapping("/accommodation/{accommodationId}")
-    public String modifyAccommodation(@PathVariable Long accommodationId, AccommodationReqDto dto){
+    public void modifyAccommodation(@PathVariable Long accommodationId, @RequestBody AccommodationReqDto dto){
         accommodationService.modifyAccommodation(accommodationId, dto);
-        return "/accommodation/"+accommodationId;
+    }
+
+    //숙소 사진 조회
+    @GetMapping("/accommodation/{accommodationId}/image")
+    public ImageDto findImages(@PathVariable Long accommodationId){
+        return accommodationService.accommodationImages(accommodationId);
     }
 
 }

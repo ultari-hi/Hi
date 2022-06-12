@@ -87,4 +87,14 @@ public class Room {
         this.numberOfPeople = numberOfPeople;
         this.accommodation = accommodation;
     }
+
+    public void update(RoomReqDto dto){
+        this.name = dto.getName();
+        this.checkInDate = dto.getCheckInDate();
+        this.checkOutDate = dto.getCheckOutDate();
+        this.information = dto.getInformation();
+        this.guide = dto.getGuide();
+        this.price = dto.getPrice();
+        this.numberOfPeople = dto.getNumberOfPeople();
+    }
 }

@@ -1,17 +1,19 @@
 package com.hi.service;
 
 import com.hi.domain.Accommodation;
+import com.hi.domain.AccommodationImage;
 import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
+import com.hi.dto.ImageDto;
+import com.hi.repository.AccommodationImageRepository;
 import com.hi.repository.AccommodationRepositoryTest;
-import com.hi.repository.ReservationRepository;
-import com.hi.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toUnmodifiableList;
 
@@ -21,13 +23,17 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 public class AccommodationService {
 
     private final AccommodationRepositoryTest accommodationRepository;
-    private final RoomRepository roomRepository;
-    private final ReservationRepository reservationRepository;
+    private final AccommodationImageRepository accommodationImageRepository;
 
-    //숙소 등록
+    //숙소, 사진 등록
     public void saveAccommodation(AccommodationReqDto dto) {
         Accommodation accommodation = Accommodation.createAccommodation(dto);
-        accommodationRepository.save(accommodation);
+        Accommodation accommodationId = accommodationRepository.save(accommodation);
+        List<AccommodationImage> images = dto.getUrlList()
+                .stream()
+                .map(url -> AccommodationImage.create(accommodationId, url))
+                .collect(Collectors.toUnmodifiableList());
+        accommodationImageRepository.saveAll(images);
     }
 
     //숙소 상세 조회
@@ -46,8 +52,16 @@ public class AccommodationService {
     //숙소 수정
     public void modifyAccommodation(Long accommodationId, AccommodationReqDto dto) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId);
-        accommodation.modifyAccommodation(dto);
-        accommodationRepository.save(accommodation);
+        accommodation.update(dto);
+    }
+
+    //숙소 사진 조회
+    public ImageDto accommodationImages(Long accommodationId) {
+        List<String> urlList = accommodationImageRepository.findAll(accommodationId)
+                .stream()
+                .map(AccommodationImage::getUrl)
+                .collect(toUnmodifiableList());
+        return new ImageDto(urlList);
     }
 
 }

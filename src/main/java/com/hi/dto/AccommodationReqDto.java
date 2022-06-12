@@ -1,11 +1,14 @@
 package com.hi.dto;
 
-import com.hi.domain.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class AccommodationReqDto {
     private String nameKor;
     private String nameEng;
@@ -17,4 +20,5 @@ public class AccommodationReqDto {
     private int price;
     private int priceKor;
     private String filtering;
+    List<String> urlList;
 }

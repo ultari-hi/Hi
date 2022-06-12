@@ -13,8 +13,9 @@ public class AccommodationRepositoryTest {
 
     private final EntityManager em;
 
-    public void save(Accommodation accommodation) {
+    public Accommodation save(Accommodation accommodation) {
             em.persist(accommodation);
+            return accommodation;
     }
 
     public List<Accommodation> findAccommodationList(){
@@ -23,7 +24,7 @@ public class AccommodationRepositoryTest {
     }
 
     public Accommodation findById(Long id) {
-        return em.createQuery("select a from Accommodation a where a.id =:id",Accommodation.class)
+        return em.createQuery("select a from Accommodation a where a.id = :id",Accommodation.class)
                 .setParameter("id",id)
                 .getSingleResult();
     }

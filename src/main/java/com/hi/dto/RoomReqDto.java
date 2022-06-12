@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -15,4 +16,5 @@ public class RoomReqDto {
     private String guide;
     private Integer price;
     private Integer numberOfPeople;
+    List<String> urlList;
 }
