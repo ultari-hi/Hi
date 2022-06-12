@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController
 @RequestMapping("/api/board")
 public class JoinBoardController {
