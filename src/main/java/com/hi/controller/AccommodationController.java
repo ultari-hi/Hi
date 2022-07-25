@@ -1,4 +1,4 @@
-package com.hi.comtroller;
+package com.hi.controller;
 
 import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
