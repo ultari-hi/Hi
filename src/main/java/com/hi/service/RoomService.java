@@ -6,7 +6,7 @@ import com.hi.domain.RoomImage;
 import com.hi.dto.ImageDto;
 import com.hi.dto.RoomReqDto;
 import com.hi.dto.RoomResDto;
-import com.hi.repository.AccommodationRepositoryTest;
+import com.hi.repository.AccommodationRepository;
 import com.hi.repository.RoomImageRepository;
 import com.hi.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @RequiredArgsConstructor
 public class RoomService {
 
-    private final AccommodationRepositoryTest accommodationRepository;
+    private final AccommodationRepository accommodationRepository;
     private final RoomRepository roomRepository;
     private final RoomImageRepository roomImageRepository;
 

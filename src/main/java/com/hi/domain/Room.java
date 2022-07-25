@@ -49,11 +49,8 @@ public class Room {
     @Column(name = "number_of_people")
     private Integer numberOfPeople;
 
-    @ColumnDefault("TRUE")
-    private boolean available;
-
     @Builder
-    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, List<Reservation> reservation, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople, boolean available) {
+    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, List<Reservation> reservation, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople) {
         this.id = id;
         this.accommodation = accommodation;
         this.roomImage = roomImage;
@@ -65,7 +62,6 @@ public class Room {
         this.guide = guide;
         this.price = price;
         this.numberOfPeople = numberOfPeople;
-        this.available = available;
     }
 
     public static Room createRoom(RoomReqDto dto, Accommodation accommodation){

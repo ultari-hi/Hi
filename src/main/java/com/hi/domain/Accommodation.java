@@ -20,9 +20,6 @@ public class Accommodation {
     @Column(name = "accommodation_id")
     private Long id;
 
-//    @OneToMany(mappedBy = "accommodation")
-//    private List<Room> room = new ArrayList<>();
-
     @OneToMany(mappedBy = "accommodation")
     private final List<AccommodationImage> accommodationImage = new ArrayList<>();
 
@@ -53,10 +50,12 @@ public class Accommodation {
     @ColumnDefault("0.0")
     private Float rating;
 
+    private String region;
+
     private String filtering;
 
     @Builder
-    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, String price, int priceKor, Float rating, String filtering) {
+    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, String price, int priceKor, Float rating, String region, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
@@ -67,6 +66,7 @@ public class Accommodation {
         this.price = price;
         this.priceKor = priceKor;
         this.rating = rating;
+        this.region = region;
         this.filtering = filtering;
     }
 
@@ -81,6 +81,7 @@ public class Accommodation {
                 .numberOfPeople(dto.getNumberOfPeople())
                 .price(dto.getPrice())
                 .priceKor(dto.getPriceKor())
+                .region(dto.getRegion())
                 .filtering(dto.getFiltering())
                 .build();
     }
@@ -96,8 +97,6 @@ public class Accommodation {
         this.price = dto.getPrice();
         this.filtering = dto.getFiltering();
     }
-
-
 }
 
 

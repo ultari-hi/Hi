@@ -20,6 +20,7 @@ public class AccommodationResDto {
     private String price;
     private int priceKor;
     private Float rating;
+    private String region;
     private String filtering;
 
     public AccommodationResDto(Accommodation accommodation) {
@@ -34,6 +35,7 @@ public class AccommodationResDto {
         this.price = accommodation.getPrice();
         this.priceKor = accommodation.getPriceKor();
         this.rating = accommodation.getRating();
+        this.region = accommodation.getRegion();
         this.filtering = accommodation.getFiltering();
     }
 

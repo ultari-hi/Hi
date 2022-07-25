@@ -6,11 +6,14 @@ import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
 import com.hi.dto.ImageDto;
 import com.hi.repository.AccommodationImageRepository;
-import com.hi.repository.AccommodationRepositoryTest;
+import com.hi.repository.AccommodationRepository;
+import com.hi.repository.ReservationRepository;
+import com.hi.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,8 +25,10 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 @RequiredArgsConstructor
 public class AccommodationService {
 
-    private final AccommodationRepositoryTest accommodationRepository;
+    private final AccommodationRepository accommodationRepository;
     private final AccommodationImageRepository accommodationImageRepository;
+    private final RoomRepository roomRepository;
+    private final ReservationRepository reservationRepository;
 
     //숙소, 사진 등록
     public void saveAccommodation(AccommodationReqDto dto) {
@@ -42,8 +47,10 @@ public class AccommodationService {
     }
 
     //숙소 리스트
-    public List<AccommodationResDto> accommodationList() {
-        return new ArrayList<>(accommodationRepository.findAccommodationList()
+    public List<AccommodationResDto> accommodationList(LocalDate checkInDate, LocalDate checkOutDate, int number_of_people, String region) {
+        List<Long> findAvailableRoomIds = reservationRepository.notAvailableRoom(checkInDate, checkOutDate);
+        List<Long> findAvailableAccommodationIds = roomRepository.findAvailableRoom(findAvailableRoomIds, number_of_people);
+        return new ArrayList<>(accommodationRepository.findAccommodationList(findAvailableAccommodationIds, region)
                 .stream()
                 .map(AccommodationResDto::new)
                 .collect(toUnmodifiableList()));

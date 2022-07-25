@@ -7,6 +7,7 @@ import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @CrossOrigin(origins = "*") // CORS 에러 처리 용도
@@ -30,8 +31,11 @@ public class AccommodationController {
 
     //숙소 리스트
     @GetMapping("/accommodation/list")
-    public List<AccommodationResDto> accommodationList(){
-        return accommodationService.accommodationList();
+    public List<AccommodationResDto> accommodationList(@RequestParam LocalDate checkInDate,
+                                                       @RequestParam LocalDate checkOutDate,
+                                                       @RequestParam int number_of_people,
+                                                       @RequestParam String region){
+        return accommodationService.accommodationList(checkInDate, checkOutDate, number_of_people, region);
     }
 
     //숙소 수정
