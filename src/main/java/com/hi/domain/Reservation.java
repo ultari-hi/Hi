@@ -1,11 +1,14 @@
 package com.hi.domain;
 
+import com.hi.dto.ReservationDto;
 import com.hi.enums.Status;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -37,15 +40,16 @@ public class Reservation {
 
     private String enquiry;
 
-    @CreatedDate
     @Column(name = "check_in_date")
     private LocalDate checkInDate;
 
-    @CreatedDate
     @Column(name = "check_out_date")
     private LocalDate checkOutDate;
 
-    private int price;
+    private String price;
+
+    @Column(name = "price_kor")
+    private int priceKor;
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault("IN_PROGRESS")
@@ -55,13 +59,33 @@ public class Reservation {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
-    public Reservation(User user, Accommodation accommodation, Room room, Payment payment){
+    @Builder
+    public Reservation(User user, Accommodation accommodation, Room room, Payment payment, String enquiry, LocalDate checkInDate, LocalDate checkOutDate, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.user = user;
         this.accommodation = accommodation;
         this.room = room;
         this.payment = payment;
-        this.status = Status.IN_PROGRESS;
+        this.enquiry = enquiry;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+        this.price = price;
+        this.priceKor = priceKor;
+        this.status = status;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
+    public static Reservation reservation(User user, Room room, ReservationDto dto){
+        return Reservation.builder()
+                .user(user)
+                .room(room)
+                .enquiry(dto.getEnquiry())
+                .checkInDate(dto.getCheckInDate())
+                .checkOutDate(dto.getCheckOutDate())
+                .build();
+    }
 }

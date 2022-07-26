@@ -16,5 +16,6 @@ public class RoomReqDto {
     private String guide;
     private Integer price;
     private Integer numberOfPeople;
+    private Boolean available;
     List<String> urlList;
 }

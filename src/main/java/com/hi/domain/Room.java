@@ -29,9 +29,6 @@ public class Room {
     @OneToMany(mappedBy = "room")
     private List<RoomImage> roomImage = new ArrayList<>();
 
-    @OneToMany(mappedBy = "room")
-    private List<Reservation> reservation = new ArrayList<>();
-
     private String name;
 
     @Column(name = "check_in_date")
@@ -49,12 +46,14 @@ public class Room {
     @Column(name = "number_of_people")
     private Integer numberOfPeople;
 
+    @ColumnDefault("True")
+    private Boolean available;
+
     @Builder
-    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, List<Reservation> reservation, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople) {
+    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
         this.id = id;
         this.accommodation = accommodation;
         this.roomImage = roomImage;
-        this.reservation = reservation;
         this.name = name;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -62,6 +61,7 @@ public class Room {
         this.guide = guide;
         this.price = price;
         this.numberOfPeople = numberOfPeople;
+        this.available = available;
     }
 
     public static Room createRoom(RoomReqDto dto, Accommodation accommodation){
@@ -77,13 +77,6 @@ public class Room {
                 .build();
     }
 
-    public Room(LocalDate checkInDate, LocalDate checkOutDate, int numberOfPeople, Accommodation accommodation){
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
-        this.numberOfPeople = numberOfPeople;
-        this.accommodation = accommodation;
-    }
-
     public void update(RoomReqDto dto){
         this.name = dto.getName();
         this.checkInDate = dto.getCheckInDate();
@@ -92,5 +85,6 @@ public class Room {
         this.guide = dto.getGuide();
         this.price = dto.getPrice();
         this.numberOfPeople = dto.getNumberOfPeople();
+        this.available = dto.getAvailable();
     }
 }

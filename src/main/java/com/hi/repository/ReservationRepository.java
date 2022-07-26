@@ -30,9 +30,9 @@ public class ReservationRepository {
                 .getResultList();
     }
 
-    public List<Long> notAvailableRoom(LocalDate checkInDate, LocalDate checkOutDate){
+    public List<Long> unAvailableRoom(LocalDate checkInDate, LocalDate checkOutDate){
         return em.createQuery("select distinct resv.room.id from Reservation resv " +
-                "where :checkInDate < resv.checkOutDate and :checkInDate >= resv.checkInDate " +
+                "where  :checkInDate >= resv.checkInDate and :checkInDate < resv.checkOutDate " +
                 "or :checkOutDate > resv.checkInDate and :checkOutDate <= resv.checkOutDate " +
                 "or :checkInDate <= resv.checkInDate and :checkOutDate >= resv.checkOutDate " +
                 "or :checkInDate >= resv.checkInDate and :checkOutDate <= resv.checkOutDate", Long.class)

@@ -48,8 +48,8 @@ public class AccommodationService {
 
     //숙소 리스트
     public List<AccommodationResDto> accommodationList(LocalDate checkInDate, LocalDate checkOutDate, int number_of_people, String region) {
-        List<Long> findAvailableRoomIds = reservationRepository.notAvailableRoom(checkInDate, checkOutDate);
-        List<Long> findAvailableAccommodationIds = roomRepository.findAvailableRoom(findAvailableRoomIds, number_of_people);
+        List<Long> findUnAvailableRoomIds = reservationRepository.unAvailableRoom(checkInDate, checkOutDate);
+        List<Long> findAvailableAccommodationIds = roomRepository.findAvailableRoom(findUnAvailableRoomIds, number_of_people);
         return new ArrayList<>(accommodationRepository.findAccommodationList(findAvailableAccommodationIds, region)
                 .stream()
                 .map(AccommodationResDto::new)
