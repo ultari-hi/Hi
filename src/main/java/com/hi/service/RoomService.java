@@ -30,7 +30,8 @@ public class RoomService {
 
     //객실, 사진 등록
     public void saveRoom(Long accommodationId, RoomReqDto dto) {
-        Accommodation accommodation = accommodationRepository.findById(accommodationId);
+        Accommodation accommodation = accommodationRepository.findById(accommodationId)
+                .orElseThrow(()->new IllegalArgumentException("숙소를 찾을 수 없습니다."));
         Room room = Room.createRoom(dto,accommodation);
         Room roomId = roomRepository.save(room);
         List<RoomImage> images = dto.getUrlList()

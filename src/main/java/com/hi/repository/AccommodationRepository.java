@@ -28,9 +28,10 @@ public class AccommodationRepository {
                 .getResultList();
     }
 
-    public Accommodation findById(Long id) {
-        return em.createQuery("select a from Accommodation a where a.id = :id",Accommodation.class)
+    public Optional<Accommodation> findById(Long id) {
+        return Optional.ofNullable(em.createQuery("select a from Accommodation a where a.id = :id",Accommodation.class)
                 .setParameter("id",id)
-                .getSingleResult();
+                .getSingleResult()
+        );
     }
 }

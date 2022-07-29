@@ -1,14 +1,10 @@
 package com.hi.dto;
 
 import com.hi.domain.Room;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 public class RoomResDto {
     private Long id;

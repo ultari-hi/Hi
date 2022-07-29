@@ -17,17 +17,17 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Reservation {
+public class Reservation extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reservation_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
 
@@ -35,9 +35,11 @@ public class Reservation {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @OneToOne(mappedBy = "reservation")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
+    @Column(columnDefinition = "text")
     private String enquiry;
 
     @Column(name = "check_in_date")
@@ -46,6 +48,7 @@ public class Reservation {
     @Column(name = "check_out_date")
     private LocalDate checkOutDate;
 
+    @Column(columnDefinition = "char(10)")
     private String price;
 
     @Column(name = "price_kor")
@@ -54,14 +57,6 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @ColumnDefault("IN_PROGRESS")
     private Status status;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Builder
     public Reservation(User user, Accommodation accommodation, Room room, Payment payment, String enquiry, LocalDate checkInDate, LocalDate checkOutDate, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
@@ -75,14 +70,14 @@ public class Reservation {
         this.price = price;
         this.priceKor = priceKor;
         this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
-    public static Reservation reservation(User user, Room room, ReservationDto dto){
+    public static Reservation newReservation(User user, Accommodation accommodation ,Room room, Payment payment, ReservationDto dto){
         return Reservation.builder()
                 .user(user)
+                .accommodation(accommodation)
                 .room(room)
+                .payment(payment)
                 .enquiry(dto.getEnquiry())
                 .checkInDate(dto.getCheckInDate())
                 .checkOutDate(dto.getCheckOutDate())

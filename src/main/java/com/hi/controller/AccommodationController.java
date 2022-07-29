@@ -34,7 +34,8 @@ public class AccommodationController {
     public List<AccommodationResDto> accommodationList(@RequestParam LocalDate checkInDate,
                                                        @RequestParam LocalDate checkOutDate,
                                                        @RequestParam int number_of_people,
-                                                       @RequestParam String region){
+                                                       @RequestParam String region,
+                                                       @RequestParam List<String> filtering){
         return accommodationService.accommodationList(checkInDate, checkOutDate, number_of_people, region);
     }
 

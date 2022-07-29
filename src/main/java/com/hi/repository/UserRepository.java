@@ -21,7 +21,8 @@ public class UserRepository {
 
     public Optional<User> findById(Long id) {
         return Optional.ofNullable(em.createQuery("select u from User u where u.id = :id",User.class)
-                .getSingleResult()) ;
+                .setParameter("id",id)
+                .getSingleResult());
     }
 
     public List<User> findAll() {

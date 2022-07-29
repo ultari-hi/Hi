@@ -43,7 +43,8 @@ public class AccommodationService {
 
     //숙소 상세 조회
     public AccommodationResDto findOne(Long accommodationId) {
-        return new AccommodationResDto(accommodationRepository.findById(accommodationId));
+        return new AccommodationResDto(accommodationRepository.findById(accommodationId)
+                .orElseThrow(() -> new IllegalArgumentException("숙소를 찾을 수 없습니다.")));
     }
 
     //숙소 리스트
@@ -58,7 +59,8 @@ public class AccommodationService {
 
     //숙소 수정
     public void modifyAccommodation(Long accommodationId, AccommodationReqDto dto) {
-        Accommodation accommodation = accommodationRepository.findById(accommodationId);
+        Accommodation accommodation = accommodationRepository.findById(accommodationId)
+                .orElseThrow(()->new IllegalArgumentException("숙소를 찾을 수 없습니다."));
         accommodation.update(dto);
     }
 

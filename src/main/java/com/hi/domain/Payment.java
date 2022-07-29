@@ -1,5 +1,6 @@
 package com.hi.domain;
 
+import com.hi.dto.PaymentReqDto;
 import com.hi.enums.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Payment {
+public class Payment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
@@ -23,16 +24,11 @@ public class Payment {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "point_id")
-    private Point point;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id")
+    @OneToOne(mappedBy = "payment")
     private Reservation reservation;
 
-    @Column(name = "total_price")
-    private Integer totalPrice;
+    @Column(name = "total_amount")
+    private Integer totalAmount;
 
     @Column(name = "point_pay")
     @ColumnDefault("0")
@@ -41,13 +37,22 @@ public class Payment {
     @Column(name = "cash_pay")
     private Integer cashPay;
 
-    private String way;
-
-    @CreatedDate
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    @Column(name = "method", columnDefinition = "char(10)")
+    private String method;
 
     @Enumerated(EnumType.STRING)
     @ColumnDefault("IN_PROGRESS")
     private Status status;
+
+    public Payment(PaymentReqDto dto, User user){
+        this.user = user;
+        this.totalAmount = dto.getTotalAmount();
+        this.pointPay = dto.getPointPay();
+        this.cashPay = dto.getCashPay();
+        this.method = dto.getMethod();
+    }
+
+    public static Payment newPayment(PaymentReqDto dto, User user){
+        return new Payment(dto, user);
+    }
 }
