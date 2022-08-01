@@ -24,7 +24,8 @@ public class Payment extends BaseTimeEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(mappedBy = "payment")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
     @Column(name = "total_amount")
@@ -44,15 +45,37 @@ public class Payment extends BaseTimeEntity{
     @ColumnDefault("IN_PROGRESS")
     private Status status;
 
-    public Payment(PaymentReqDto dto, User user){
+    public Payment(Long id, User user, Reservation reservation, Integer totalAmount, Integer pointPay, Integer cashPay, String method, Status status) {
+        this.id = id;
         this.user = user;
+        this.reservation = reservation;
+        this.totalAmount = totalAmount;
+        this.pointPay = pointPay;
+        this.cashPay = cashPay;
+        this.method = method;
+        this.status = status;
+    }
+
+    public Payment(PaymentReqDto dto, User user, Reservation reservation){
+        this.user = user;
+        this.reservation = reservation;
         this.totalAmount = dto.getTotalAmount();
         this.pointPay = dto.getPointPay();
         this.cashPay = dto.getCashPay();
         this.method = dto.getMethod();
     }
 
-    public static Payment newPayment(PaymentReqDto dto, User user){
-        return new Payment(dto, user);
+    public static Payment newPayment(PaymentReqDto dto, User user, Reservation reservation){
+        return new Payment(dto, user, reservation);
+    }
+
+    public void status(String result){
+        if (result.equals("success")) {
+            this.status = Status.SUCCESS;
+        } else if (result.equals("fail")) {
+            this.status = Status.FAIL;
+        } else {
+            System.out.print("오류 메세지");
+        }
     }
 }

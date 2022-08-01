@@ -36,6 +36,7 @@ public class Accommodation {
 
     private String location;
 
+    @Column(columnDefinition = "text")
     private String introduction;
 
     @Column(name = "number_of_people")
@@ -52,6 +53,7 @@ public class Accommodation {
 
     private String region;
 
+    @Column(columnDefinition = "text")
     private String filtering;
 
     @Builder

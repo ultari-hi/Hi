@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -12,8 +13,13 @@ public class PaymentRepository {
 
     private final EntityManager em;
 
-    public Payment save(Payment payment){
+    public void save(Payment payment){
         em.persist(payment);
-        return payment;
+    }
+
+    public Optional<Payment> findById(Long reservationId){
+        return Optional.ofNullable(em.createQuery("select p from Payment p where p.reservation.id = :reservationId",Payment.class)
+                .setParameter("reservationId",reservationId)
+                .getSingleResult());
     }
 }

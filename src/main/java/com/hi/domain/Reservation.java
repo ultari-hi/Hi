@@ -1,5 +1,6 @@
 package com.hi.domain;
 
+import com.hi.dto.PaymentReqDto;
 import com.hi.dto.ReservationDto;
 import com.hi.enums.Status;
 import lombok.AccessLevel;
@@ -35,10 +36,6 @@ public class Reservation extends BaseTimeEntity{
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
     @Column(columnDefinition = "text")
     private String enquiry;
 
@@ -59,11 +56,11 @@ public class Reservation extends BaseTimeEntity{
     private Status status;
 
     @Builder
-    public Reservation(User user, Accommodation accommodation, Room room, Payment payment, String enquiry, LocalDate checkInDate, LocalDate checkOutDate, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Reservation(Long id, User user, Accommodation accommodation, Room room, String enquiry, LocalDate checkInDate, LocalDate checkOutDate, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+        this.id = id;
         this.user = user;
         this.accommodation = accommodation;
         this.room = room;
-        this.payment = payment;
         this.enquiry = enquiry;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -72,15 +69,24 @@ public class Reservation extends BaseTimeEntity{
         this.status = status;
     }
 
-    public static Reservation newReservation(User user, Accommodation accommodation ,Room room, Payment payment, ReservationDto dto){
+    public static Reservation newReservation(User user, Accommodation accommodation , Room room, PaymentReqDto dto){
         return Reservation.builder()
                 .user(user)
                 .accommodation(accommodation)
                 .room(room)
-                .payment(payment)
                 .enquiry(dto.getEnquiry())
                 .checkInDate(dto.getCheckInDate())
                 .checkOutDate(dto.getCheckOutDate())
                 .build();
+    }
+
+    public void status(String result) {
+        if (result.equals("success")) {
+            this.status = Status.SUCCESS;
+        } else if (result.equals("fail")) {
+            this.status = Status.FAIL;
+        } else {
+            System.out.print("오류 메세지");
+        }
     }
 }
