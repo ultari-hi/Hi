@@ -75,6 +75,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @ColumnDefault("0")
+    private Integer point;
+
     public User(String name,String pwd){
         this.username = name;
         this.password = pwd;

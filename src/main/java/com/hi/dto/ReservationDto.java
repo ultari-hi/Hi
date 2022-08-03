@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Data
 public class ReservationDto {
     private Long id;
-    private User user;
     private Accommodation accommodation;
     private Room room;
     private String enquiry;
@@ -26,7 +25,6 @@ public class ReservationDto {
 
     public ReservationDto(Reservation reservation) {
         this.id = reservation.getId();
-        this.user = reservation.getUser();
         this.accommodation = reservation.getAccommodation();
         this.room = reservation.getRoom();
         this.enquiry = reservation.getEnquiry();

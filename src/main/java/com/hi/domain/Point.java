@@ -23,16 +23,27 @@ public class Point {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ColumnDefault("0")
     private Integer saving;
 
+    @ColumnDefault("0")
     private Integer using;
 
     @ColumnDefault("0")
-    private Integer balance;
+    private Integer remaining;
 
     @CreatedDate
     @Column(name = "changed_date")
     private LocalDateTime changedDate;
 
     private LocalDate extinction;
+
+    public Point(User user, Integer saving, Integer using, Integer remaining, LocalDateTime changedDate, LocalDate extinction) {
+        this.user = user;
+        this.saving = saving;
+        this.using = using;
+        this.remaining = remaining;
+        this.changedDate = changedDate;
+        this.extinction = extinction;
+    }
 }
