@@ -33,17 +33,18 @@ public class Point {
     private Integer remaining;
 
     @CreatedDate
-    @Column(name = "changed_date")
-    private LocalDateTime changedDate;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    private LocalDate extinction;
-
-    public Point(User user, Integer saving, Integer using, Integer remaining, LocalDateTime changedDate, LocalDate extinction) {
+    public Point(User user, Integer saving, Integer using) {
         this.user = user;
         this.saving = saving;
         this.using = using;
-        this.remaining = remaining;
-        this.changedDate = changedDate;
-        this.extinction = extinction;
+        this.remaining = getRemaining(saving, using);
+    }
+
+    public Integer getRemaining(Integer saving, Integer using) {
+        remaining = remaining + saving - using;
+        return remaining;
     }
 }

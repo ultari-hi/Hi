@@ -60,7 +60,8 @@ public class RoomService {
 
     //객실 수정
     public void modifyRoom(Long roomId, RoomReqDto dto) {
-        Room room = roomRepository.findById(roomId);
+        Room room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new IllegalArgumentException("객실을 찾을 수 없습니다."));
         room.update(dto);
     }
 }

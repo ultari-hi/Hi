@@ -37,7 +37,8 @@ public class ReservationRepository {
                 "where  :checkInDate >= resv.checkInDate and :checkInDate < resv.checkOutDate " +
                 "or :checkOutDate > resv.checkInDate and :checkOutDate <= resv.checkOutDate " +
                 "or :checkInDate <= resv.checkInDate and :checkOutDate >= resv.checkOutDate " +
-                "or :checkInDate >= resv.checkInDate and :checkOutDate <= resv.checkOutDate", Long.class)
+                "or :checkInDate >= resv.checkInDate and :checkOutDate <= resv.checkOutDate " +
+                        "or resv.status <> 'SUCCESS'", Long.class)
                 .setParameter("checkInDate",checkInDate)
                 .setParameter("checkOutDate",checkOutDate)
                 .getResultList();

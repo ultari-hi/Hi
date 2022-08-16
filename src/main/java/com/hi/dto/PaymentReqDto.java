@@ -1,5 +1,6 @@
 package com.hi.dto;
 
+import com.hi.enums.Status;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 @Data
 public class PaymentReqDto {
     private Long reservationId;
-    private String status;
+    private Status status;
 
     private Long userId;
     private Integer totalAmount;
@@ -21,21 +22,25 @@ public class PaymentReqDto {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
 
-    public PaymentReqDto(Long userId, Integer totalAmount, Integer pointPay, Integer cashPay, String method, Long accommodationId, Long roomId, String enquiry, LocalDate checkInDate, LocalDate checkOutDate) {
+    public PaymentReqDto(Long userId, Integer totalAmount, Integer pointPay, Integer cashPay, String method, Long roomId, String enquiry, LocalDate checkInDate, LocalDate checkOutDate) {
         this.userId = userId;
         this.totalAmount = totalAmount;
         this.pointPay = pointPay;
         this.cashPay = cashPay;
         this.method = method;
-        this.accommodationId = accommodationId;
+
         this.roomId = roomId;
         this.enquiry = enquiry;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }
 
-    public PaymentReqDto(Long reservationId, String status) {
+    public PaymentReqDto(Long userId, Long reservationId, Long roomId, Status status, LocalDate checkInDate, LocalDate checkOutDate) {
+        this.userId = userId;
         this.reservationId = reservationId;
+        this.roomId = roomId;
         this.status = status;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
     }
 }

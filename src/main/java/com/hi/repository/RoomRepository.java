@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,9 +34,9 @@ public class RoomRepository {
                 .getResultList();
     }
 
-    public Room findById(Long id) {
-        return em.createQuery("select r from Room r where r.id =:id",Room.class)
+    public Optional<Room> findById(Long id) {
+        return Optional.ofNullable(em.createQuery("select r from Room r where r.id =:id",Room.class)
                 .setParameter("id",id)
-                .getSingleResult();
+                .getSingleResult());
     }
 }

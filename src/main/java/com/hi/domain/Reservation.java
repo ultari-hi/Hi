@@ -80,13 +80,7 @@ public class Reservation extends BaseTimeEntity{
                 .build();
     }
 
-    public void status(String result) {
-        if (result.equals("success")) {
-            this.status = Status.SUCCESS;
-        } else if (result.equals("fail")) {
-            this.status = Status.FAIL;
-        } else {
-            System.out.print("오류 메세지");
-        }
+    public void status(Status result) {
+        this.status = result;
     }
 }

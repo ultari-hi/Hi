@@ -18,7 +18,7 @@ public class PaymentRepository {
     }
 
     public Optional<Payment> findById(Long reservationId){
-        return Optional.ofNullable(em.createQuery("select p from Payment p where p.reservation.id = :reservationId",Payment.class)
+        return Optional.ofNullable(em.createQuery("select p from Payment p join p.reservation where p.reservation.id = :reservationId",Payment.class)
                 .setParameter("reservationId",reservationId)
                 .getSingleResult());
     }
