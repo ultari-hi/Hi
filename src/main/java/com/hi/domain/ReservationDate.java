@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class ReservationDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reservation_date_id")
+    @Column(name = "reservation_date_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -25,6 +25,7 @@ public class ReservationDate {
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @Column(name = "date", columnDefinition = "date", nullable = false)
     private LocalDate date;
 
     @Builder

@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class Reservation extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reservation_id")
+    @Column(name = "reservation_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,34 +36,27 @@ public class Reservation extends BaseTimeEntity{
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "enquiry", columnDefinition = "text")
     private String enquiry;
 
-    @Column(name = "check_in_date")
-    private LocalDate checkInDate;
-
-    @Column(name = "check_out_date")
-    private LocalDate checkOutDate;
-
-    @Column(columnDefinition = "char(10)")
+    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
     private String price;
 
-    @Column(name = "price_kor")
-    private int priceKor;
+    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
+    private Integer priceKor;
 
-    @Enumerated(EnumType.STRING)
+    @Column(name = "status", columnDefinition = "enum", nullable = false)
     @ColumnDefault("IN_PROGRESS")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Builder
-    public Reservation(Long id, User user, Accommodation accommodation, Room room, String enquiry, LocalDate checkInDate, LocalDate checkOutDate, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Reservation(Long id, User user, Accommodation accommodation, Room room, String enquiry, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
         this.user = user;
         this.accommodation = accommodation;
         this.room = room;
         this.enquiry = enquiry;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
         this.price = price;
         this.priceKor = priceKor;
         this.status = status;
@@ -75,8 +68,6 @@ public class Reservation extends BaseTimeEntity{
                 .accommodation(accommodation)
                 .room(room)
                 .enquiry(dto.getEnquiry())
-                .checkInDate(dto.getCheckInDate())
-                .checkOutDate(dto.getCheckOutDate())
                 .build();
     }
 

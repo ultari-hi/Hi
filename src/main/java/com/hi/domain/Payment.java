@@ -28,19 +28,19 @@ public class Payment extends BaseTimeEntity{
     @JoinColumn(name = "reservation_id")
     private Reservation reservation;
 
-    @Column(name = "total_amount")
+    @Column(name = "total_amount", columnDefinition = "integer", nullable = false)
     private Integer totalAmount;
 
-    @Column(name = "point_pay")
-    @ColumnDefault("0")
+    @Column(name = "point_pay", columnDefinition = "integer", nullable = false)
     private Integer pointPay;
 
-    @Column(name = "cash_pay")
+    @Column(name = "cash_pay", columnDefinition = "integer", nullable = false)
     private Integer cashPay;
 
-    @Column(name = "method", columnDefinition = "char(10)")
+    @Column(name = "method", columnDefinition = "varchar(10)", nullable = false)
     private String method;
 
+    @Column(name = "status", columnDefinition = "enum", nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("IN_PROGRESS")
     private Status status;
