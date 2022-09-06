@@ -47,6 +47,9 @@ public class JoinBoardController {
         /*
             type : 1 -> 제목으로 검색
             type : 2 -> 제목 + 본문 검색
+
+            검색 조건 : 도시, 날짜, 제목
+
         */
 
         try {
