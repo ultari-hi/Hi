@@ -36,6 +36,10 @@ public class Reservation extends BaseTimeEntity{
     @JoinColumn(name = "room_id")
     private Room room;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
     @Column(name = "enquiry", columnDefinition = "text")
     private String enquiry;
 
@@ -51,11 +55,12 @@ public class Reservation extends BaseTimeEntity{
     private Status status;
 
     @Builder
-    public Reservation(Long id, User user, Accommodation accommodation, Room room, String enquiry, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Reservation(Long id, User user, Accommodation accommodation, Room room, Payment payment, String enquiry, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
         this.user = user;
         this.accommodation = accommodation;
         this.room = room;
+        this.payment = payment;
         this.enquiry = enquiry;
         this.price = price;
         this.priceKor = priceKor;
@@ -68,10 +73,12 @@ public class Reservation extends BaseTimeEntity{
                 .accommodation(accommodation)
                 .room(room)
                 .enquiry(dto.getEnquiry())
+                .priceKor(room.getPriceKor())
                 .build();
     }
 
-    public void status(Status result) {
+    public Reservation status(Status result) {
         this.status = result;
+        return this;
     }
 }

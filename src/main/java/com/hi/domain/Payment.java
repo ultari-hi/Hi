@@ -5,11 +5,14 @@ import com.hi.enums.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -17,25 +20,21 @@ import java.time.LocalDateTime;
 public class Payment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_id")
+    @Column(name = "payment_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reservation_id")
-    private Reservation reservation;
-
     @Column(name = "total_amount", columnDefinition = "integer", nullable = false)
-    private Integer totalAmount;
+    private int totalAmount;
 
-    @Column(name = "point_pay", columnDefinition = "integer", nullable = false)
-    private Integer pointPay;
+    @Column(name = "point_amount", columnDefinition = "integer", nullable = false)
+    private int pointAmount;
 
-    @Column(name = "cash_pay", columnDefinition = "integer", nullable = false)
-    private Integer cashPay;
+    @Column(name = "cash_amount", columnDefinition = "integer", nullable = false)
+    private int cashAmount;
 
     @Column(name = "method", columnDefinition = "varchar(10)", nullable = false)
     private String method;
@@ -45,31 +44,41 @@ public class Payment extends BaseTimeEntity{
     @ColumnDefault("IN_PROGRESS")
     private Status status;
 
-    public Payment(Long id, User user, Reservation reservation, Integer totalAmount, Integer pointPay, Integer cashPay, String method, Status status) {
+    @OneToOne(mappedBy = "payment")
+    private final Reservation reservation = new Reservation();
+
+    @OneToMany(mappedBy = "payment")
+    private final ArrayList<TmpDate> tmpDate = new ArrayList<>();
+
+    public Payment(Long id, User user, int totalAmount, int pointAmount, int cashAmount, String method, Status status) {
         this.id = id;
         this.user = user;
-        this.reservation = reservation;
         this.totalAmount = totalAmount;
-        this.pointPay = pointPay;
-        this.cashPay = cashPay;
+        this.pointAmount = pointAmount;
+        this.cashAmount = cashAmount;
         this.method = method;
         this.status = status;
     }
 
-    public Payment(PaymentReqDto dto, User user, Reservation reservation){
+    public Payment(PaymentReqDto dto, User user){
         this.user = user;
-        this.reservation = reservation;
         this.totalAmount = dto.getTotalAmount();
-        this.pointPay = dto.getPointPay();
-        this.cashPay = dto.getCashPay();
+        this.pointAmount = dto.getPointAmount();
+        this.cashAmount = dto.getCashAmount();
         this.method = dto.getMethod();
     }
 
-    public static Payment newPayment(PaymentReqDto dto, User user, Reservation reservation){
-        return new Payment(dto, user, reservation);
+    public static Payment newPayment(PaymentReqDto dto, User user){
+        return new Payment(dto, user);
     }
 
-    public void status(Status result){
-        this.status = result;
+    public Status verify(int paidAmount){
+        if(paidAmount == this.cashAmount){
+            this.status = Status.SUCCESS;
+            Reservation reservation = this.reservation.status(this.status);
+        }else {
+            this.status = Status.FAIL;
+        }
+        return this.status;
     }
 }

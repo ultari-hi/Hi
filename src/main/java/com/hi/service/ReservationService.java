@@ -19,11 +19,10 @@ import static java.util.stream.Collectors.toUnmodifiableList;
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
-    private final AccommodationRepository accommodationRepository;
-    private final RoomRepository roomRepository;
+
 
     public List<ReservationDto> reservationList(Long userId){
-        return new ArrayList<>(reservationRepository.findAll(userId)
+        return new ArrayList<>(reservationRepository.findAllByUserId(userId)
                 .stream()
                 .map(ReservationDto::new)
                 .collect(toUnmodifiableList()));

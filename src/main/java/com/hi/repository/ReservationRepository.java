@@ -15,9 +15,8 @@ public class ReservationRepository {
 
     private final EntityManager em;
 
-    public Reservation save(Reservation reservation) {
+    public void save(Reservation reservation) {
             em.persist(reservation);
-            return reservation;
     }
 
     public Optional<Reservation> findById(Long reservationId) {
@@ -26,7 +25,7 @@ public class ReservationRepository {
                 .getSingleResult());
     }
 
-    public List<Reservation> findAll(Long userId) {
+    public List<Reservation> findAllByUserId(Long userId){
         return em.createQuery("select resv from Reservation resv where resv.user.id = :userId", Reservation.class)
                 .setParameter("userId",userId)
                 .getResultList();

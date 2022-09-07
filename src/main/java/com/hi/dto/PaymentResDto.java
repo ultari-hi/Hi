@@ -1,5 +1,6 @@
 package com.hi.dto;
 
+import com.hi.domain.Point;
 import com.hi.domain.User;
 import lombok.Data;
 
@@ -8,12 +9,12 @@ public class PaymentResDto {
     private Long userId;
     private String username;
     private String phoneNumber;
-    private Integer point;
+    private int balance;
 
-    public PaymentResDto(User user){
+    public PaymentResDto(User user, Point point){
         userId = user.getId();
         username = user.getUsername();
         phoneNumber = user.getPhoneNumber();
-        point = user.getPoint();
+        balance = point.getBalance();
     }
 }
