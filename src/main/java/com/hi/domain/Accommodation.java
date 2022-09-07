@@ -17,45 +17,53 @@ import java.util.List;
 public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accommodation_id")
+    @Column(name = "accommodation_id", columnDefinition = "bigint")
     private Long id;
 
     @OneToMany(mappedBy = "accommodation")
     private final List<AccommodationImage> accommodationImage = new ArrayList<>();
 
-    @Column(name = "name_kor")
+    @Column(name = "name_kor", columnDefinition = "varchar(20)", nullable = false)
     private String nameKor;
 
-    @Column(name = "name_eng")
+    @Column(name = "name_eng", columnDefinition = "varchar(20)", nullable = false)
     private String nameEng;
 
-    @Column(name = "post_code")
-    private int postCode;
+    @Column(name = "post_code", columnDefinition = "varchar(5)")
+    private String postCode;
 
+    @Column(name = "address", columnDefinition = "varchar(50)", nullable = false)
     private String address;
 
+    @Column(name = "name_eng", columnDefinition = "varchar(50)", nullable = false)
     private String location;
 
+    @Column(name = "introduction", columnDefinition = "text")
     private String introduction;
 
-    @Column(name = "number_of_people")
-    private int numberOfPeople;
+    @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
+    private Integer numberOfPeople;
 
+    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
     @ColumnDefault("0")
     private String price;
 
+    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
     @ColumnDefault("0")
-    private int priceKor;
+    private Integer priceKor;
 
+    @Column(name = "rating", columnDefinition = "float", nullable = false)
     @ColumnDefault("0.0")
     private Float rating;
 
+    @Column(name = "region", columnDefinition = "varchar(10)", nullable = false)
     private String region;
 
+    @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
     @Builder
-    public Accommodation(String nameKor, String nameEng, int postCode, String address, String location, String introduction, int numberOfPeople, String price, int priceKor, Float rating, String region, String filtering) {
+    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, Integer numberOfPeople, String price, Integer priceKor, Float rating, String region, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
