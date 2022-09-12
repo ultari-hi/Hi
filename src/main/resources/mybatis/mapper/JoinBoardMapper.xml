@@ -37,43 +37,19 @@
         from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');
     </select>
 
-    <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
-    SELECT b.*, u.nickname, u.gender
-    FROM board b JOIN user u USING (user_id)
-    WHERE (title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%'))
-    AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end}) OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
---     WHERE true
-<!--        <include refid="searchType"/><include refid="searchDate"/>-->
-    </select>
-
-    <!-- SQL 중복으로 별도 SQL문 생성-->
-    <sql id="searchType">
-        <choose>
-            <when test='type==1'>
-                AND title LIKE concat('%', #{keyword}, '%')
-            </when>
-            <when test='type==2'>
-                AND content LIKE concat('%', #{keyword}, '%')
-            </when>
-            <otherwise>
-                AND (title LIKE concat('%', #{keyword}, '%')
-                OR content LIKE concat('%', #{keyword}, '%'))
-            </otherwise>
-        </choose>
-    </sql>
     <sql id="searchDate">
         <choose>
             <when test='go_with_start=="" and go_with_end==""'>
-                AND (go_with_start BETWEEN now() AND 9999-12-31)
-                OR (go_with_end BETWEEN now() AND 9999-12-31);
+                AND (go_with_start BETWEEN now() AND '9999-12-31')
+                OR (go_with_end BETWEEN now() AND '9999-12-31');
             </when>
             <when test='go_with_start==""'>
                 AND (go_with_start BETWEEN now() AND #{go_with_end})
                 OR (go_with_end BETWEEN now() AND #{go_with_end});
             </when>
             <when test='go_with_end==""'>
-                AND (go_with_start BETWEEN #{go_with_start} AND 9999-12-31)
-                OR (go_with_end BETWEEN #{go_with_start} AND 9999-12-31);
+                AND (go_with_start BETWEEN #{go_with_start} AND '9999-12-31')
+                OR (go_with_end BETWEEN #{go_with_start} AND '9999-12-31');
             </when>
             <otherwise>
                 AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})
@@ -81,6 +57,81 @@
             </otherwise>
         </choose>
     </sql>
+
+    <select id="searchDate" parameterType="String" resultType="com.hi.domain.JoinBoardDto">
+        select b.*, u.nickname, u.gender
+        from board b join user u using (user_id) WHERE (go_with_start BETWEEN #{go_with_start} AND '9999-12-31')
+    </select>
+
+    <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
+    SELECT b.*, u.nickname, u.gender
+    FROM board b JOIN user u USING (user_id)
+    WHERE (title LIKE CONCAT('%',#{keyword},'%') OR region LIKE CONCAT('%',#{region},'%'))
+<!--        <include refid="searchDate"/>-->
+--             AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end});
+--             OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
+<!--    WHERE true-->
+<!--        <include refid="searchType"/>&lt;!&ndash; <include refid="searchDate"/> &ndash;&gt;-->
+    </select>
+
+    <!-- SQL 중복으로 별도 SQL문 생성-->
+    <sql id="searchType">
+<!--        <trim prefix="WHERE" prefixOverrides="AND|OR">-->
+            <choose>
+                <when test='region==""'> <!-- region 조건이 All일 경우 키워드로 제목만 조건 검색 -->
+                    <if test='keyword==""'>return</if> <!-- region, keyword 둘다 없을 경우 조건문 미작성 -->
+                    title LIKE concat('%', #{keyword}, '%')
+                </when>
+
+                <when test='keyword==""'> <!-- keyword 조건이 All일 경우 region으로 지역만 조건 검색 -->
+                    <if test='region==""'>return</if> <!-- region, keyword 둘다 없을 경우 조건문 미작성 -->
+                    AND region LIKE concat('%', #{region}, '%')
+                </when>
+
+                <otherwise> <!-- region, keywork 모두 값이 있을 경우 -->
+                    AND (region LIKE concat('%', #{region}, '%') OR title LIKE concat('%', #{keyword}, '%'))
+                </otherwise>
+            </choose>
+<!--        </trim>-->
+    </sql>
+
+
+
+
+<!--    <sql id="searchType">-->
+<!--        <choose>-->
+<!--            <when test='type==1'>-->
+<!--                AND title LIKE concat('%', #{keyword}, '%')-->
+<!--            </when>-->
+<!--            <when test='type==2'>-->
+<!--                AND content LIKE concat('%', #{keyword}, '%')-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                AND (title LIKE concat('%', #{keyword}, '%')-->
+<!--                OR content LIKE concat('%', #{keyword}, '%'))-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--    </sql>-->
+<!--    <sql id="searchDate">-->
+<!--        <choose>-->
+<!--            <when test='go_with_start=="" and go_with_end==""'>-->
+<!--                AND (go_with_start BETWEEN now() AND 9999-12-31)-->
+<!--                OR (go_with_end BETWEEN now() AND 9999-12-31);-->
+<!--            </when>-->
+<!--            <when test='go_with_start==""'>-->
+<!--                AND (go_with_start BETWEEN now() AND #{go_with_end})-->
+<!--                OR (go_with_end BETWEEN now() AND #{go_with_end});-->
+<!--            </when>-->
+<!--            <when test='go_with_end==""'>-->
+<!--                AND (go_with_start BETWEEN #{go_with_start} AND 9999-12-31)-->
+<!--                OR (go_with_end BETWEEN #{go_with_start} AND 9999-12-31);-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})-->
+<!--                OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--    </sql>-->
 
 <!--    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">-->
 <!--        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date-->

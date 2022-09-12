@@ -14,7 +14,7 @@ public interface JoinBoardService {
 
     List<JoinBoardDto> readAll();
 
-    List<JoinBoardDto> search(int type, String title,String go_with_start, String go_with_end);
+    List<JoinBoardDto> search(String region, String title,String go_with_start, String go_with_end);
 
     int write(JoinBoardDto dto);
 

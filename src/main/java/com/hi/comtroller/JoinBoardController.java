@@ -40,7 +40,8 @@ public class JoinBoardController {
 
     @GetMapping("/join/search")
     public ResponseEntity search(
-            @RequestParam(required = false, defaultValue = "1") int type,
+//            @RequestParam(required = false, defaultValue = "1") int type,
+            @RequestParam(required = false, defaultValue = "") String region,
             @RequestParam(required = false, defaultValue = "") String keyword,
             @RequestParam(required = false, defaultValue = "") String go_with_start,
             @RequestParam(required = false, defaultValue = "") String go_with_end){
@@ -49,11 +50,10 @@ public class JoinBoardController {
             type : 2 -> 제목 + 본문 검색
 
             검색 조건 : 도시, 날짜, 제목
-
         */
 
         try {
-            List<JoinBoardDto> list = joinBoardService.search(type, keyword, go_with_start, go_with_end);
+            List<JoinBoardDto> list = joinBoardService.search(region, keyword, go_with_start, go_with_end);
 
             return new ResponseEntity<>(list, HttpStatus.OK);
 

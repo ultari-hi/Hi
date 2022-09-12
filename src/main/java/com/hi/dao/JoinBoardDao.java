@@ -18,7 +18,7 @@ public interface JoinBoardDao {
 
     List<JoinBoardDto> searchTitCon(String keyword);
 
-    List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end);
+    List<JoinBoardDto> search(String region, String keyword, String go_with_start, String go_with_end);
 
     int insert(JoinBoardDto dto);
 
