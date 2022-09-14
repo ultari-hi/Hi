@@ -66,10 +66,9 @@
     <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
     SELECT b.*, u.nickname, u.gender
     FROM board b JOIN user u USING (user_id)
-    WHERE (title LIKE CONCAT('%',#{keyword},'%') OR region LIKE CONCAT('%',#{region},'%'))
+    WHERE (title LIKE CONCAT('%',#{keyword},'%') AND region LIKE CONCAT('%',#{region},'%'))
 <!--        <include refid="searchDate"/>-->
---             AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end});
---             OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
+            AND ((go_with_start BETWEEN #{go_with_start} AND #{go_with_end}) AND (go_with_end BETWEEN #{go_with_start} AND #{go_with_end}));
 <!--    WHERE true-->
 <!--        <include refid="searchType"/>&lt;!&ndash; <include refid="searchDate"/> &ndash;&gt;-->
     </select>

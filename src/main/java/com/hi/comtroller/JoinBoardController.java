@@ -43,8 +43,8 @@ public class JoinBoardController {
 //            @RequestParam(required = false, defaultValue = "1") int type,
             @RequestParam(required = false, defaultValue = "") String region,
             @RequestParam(required = false, defaultValue = "") String keyword,
-            @RequestParam(required = false, defaultValue = "") String go_with_start,
-            @RequestParam(required = false, defaultValue = "") String go_with_end){
+            @RequestParam(required = false, defaultValue = "2000-01-01") String go_with_start,
+            @RequestParam(required = false, defaultValue = "9999-12-30") String go_with_end){
         /*
             type : 1 -> 제목으로 검색
             type : 2 -> 제목 + 본문 검색
