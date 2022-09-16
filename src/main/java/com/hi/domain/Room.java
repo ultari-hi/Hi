@@ -27,7 +27,7 @@ public class Room {
     private Accommodation accommodation;
 
     @OneToMany(mappedBy = "room")
-    private List<RoomImage> roomImage = new ArrayList<>();
+    private final List<RoomImage> roomImage = new ArrayList<>();
 
     @Column(name = "name", columnDefinition = "varchar(20)", nullable = false)
     private String name;
@@ -38,8 +38,13 @@ public class Room {
     @Column(name = "guide", columnDefinition = "text")
     private String guide;
 
-    @Column(name = "price", columnDefinition = "integer", nullable = false)
-    private Integer price;
+    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
+    @ColumnDefault("0")
+    private String price;
+
+    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
+    @ColumnDefault("0")
+    private Integer priceKor;
 
     @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
     private Integer numberOfPeople;
@@ -55,14 +60,13 @@ public class Room {
     private Boolean available;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, String name, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
         this.id = id;
         this.accommodation = accommodation;
-        this.roomImage = roomImage;
         this.name = name;
         this.information = information;
         this.guide = guide;
-        this.price = price;
+        this.priceKor = price;
         this.numberOfPeople = numberOfPeople;
         this.available = available;
     }
@@ -82,7 +86,7 @@ public class Room {
         this.name = dto.getName();
         this.information = dto.getInformation();
         this.guide = dto.getGuide();
-        this.price = dto.getPrice();
+        this.priceKor = dto.getPrice();
         this.numberOfPeople = dto.getNumberOfPeople();
         this.available = dto.getAvailable();
     }

@@ -28,8 +28,8 @@ public class ReservationDto {
         this.accommodation = reservation.getAccommodation();
         this.room = reservation.getRoom();
         this.enquiry = reservation.getEnquiry();
-        this.checkInDate = reservation.getCheckInDate();
-        this.checkOutDate = reservation.getCheckOutDate();
+        this.checkInDate = LocalDate.ofEpochDay(20220907);
+        this.checkOutDate = LocalDate.ofEpochDay(20220907);
         this.price = reservation.getPrice();
         this.priceKor = reservation.getPriceKor();
         this.status = reservation.getStatus();

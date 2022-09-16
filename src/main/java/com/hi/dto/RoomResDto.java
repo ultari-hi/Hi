@@ -19,11 +19,9 @@ public class RoomResDto {
     public RoomResDto(Room room){
         this.id = room.getId();
         this.name = room.getName();
-        this.checkInDate = room.getCheckInDate();
-        this.checkOutDate = room.getCheckOutDate();
         this.information = room.getInformation();
         this.guide = room.getGuide();
-        this.price = room.getPrice();
+        this.price = room.getPriceKor();
         this.numberOfPeople = room.getNumberOfPeople();
     }
 }

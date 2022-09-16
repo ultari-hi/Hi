@@ -53,7 +53,7 @@ public class RoomService {
     public ImageDto roomImages(Long roomId) {
         List<String> urlList = roomImageRepository.findAll(roomId)
                 .stream()
-                .map(RoomImage::getUrl)
+                .map(RoomImage::getRoomImageUrl)
                 .collect(toUnmodifiableList());
         return new ImageDto(urlList);
     }

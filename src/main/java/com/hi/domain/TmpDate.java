@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class TmpDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "TmpDate", columnDefinition = "bigint")
+    @Column(name = "tmp_date_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

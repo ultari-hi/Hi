@@ -5,12 +5,9 @@ import com.hi.enums.Status;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class Payment extends BaseTimeEntity{
     private final Reservation reservation = new Reservation();
 
     @OneToMany(mappedBy = "payment")
-    private final ArrayList<TmpDate> tmpDate = new ArrayList<>();
+    private final List<TmpDate> tmpDate = new ArrayList<>();
 
     public Payment(Long id, User user, int totalAmount, int pointAmount, int cashAmount, String method, Status status) {
         this.id = id;
