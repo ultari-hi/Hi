@@ -12,7 +12,7 @@ import javax.persistence.*;
 public class AccommodationImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accommdation_image_id", columnDefinition = "bigint")
+    @Column(name = "accommodation_image_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,9 +22,8 @@ public class AccommodationImage {
     @Column(name = "acm_image_url", columnDefinition = "text", nullable = false)
     private String acmImageUrl;
 
-    public AccommodationImage(Long id, Accommodation accommodation, String acmImageUrl) {
+    public AccommodationImage(Long id, String acmImageUrl) {
         this.id = id;
-        this.accommodation = accommodation;
         this.acmImageUrl = acmImageUrl;
     }
 

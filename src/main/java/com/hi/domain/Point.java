@@ -30,7 +30,7 @@ public class Point {
     @Enumerated(EnumType.STRING)
     private PointType type;
 
-    @Column(name = "saving_and_using", columnDefinition = "int")
+    @Column(name = "amount", columnDefinition = "int")
     private int amount;
 
     @Column(name = "balance", columnDefinition = "int")

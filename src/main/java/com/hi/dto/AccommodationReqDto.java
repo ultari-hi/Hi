@@ -11,13 +11,11 @@ import java.util.List;
 public class AccommodationReqDto {
     private String nameKor;
     private String nameEng;
-    private int postCode;
+    private String postCode;
     private String address;
     private String location;
     private String introduction;
-    private int numberOfPeople;
-    private String price;
-    private int priceKor;
+    private Integer numberOfPeople;
     private String region;
     private String filtering;
     List<String> urlList;
