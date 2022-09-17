@@ -48,9 +48,9 @@ public class Accommodation {
     @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
     private int numberOfPeople;
 
-//    @Column(name = "rating", columnDefinition = "float")
-//    @ColumnDefault("0.0")
-//    private Float rating;
+    @Column(name = "rating", columnDefinition = "float")
+    @ColumnDefault("0.0")
+    private Float rating;
 
     @Column(name = "region", columnDefinition = "varchar(10)", nullable = false)
     private String region;
@@ -59,7 +59,7 @@ public class Accommodation {
     private String filtering;
 
     @Builder
-    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, int numberOfPeople, String region, String filtering) {
+    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, int numberOfPeople, float rating, String region, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
@@ -67,6 +67,7 @@ public class Accommodation {
         this.location = location;
         this.introduction = introduction;
         this.numberOfPeople = numberOfPeople;
+        this.rating = rating;
         this.region = region;
         this.filtering = filtering;
     }

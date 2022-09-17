@@ -2,7 +2,7 @@ package com.hi.service;
 
 import com.hi.domain.Accommodation;
 import com.hi.domain.AccommodationImage;
-import com.hi.domain.Room;
+import com.hi.dto.AccommodationDetailDto;
 import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
 import com.hi.dto.ImageDto;
@@ -41,14 +41,14 @@ public class AccommodationService {
     }
 
     //숙소 상세 조회
-    public AccommodationResDto findOne(Long accommodationId) {
+    public AccommodationDetailDto findOne(Long accommodationId) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new IllegalArgumentException("숙소를 찾을 수 없습니다."));
         ImageDto urlList = new ImageDto(accommodation.getAccommodationImages()
                 .stream()
                 .map(AccommodationImage::getAcmImageUrl)
                 .collect(Collectors.toUnmodifiableList()));
-        return new AccommodationResDto(accommodation, urlList);
+        return new AccommodationDetailDto(accommodation, urlList);
     }
 
     //필터링 한 숙소 리스트
