@@ -1,5 +1,6 @@
 package com.hi.controller;
 
+import com.hi.dto.AccommodationDetailDto;
 import com.hi.dto.AccommodationReqDto;
 import com.hi.dto.AccommodationResDto;
 import com.hi.dto.ImageDto;
@@ -27,7 +28,7 @@ public class AccommodationController {
 
     //숙소 상세 조회
     @GetMapping("/accommodation/{accommodationId}")
-    public AccommodationResDto accommodationDetail(@PathVariable Long accommodationId){
+    public AccommodationDetailDto accommodationDetail(@PathVariable Long accommodationId){
         return accommodationService.findOne(accommodationId);
     }
 
