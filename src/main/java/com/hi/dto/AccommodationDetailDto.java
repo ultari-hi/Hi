@@ -15,7 +15,6 @@ public class AccommodationDetailDto {
     private String location;
     private String introduction;
     private int numberOfPeople;
-    private int priceKor;
     private Float rating;
     private String region;
     private String filtering;
