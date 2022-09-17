@@ -58,8 +58,12 @@ public class Accommodation {
     @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
+    //테스트용
+    @Column(name = "price_kor", columnDefinition = "int")
+    private int priceKor;
+
     @Builder
-    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, int numberOfPeople, float rating, String region, String filtering) {
+    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, int numberOfPeople, float rating, String region, String filtering, int priceKor) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
         this.postCode = postCode;
@@ -70,6 +74,7 @@ public class Accommodation {
         this.rating = rating;
         this.region = region;
         this.filtering = filtering;
+        this.priceKor = priceKor;
     }
 
     public static Accommodation createAccommodation(AccommodationReqDto dto){

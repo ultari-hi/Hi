@@ -1,10 +1,7 @@
 package com.hi.dto;
 
 import com.hi.domain.Accommodation;
-import com.hi.domain.AccommodationImage;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -22,6 +19,7 @@ public class AccommodationResDto {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
+        this.priceKor = acm.getPriceKor();
         this.rating = acm.getRating();
         this.region = acm.getRegion();
         this.urlList = dto.getUrlList();
