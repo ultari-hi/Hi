@@ -33,7 +33,7 @@ public class Accommodation {
     @Column(name = "name_eng", columnDefinition = "varchar(20)", nullable = false)
     private String nameEng;
 
-    @Column(name = "post_code", columnDefinition = "varchar(5)")
+    @Column(name = "post_code", columnDefinition = "varchar(10)")
     private String postCode;
 
     @Column(name = "address", columnDefinition = "varchar(50)", nullable = false)
