@@ -12,27 +12,28 @@ import javax.persistence.*;
 public class RoomImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_picture_id")
+    @Column(name = "room_image_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
-    private String url;
+    @Column(name = "room_image_url", columnDefinition = "text", nullable = false)
+    private String roomImageUrl;
 
-    public RoomImage(Long id, Room room, String url) {
+    public RoomImage(Long id, Room room, String roomImageUrl) {
         this.id = id;
         this.room = room;
-        this.url = url;
+        this.roomImageUrl = roomImageUrl;
     }
 
-    public RoomImage(Room room, String url) {
+    public RoomImage(Room room, String roomImageUrl) {
         this.room = room;
-        this.url = url;
+        this.roomImageUrl = roomImageUrl;
     }
 
-    public static RoomImage create(Room room, String url){
-        return new RoomImage(room, url);
+    public static RoomImage create(Room room, String roomImageUrl){
+        return new RoomImage(room, roomImageUrl);
     }
 }

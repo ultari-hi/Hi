@@ -19,7 +19,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "room_id")
+    @Column(name = "room_id", columnDefinition = "bigint")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,39 +27,46 @@ public class Room {
     private Accommodation accommodation;
 
     @OneToMany(mappedBy = "room")
-    private List<RoomImage> roomImage = new ArrayList<>();
+    private final List<RoomImage> roomImage = new ArrayList<>();
 
+    @Column(name = "name", columnDefinition = "varchar(20)", nullable = false)
     private String name;
 
-    @Column(name = "check_in_date")
-    private LocalDate checkInDate;
-
-    @Column(name = "check_out_date")
-    private LocalDate checkOutDate;
-
+    @Column(name = "information", columnDefinition = "text")
     private String information;
 
+    @Column(name = "guide", columnDefinition = "text")
     private String guide;
 
-    private Integer price;
+    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
+    @ColumnDefault("0")
+    private String price;
 
-    @Column(name = "number_of_people")
+    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
+    @ColumnDefault("0")
+    private Integer priceKor;
+
+    @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
     private Integer numberOfPeople;
 
+    @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
+    private String type;
+
+    @Column(name = "filtering", columnDefinition = "text")
+    private String filtering;
+
+    @Column(name = "available", columnDefinition = "boolean", nullable = false)
     @ColumnDefault("True")
     private Boolean available;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, List<RoomImage> roomImage, String name, LocalDate checkInDate, LocalDate checkOutDate, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
         this.id = id;
         this.accommodation = accommodation;
-        this.roomImage = roomImage;
         this.name = name;
-        this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
         this.information = information;
         this.guide = guide;
-        this.price = price;
+        this.priceKor = price;
         this.numberOfPeople = numberOfPeople;
         this.available = available;
     }
@@ -68,8 +75,6 @@ public class Room {
         return Room.builder()
                 .accommodation(accommodation)
                 .name(dto.getName())
-                .checkInDate(dto.getCheckInDate())
-                .checkOutDate(dto.getCheckOutDate())
                 .information(dto.getInformation())
                 .guide(dto.getGuide())
                 .price(dto.getPrice())
@@ -79,11 +84,9 @@ public class Room {
 
     public void update(RoomReqDto dto){
         this.name = dto.getName();
-        this.checkInDate = dto.getCheckInDate();
-        this.checkOutDate = dto.getCheckOutDate();
         this.information = dto.getInformation();
         this.guide = dto.getGuide();
-        this.price = dto.getPrice();
+        this.priceKor = dto.getPrice();
         this.numberOfPeople = dto.getNumberOfPeople();
         this.available = dto.getAvailable();
     }
