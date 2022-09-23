@@ -5,11 +5,13 @@ import com.hi.domain.PageHandler;
 import com.hi.domain.SearchCondition;
 import com.hi.service.JoinBoardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +27,8 @@ public class JoinBoardController {
     JoinBoardDto data=null;
     Map map=new HashMap();
 
-    @GetMapping("/join/{board_id}")
-    public ResponseEntity<JoinBoardDto> read(@PathVariable Integer board_id) {         // 동행자 게시글 상세 조회
+    @GetMapping("/join/{board_id}")        // 동행자 게시글 상세 조회
+    public ResponseEntity<JoinBoardDto> read(@PathVariable Integer board_id) {
         try {
             JoinBoardDto joinBoardDto = joinBoardService.read(board_id);
 
@@ -63,11 +65,11 @@ public class JoinBoardController {
         }
     }
 
-    @GetMapping("/join/list")
+    @GetMapping("/join/list")         // 동행자 게시글 목록 조회
     public ResponseEntity readAll(
             @RequestParam(required = false, defaultValue = "1") int page,
             @RequestParam(required = false, defaultValue = "20") int pageSize
-    ) {         // 동행자 게시글 목록 조회
+    ) {
 
         SearchCondition searchCondition = new SearchCondition(page,pageSize,"","");
         PageHandler pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
@@ -89,8 +91,8 @@ public class JoinBoardController {
         }
     }
 
-    @PostMapping("/join")
-    public ResponseEntity write(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 생성
+    @PostMapping("/join")         // 동행자 게시글 생성
+    public ResponseEntity write(@RequestBody JoinBoardDto dto, HttpSession session) {
         if(!loginCheck(session)){
             resultSet(0);   // error : true 후 반환
             return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
@@ -109,8 +111,8 @@ public class JoinBoardController {
         }
     }
 
-    @PatchMapping("/join")
-    public ResponseEntity modify(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 수정
+    @PatchMapping("/join")         // 동행자 게시글 수정
+    public ResponseEntity modify(@RequestBody JoinBoardDto dto, HttpSession session) {
         // 게시글 정보와 작성자 정보가 일치해야 수정 진행
         if(!writerCheck(dto.getBoard_id(), session)){
             resultSet(0);   // error : true 후 반환
@@ -134,8 +136,8 @@ public class JoinBoardController {
         }
     }
 
-    @DeleteMapping("/join")
-    public ResponseEntity remove(@RequestBody JoinBoardDto dto, HttpSession session) {         // 동행자 게시글 삭제
+    @DeleteMapping("/join")         // 동행자 게시글 삭제
+    public ResponseEntity remove(@RequestBody JoinBoardDto dto, HttpSession session) {
         // 게시글 정보와 작성자 정보가 일치해야 삭제 진행
         if(!writerCheck(dto.getBoard_id(), session))
             return new ResponseEntity<>("ERROR",HttpStatus.BAD_REQUEST);
@@ -146,7 +148,16 @@ public class JoinBoardController {
 
             resultSet(result);
 
-            return new ResponseEntity<Map>(map,HttpStatus.OK);
+            // 삭제 성공 시 숙소 목록으로 리다이렉션
+            if(result==1){
+
+            }
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(new URI("/api/board/join/list"));   // 리다이렉션 경로 입력
+
+            return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
+
+            //            return new ResponseEntity<Map>(map,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
