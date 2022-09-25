@@ -50,8 +50,12 @@ public class JoinBoardController {
         SearchCondition searchCondition = new SearchCondition(page,pageSize,"","");
         PageHandler pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
 
-        if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력되면 page값을 총 페이지 값으로 변경
-            page=pageHandler.getTotalPage();
+        if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
+            {
+                page=pageHandler.getTotalPage();
+                searchCondition = new SearchCondition(page,pageSize,"","");
+                pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
+            }
 
         Map mapArr = new HashMap();
         try{
@@ -86,8 +90,12 @@ public class JoinBoardController {
 
         System.out.println("=========== "+joinBoardService.searchCount(region,title,go_with_start,go_with_end));
 
-        if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력되면 page값을 총 페이지 값으로 변경
-            page=pageHandler.getTotalPage();
+        if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
+            {
+                page=pageHandler.getTotalPage();
+                searchCondition = new SearchCondition(page,pageSize,"","");
+                pageHandler = new PageHandler(joinBoardService.searchCount(region,title,go_with_start,go_with_end),searchCondition);
+            }
 
         Map mapArr = new HashMap();
         try {
@@ -101,7 +109,8 @@ public class JoinBoardController {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
+            resultSet(0);
+            return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -119,7 +128,11 @@ public class JoinBoardController {
             System.out.println("================== "+result+" =====================");
 
             resultSet(result);
-            return new ResponseEntity<>(map,HttpStatus.OK);
+
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(new URI("/board/join/list"));   // 리다이렉션 경로 입력
+
+            return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,12 +157,11 @@ public class JoinBoardController {
 
             // 수정 성공 시 수정된 게시글 화면을 보여주기 위해 joinBoardDto 전달 -> 프론트에서 해당 기존 페이지에서 변경된 정보로 출력
             JoinBoardDto joinBoardDto = joinBoardService.read(dto.getBoard_id());
-            map.put("data",joinBoardDto);
 
-            return new ResponseEntity<Map>(map,HttpStatus.OK);
+            return new ResponseEntity<JoinBoardDto>(joinBoardDto,HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -177,7 +189,7 @@ public class JoinBoardController {
             return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
         }
     }
 

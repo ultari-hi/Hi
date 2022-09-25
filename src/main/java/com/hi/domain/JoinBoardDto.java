@@ -1,15 +1,13 @@
 package com.hi.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor // 자동으로 모든 매개변수를 받는 생성자를 생성
 @JsonInclude(JsonInclude.Include.NON_NULL)  // 응답 시 null인 값을 자동으로 제거
@@ -34,23 +32,6 @@ public class JoinBoardDto {
         this.content = content;
         this.nickname = nickname;
         this.together = together;
-    }
-
-    @Override
-    public String toString() {
-        return "JoinBoardDto{" +
-                "board_id=" + board_id +
-                ", title='" + title + '\'' +
-                ", create_at=" + created_at +
-                ", update_at=" + updated_at +
-                ", region='" + region + '\'' +
-                ", go_with_start=" + go_with_start +
-                ", go_with_end=" + go_with_end +
-                ", content='" + content + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", gender='" + gender + '\'' +
-                ", together='" + together + '\'' +
-                '}';
     }
 
     @Override
