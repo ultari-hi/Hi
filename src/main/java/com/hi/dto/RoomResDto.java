@@ -9,8 +9,6 @@ import java.time.LocalDate;
 public class RoomResDto {
     private Long id;
     private String name;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
     private String information;
     private String guide;
     private Integer price;
@@ -22,6 +20,6 @@ public class RoomResDto {
         this.information = room.getInformation();
         this.guide = room.getGuide();
         this.price = room.getPriceKor();
-        this.numberOfPeople = room.getNumberOfPeople();
+        this.numberOfPeople = room.getNumberPeople();
     }
 }

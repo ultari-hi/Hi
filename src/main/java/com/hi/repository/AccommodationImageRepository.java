@@ -16,12 +16,6 @@ public class AccommodationImageRepository {
             em.persist(image);
     }
 
-    public List<AccommodationImage> findAll(Long accommodationId) {
-        return em.createQuery("select ai from AccommodationImage ai where ai.accommodation.id = :accommodationId", AccommodationImage.class)
-                .setParameter("accommodationId", accommodationId)
-                .getResultList();
-    }
-
     public void saveAll(List<AccommodationImage> images) {
         images.forEach(this::save);
     }

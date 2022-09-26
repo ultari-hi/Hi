@@ -16,7 +16,7 @@ public class RoomImageRepository {
             em.persist(image);
     }
 
-    public List<RoomImage> findAll(Long roomId) {
+    public List<RoomImage> findAllById(Long roomId) {
         return em.createQuery("select ri from RoomImage ri where ri.room.id = :roomId", RoomImage.class)
                 .setParameter("roomId", roomId)
                 .getResultList();

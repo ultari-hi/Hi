@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,16 +37,12 @@ public class Room {
     @Column(name = "guide", columnDefinition = "text")
     private String guide;
 
-    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
-    @ColumnDefault("0")
-    private String price;
-
-    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
+    @Column(name = "price_kor", columnDefinition = "int", nullable = false)
     @ColumnDefault("0")
     private Integer priceKor;
 
-    @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
-    private Integer numberOfPeople;
+    @Column(name = "number_people", columnDefinition = "int", nullable = false)
+    private Integer numberPeople;
 
     @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
     private String type;
@@ -55,30 +50,30 @@ public class Room {
     @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
-    @Column(name = "available", columnDefinition = "boolean", nullable = false)
-    @ColumnDefault("True")
-    private Boolean available;
+    @Column(name = "isAvailable", columnDefinition = "boolean")
+    @ColumnDefault("TRUE")
+    private Boolean isAvailable;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, Boolean isAvailable) {
         this.id = id;
         this.accommodation = accommodation;
         this.name = name;
         this.information = information;
         this.guide = guide;
         this.priceKor = price;
-        this.numberOfPeople = numberOfPeople;
-        this.available = available;
+        this.numberPeople = numberPeople;
+        this.isAvailable = isAvailable;
     }
 
-    public static Room createRoom(RoomReqDto dto, Accommodation accommodation){
+    public static Room newRoom(RoomReqDto dto, Accommodation accommodation){
         return Room.builder()
                 .accommodation(accommodation)
                 .name(dto.getName())
                 .information(dto.getInformation())
                 .guide(dto.getGuide())
                 .price(dto.getPrice())
-                .numberOfPeople(dto.getNumberOfPeople())
+                .numberPeople(dto.getNumberPeople())
                 .build();
     }
 
@@ -87,7 +82,7 @@ public class Room {
         this.information = dto.getInformation();
         this.guide = dto.getGuide();
         this.priceKor = dto.getPrice();
-        this.numberOfPeople = dto.getNumberOfPeople();
-        this.available = dto.getAvailable();
+        this.numberPeople = dto.getNumberPeople();
+        this.isAvailable = dto.getIsAvailable();
     }
 }

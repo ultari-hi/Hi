@@ -58,7 +58,7 @@ public class PaymentService {
         return "success";
     }
 
-    //결제,예약 결과에 따른 상태 수정
+    //결제 결과에 따른 상태 수정
     public Status paymentResult(PaymentReqDto dto){
         Payment payment = paymentRepository.findById(dto.getPaymentId())
                 .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
@@ -68,16 +68,18 @@ public class PaymentService {
 
         //포인트 사용/적립
         if(result.equals(Status.SUCCESS)) {
-            Point latestPoint = pointRepository.findBalance(payment.getUser());
-            List<Point> point = Point.newPoint(payment, latestPoint);
-            pointRepository.saveAll(point);
+            if(payment.getPointAmount() > 0){
+                Point latestPoint = pointRepository.findBalance(payment.getUser());
+                List<Point> point = Point.newPoint(payment, latestPoint);
+                pointRepository.saveAll(point);
 
-            List<LocalDate> dates = tmpDateRepository.findAllById(payment);
-            List<ReservationDate> reservationDates = dates
-                    .stream()
-                    .map(date -> new ReservationDate(payment.getReservation(), payment.getReservation().getRoom(), date))
-                    .collect(toUnmodifiableList());
-            reservationDateRepository.saveAll(reservationDates);
+                List<LocalDate> dates = tmpDateRepository.findAllById(payment);
+                List<ReservationDate> reservationDates = dates
+                        .stream()
+                        .map(date -> new ReservationDate(payment.getReservation(), payment.getReservation().getRoom(), date))
+                        .collect(toUnmodifiableList());
+                reservationDateRepository.saveAll(reservationDates);
+            }
         }
         return result;
     }

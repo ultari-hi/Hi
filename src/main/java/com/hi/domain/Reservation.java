@@ -1,19 +1,17 @@
 package com.hi.domain;
 
 import com.hi.dto.PaymentReqDto;
-import com.hi.dto.ReservationDto;
 import com.hi.enums.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,26 +41,25 @@ public class Reservation extends BaseTimeEntity{
     @Column(name = "enquiry", columnDefinition = "text")
     private String enquiry;
 
-    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
-    private String price;
-
-    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
-    private Integer priceKor;
+    @Column(name = "price_kor", columnDefinition = "int", nullable = false)
+    private int priceKor;
 
     @Column(name = "status", columnDefinition = "enum", nullable = false)
     @ColumnDefault("IN_PROGRESS")
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @OneToMany(mappedBy = "reservation")
+    private final List<ReservationDate> reservationDates = new ArrayList<>();
+
     @Builder
-    public Reservation(Long id, User user, Accommodation accommodation, Room room, Payment payment, String enquiry, String price, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Reservation(Long id, User user, Accommodation accommodation, Room room, Payment payment, String enquiry, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
         this.user = user;
         this.accommodation = accommodation;
         this.room = room;
         this.payment = payment;
         this.enquiry = enquiry;
-        this.price = price;
         this.priceKor = priceKor;
         this.status = status;
     }

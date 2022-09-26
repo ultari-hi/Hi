@@ -21,10 +21,14 @@ public class Accommodation {
     @Column(name = "accommodation_id", columnDefinition = "bigint")
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "accommodation")
     private final List<AccommodationImage> accommodationImages = new ArrayList<>();
 
-    @OneToMany(mappedBy = "accommodation", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "accommodation")
     private final List<Room> rooms = new ArrayList<>();
 
     @Column(name = "name_kor", columnDefinition = "varchar(20)", nullable = false)
@@ -33,22 +37,22 @@ public class Accommodation {
     @Column(name = "name_eng", columnDefinition = "varchar(20)", nullable = false)
     private String nameEng;
 
-    @Column(name = "post_code", columnDefinition = "varchar(10)")
-    private String postCode;
+    @Column(name = "postcode", columnDefinition = "varchar(10)")
+    private String postcode;
 
     @Column(name = "address", columnDefinition = "varchar(50)", nullable = false)
     private String address;
 
-    @Column(name = "location", columnDefinition = "varchar(50)", nullable = false)
-    private String location;
+    @Column(name = "directions", columnDefinition = "varchar(50)")
+    private String directions;
 
     @Column(name = "introduction", columnDefinition = "text")
     private String introduction;
 
-    @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
-    private int numberOfPeople;
+    @Column(name = "number_people", columnDefinition = "int", nullable = false)
+    private int numberPeople;
 
-    @Column(name = "rating", columnDefinition = "float")
+    @Column(name = "rating", columnDefinition = "float(3,2)")
     @ColumnDefault("0.0")
     private Float rating;
 
@@ -58,34 +62,29 @@ public class Accommodation {
     @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
-    //테스트용
-    @Column(name = "price_kor", columnDefinition = "int")
-    private int priceKor;
-
     @Builder
-    public Accommodation(String nameKor, String nameEng, String postCode, String address, String location, String introduction, int numberOfPeople, float rating, String region, String filtering, int priceKor) {
+    public Accommodation(String nameKor, String nameEng, String postcode, String address, String directions, String introduction, int numberPeople, float rating, String region, String filtering) {
         this.nameKor = nameKor;
         this.nameEng = nameEng;
-        this.postCode = postCode;
+        this.postcode = postcode;
         this.address = address;
-        this.location = location;
+        this.directions = directions;
         this.introduction = introduction;
-        this.numberOfPeople = numberOfPeople;
+        this.numberPeople = numberPeople;
         this.rating = rating;
         this.region = region;
         this.filtering = filtering;
-        this.priceKor = priceKor;
     }
 
-    public static Accommodation createAccommodation(AccommodationReqDto dto){
+    public static Accommodation newAccommodation(AccommodationReqDto dto){
         return Accommodation.builder()
                 .nameKor(dto.getNameKor())
                 .nameEng(dto.getNameEng())
-                .postCode(dto.getPostCode())
+                .postcode(dto.getPostcode())
                 .address(dto.getAddress())
-                .location(dto.getLocation())
+                .directions(dto.getDirections())
                 .introduction(dto.getIntroduction())
-                .numberOfPeople(dto.getNumberOfPeople())
+                .numberPeople(dto.getNumberPeople())
                 .region(dto.getRegion())
                 .filtering(dto.getFiltering())
                 .build();
@@ -94,11 +93,11 @@ public class Accommodation {
     public void update(AccommodationReqDto dto){
         this.nameKor = dto.getNameKor();
         this.nameEng = dto.getNameEng();
-        this.postCode = dto.getPostCode();
+        this.postcode = dto.getPostcode();
         this.address = dto.getAddress();
-        this.location = dto.getLocation();
+        this.directions = dto.getDirections();
         this.introduction = dto.getIntroduction();
-        this.numberOfPeople = dto.getNumberOfPeople();
+        this.numberPeople = dto.getNumberPeople();
         this.filtering = dto.getFiltering();
     }
 }

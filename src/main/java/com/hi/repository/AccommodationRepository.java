@@ -1,8 +1,6 @@
 package com.hi.repository;
 
 import com.hi.domain.Accommodation;
-import com.hi.domain.Room;
-import com.hi.dto.AccommodationResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -20,13 +18,13 @@ public class AccommodationRepository {
         em.persist(accommodation);
     }
 
-    public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberOfPeople, String region) {
+    public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberPeople, String region) {
         return em.createQuery("select distinct a from Room r join Accommodation a on r.accommodation = a " +
                         "where r.id not in :roomIds " +
-                        "and a.numberOfPeople >= :numberOfPeople " +
+                        "and a.numberPeople >= :numberPeople " +
                         "and a.region = :region", Accommodation.class)
                 .setParameter("roomIds", unAvailableRoomIds)
-                .setParameter("numberOfPeople", numberOfPeople)
+                .setParameter("numberPeople", numberPeople)
                 .setParameter("region", region)
                 .getResultList();
     }

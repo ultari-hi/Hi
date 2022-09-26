@@ -2,7 +2,6 @@ package com.hi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -11,12 +10,12 @@ import java.util.List;
 public class AccommodationReqDto {
     private String nameKor;
     private String nameEng;
-    private String postCode;
+    private String postcode;
     private String address;
-    private String location;
+    private String directions;
     private String introduction;
-    private Integer numberOfPeople;
+    private Integer numberPeople;
     private String region;
     private String filtering;
-    List<String> urlList;
+    List<String> imageUrls;
 }

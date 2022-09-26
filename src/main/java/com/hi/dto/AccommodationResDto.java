@@ -13,16 +13,16 @@ public class AccommodationResDto {
     private int priceKor;
     private Float rating;
     private String region;
-    private List<String> urlList;
+    private List<String> imageUrls;
 
     public AccommodationResDto(Accommodation acm, ImageDto dto) {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
-        this.priceKor = acm.getPriceKor();
         this.rating = acm.getRating();
         this.region = acm.getRegion();
-        this.urlList = dto.getUrlList();
+        this.imageUrls = dto.getUrls();
+        this.priceKor = 10000;
     }
 
 }

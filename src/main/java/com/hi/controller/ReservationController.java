@@ -15,8 +15,9 @@ public class ReservationController {
 
     private final ReservationService reservationService;
 
+    //예약 내역 조회
     @GetMapping("/reservation/{userId}")
-    public List<ReservationDto> reservationList(@PathVariable Long userId){
-        return reservationService.reservationList(userId);
+    public List<ReservationDto> findHistory(@PathVariable Long userId){
+        return reservationService.findHistory(userId);
     }
 }

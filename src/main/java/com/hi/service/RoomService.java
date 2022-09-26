@@ -29,12 +29,12 @@ public class RoomService {
     private final RoomImageRepository roomImageRepository;
 
     //객실, 사진 등록
-    public void saveRoom(Long accommodationId, RoomReqDto dto) {
+    public void createRoom(Long accommodationId, RoomReqDto dto) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(()->new IllegalArgumentException("숙소를 찾을 수 없습니다."));
-        Room room = Room.createRoom(dto,accommodation);
+        Room room = Room.newRoom(dto,accommodation);
         Room roomId = roomRepository.save(room);
-        List<RoomImage> images = dto.getUrlList()
+        List<RoomImage> images = dto.getImageUrls()
                 .stream()
                 .map(url -> RoomImage.create(roomId, url))
                 .collect(Collectors.toUnmodifiableList());
@@ -42,7 +42,7 @@ public class RoomService {
     }
 
     //객실 리스트
-    public List<RoomResDto> findRoom(Long accommodationId){
+    public List<RoomResDto> findRooms(Long accommodationId){
         return new ArrayList<>(roomRepository.findAll(accommodationId))
                 .stream()
                 .map(RoomResDto::new)
@@ -51,9 +51,9 @@ public class RoomService {
 
    //객실 사진 조회
     public ImageDto roomImages(Long roomId) {
-        List<String> urlList = roomImageRepository.findAll(roomId)
+        List<String> urlList = roomImageRepository.findAllById(roomId)
                 .stream()
-                .map(RoomImage::getRoomImageUrl)
+                .map(RoomImage::getUrl)
                 .collect(toUnmodifiableList());
         return new ImageDto(urlList);
     }

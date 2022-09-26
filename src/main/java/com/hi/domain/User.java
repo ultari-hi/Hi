@@ -6,11 +6,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,28 +26,25 @@ public class User extends BaseTimeEntity {
     @Column(name = "username", columnDefinition = "varchar(20)", nullable = false)
     private String username;
 
-    @Column(name = "password", columnDefinition = "varchar(100)", nullable = false)
+    @Column(name = "password", columnDefinition = "varchar(255)", nullable = false)
     private String password;
 
     @Column(name = "email", columnDefinition = "varchar(20)", nullable = false)
     private String email;
 
-    @Column(name = "country_number", columnDefinition = "varchar(10)", nullable = false)
-    private String countryNumber;
-
-    @Column(name = "phone_number", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "phone_number", columnDefinition = "varchar(11)", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "post_code", columnDefinition = "varchar(5)", nullable = false)
-    private String postCode;
+    @Column(name = "postcode", columnDefinition = "varchar(5)", nullable = false)
+    private String postcode;
 
     @Column(name = "address", columnDefinition = "varchar(50)", nullable = false)
     private String address;
 
-    @Column(name = "detail_address", columnDefinition = "varchar(30)", nullable = false)
-    private String detailAddress;
+    @Column(name = "detailed_address", columnDefinition = "varchar(30)", nullable = false)
+    private String detailedAddress;
 
-    @Column(name = "nickname", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "nickname", columnDefinition = "varchar(16)", nullable = false)
     private String nickname;
 
     @Column(name = "role", columnDefinition = "enum", nullable = false)

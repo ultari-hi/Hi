@@ -28,43 +28,47 @@ public class AccommodationService {
     private final ReservationDateRepository reservationDateRepository;
 
     //숙소, 사진 등록
-    public void saveAccommodation(AccommodationReqDto dto) {
-        Accommodation accommodation = Accommodation.createAccommodation(dto);
+    public void createAccommodation(AccommodationReqDto dto) {
+        Accommodation accommodation = Accommodation.newAccommodation(dto);
         accommodationRepository.save(accommodation);
 
-        if (dto.getUrlList() != null){
-        List<AccommodationImage> images = dto.getUrlList()
+        if (dto.getImageUrls() != null){
+        List<AccommodationImage> images = dto.getImageUrls()
                 .stream()
-                .map(url -> AccommodationImage.create(accommodation, url))
+                .map(url -> AccommodationImage.newAccommodationImg(accommodation, url))
                 .collect(Collectors.toUnmodifiableList());
         accommodationImageRepository.saveAll(images);}
     }
 
     //숙소 상세 조회
-    public AccommodationDetailDto findOne(Long accommodationId) {
+    public AccommodationDetailDto findAccommodationDetail(Long accommodationId) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new IllegalArgumentException("숙소를 찾을 수 없습니다."));
+
         ImageDto urlList = new ImageDto(accommodation.getAccommodationImages()
                 .stream()
-                .map(AccommodationImage::getAcmImageUrl)
+                .map(AccommodationImage::getUrl)
                 .collect(Collectors.toUnmodifiableList()));
         return new AccommodationDetailDto(accommodation, urlList);
     }
 
     //필터링 한 숙소 리스트
     public List<AccommodationResDto> findAccommodations(LocalDate checkInDate, LocalDate checkOutDate, int numberOfPeople, String region) {
+        //체크인 날짜부터 체크아웃 날짜까지 리스트로 만들기
         List<LocalDate> selectDates = checkInDate
                 .datesUntil(checkOutDate.plusDays(1))
                 .collect(StreamUtils.toUnmodifiableList());
+
         List<Long> unAvailableRoomIds = reservationDateRepository.unAvailableRooms(selectDates);
+
         List<Accommodation> accommodations = accommodationRepository.findAvailableAccommodations(unAvailableRoomIds, numberOfPeople, region);
-        return accommodations
-                .stream()
+
+        return accommodations.stream()
                 .map(accommodation -> new AccommodationResDto(accommodation, new ImageDto(accommodation.getAccommodationImages()
                         .stream()
-                        .map(AccommodationImage::getAcmImageUrl)
+                        .map(AccommodationImage::getUrl)
                         .collect(toUnmodifiableList()))))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     //숙소 전체 리스트
@@ -74,9 +78,9 @@ public class AccommodationService {
                 .stream()
                 .map(accommodation -> new AccommodationResDto(accommodation, new ImageDto(accommodation.getAccommodationImages()
                         .stream()
-                        .map(AccommodationImage::getAcmImageUrl)
+                        .map(AccommodationImage::getUrl)
                         .collect(toUnmodifiableList()))))
-                .collect(Collectors.toList());
+                .collect(Collectors.toUnmodifiableList());
     }
 
     //숙소 수정
