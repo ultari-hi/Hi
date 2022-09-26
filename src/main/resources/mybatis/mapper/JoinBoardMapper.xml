@@ -11,10 +11,6 @@
         from board b join user u using (user_id) where board_id = #{board_id};
     </select>
 
-    <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">
-        SELECT * FROM board;
-    </select>
-
     <select id="selectPage" parameterType="com.hi.domain.SearchCondition" resultType="com.hi.domain.JoinBoardDto">
         select b.*, u.nickname, u.gender
         from board b join user u using (user_id)
@@ -69,6 +65,10 @@
     <delete id="delete" parameterType="map">
         DELETE FROM board WHERE board_id = #{board_id};
     </delete>
+
+<!--    <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">-->
+<!--        SELECT * FROM board;-->
+<!--    </select>-->
 
     <!--    <select id="searchTitle" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
     <!--        select b.*, u.nickname, u.gender-->

@@ -27,6 +27,21 @@ public class JoinBoardController {
     JoinBoardDto data=null;
     Map map=new HashMap();
 
+    @GetMapping("/join/test")         // 동행자 게시글 생성
+    public ResponseEntity redirTest() {
+        try{
+            URI redirectUri = new URI("/api/board/join/list");
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);   // 리다이렉션 경로 입력
+
+            return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(map,HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping("/join/{board_id}")        // 동행자 게시글 상세 조회
     public ResponseEntity<JoinBoardDto> read(@PathVariable Integer board_id) {
         try {
@@ -114,6 +129,7 @@ public class JoinBoardController {
         }
     }
 
+    // @RequestBody : JSON 형식으로 들어온 것을 자바 객체로 변환
     @PostMapping("/join")         // 동행자 게시글 생성
     public ResponseEntity write(@RequestBody JoinBoardDto dto, HttpSession session) {
         /*
@@ -128,9 +144,9 @@ public class JoinBoardController {
             System.out.println("================== "+result+" =====================");
 
             resultSet(result);
-
+            URI redirectUri = new URI("/board/join/list");
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(new URI("/board/join/list"));   // 리다이렉션 경로 입력
+            httpHeaders.setLocation(redirectUri);   // 리다이렉션 경로 입력
 
             return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
 
