@@ -1,6 +1,7 @@
 package com.hi.dao;
 
 import com.hi.domain.CommentDto;
+import com.hi.domain.JoinBoardDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,7 @@ import java.util.List;
 public class CommentDaoImpl implements CommentDao {
     @Autowired
     private SqlSession session;
-    private static String namespace = "com.hi.dao.commentMapper.";
+    private static String namespace = "com.hi.dao.CommentMapper.";
 
     @Override   // 전체 댓글 갯수
     public int count() {return session.selectOne(namespace+"count");}
@@ -22,7 +23,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override      // 댓글 목록 조회
-    public List<CommentDto> selectList() {return session.selectList(namespace+"selectList");}
+    public List<CommentDto> selectList(Integer board_id) {return session.selectList(namespace+"selectList");}
 
     @Override         // 댓글 생성
     public int insert(CommentDto dto) {return session.insert(namespace+"insert" ,dto);}

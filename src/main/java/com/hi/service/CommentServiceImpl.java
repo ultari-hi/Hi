@@ -2,6 +2,7 @@ package com.hi.service;
 
 import com.hi.dao.CommentDaoImpl;
 import com.hi.domain.CommentDto;
+import com.hi.domain.JoinBoardDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override      // 댓글 목록 조회
-    public List<CommentDto> selectList() {return commentDaoImpl.selectList();}
+    public List<CommentDto> selectList(Integer board_id) {return commentDaoImpl.selectList(board_id);}
 
     @Override         // 댓글 생성
     public int write(CommentDto dto) {return commentDaoImpl.insert(dto);}

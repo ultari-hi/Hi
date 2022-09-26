@@ -1,6 +1,7 @@
 package com.hi.dao;
 
 import com.hi.domain.CommentDto;
+import com.hi.domain.JoinBoardDto;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface CommentDao {
 
     CommentDto select(Integer comment_id);      // 댓글 목록 조회
 
-    List<CommentDto> selectList();         // 댓글 생성
+    List<CommentDto> selectList(Integer board_id);         // 댓글 생성
 
     int insert(CommentDto dto);         // 댓글 수정
 

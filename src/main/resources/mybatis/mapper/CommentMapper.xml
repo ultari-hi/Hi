@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace를 통해 DAO와 연결 -->
+<mapper namespace="com.hi.dao.CommentMapper">
+
+    <select id="count" resultType="int">
+        SELECT count(*) FROM comment;
+    </select>
+
+    <select id="select" parameterType="int" resultType="com.hi.domain.CommentDto">
+        SELECT c.*, u.nickname
+        FROM comment c JOIN user u USING (user_id) WHERE comment_id = #{comment_id};
+    </select>
+
+    <select id="selectList" resultType="com.hi.domain.CommentDto">
+        SELECT * FROM comment;
+    </select>
+
+    <insert id="insert" parameterType="com.hi.domain.CommentDto">
+        INSERT INTO comment
+        (board_id, user_id, content, created_at, updated_at)
+        VALUES
+            (#{board_id}, (SELECT user_id FROM user WHERE nickname = #{nickname})
+            ,#{content},now(), now())
+    </insert>
+
+    <update id="update" parameterType="com.hi.domain.CommentDto">
+        UPDATE comment
+        SET   content = #{content}
+          , updated_at = now()
+        WHERE comment_id = #{comment_id};
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM comment WHERE comment_id = #{comment_id};
+    </delete>
+</mapper>
