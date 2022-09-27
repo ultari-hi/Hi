@@ -19,10 +19,10 @@ public class AccommodationResDto {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
-        this.rating = acm.getRating();
+//        this.rating = review.getRating();
         this.region = acm.getRegion();
         this.imageUrls = dto.getUrls();
-        this.priceKor = 10000;
+        this.priceKor = acm.cheapestRoom().getPriceKor();
     }
 
 }

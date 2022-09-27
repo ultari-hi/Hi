@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,30 +31,14 @@ public class RoomService {
     public void createRoom(Long accommodationId, RoomReqDto dto) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(()->new IllegalArgumentException("숙소를 찾을 수 없습니다."));
-        Room room = Room.newRoom(dto,accommodation);
-        Room roomId = roomRepository.save(room);
+
+        Room room = roomRepository.save(Room.newRoom(dto,accommodation));
+
         List<RoomImage> images = dto.getImageUrls()
                 .stream()
-                .map(url -> RoomImage.create(roomId, url))
+                .map(url -> RoomImage.create(room, url))
                 .collect(Collectors.toUnmodifiableList());
         roomImageRepository.saveAll(images);
-    }
-
-    //객실 리스트
-    public List<RoomResDto> findRooms(Long accommodationId){
-        return new ArrayList<>(roomRepository.findAll(accommodationId))
-                .stream()
-                .map(RoomResDto::new)
-                .collect(toUnmodifiableList());
-    }
-
-   //객실 사진 조회
-    public ImageDto roomImages(Long roomId) {
-        List<String> urlList = roomImageRepository.findAllById(roomId)
-                .stream()
-                .map(RoomImage::getUrl)
-                .collect(toUnmodifiableList());
-        return new ImageDto(urlList);
     }
 
     //객실 수정

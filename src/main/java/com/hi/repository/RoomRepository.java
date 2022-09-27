@@ -16,7 +16,8 @@ public class RoomRepository {
     private final EntityManager em;
 
     public Room save(Room room) {
-            em.persist(room);
+        em.persist(room);
+        em.refresh(room);
         return room;
     }
 

@@ -22,18 +22,6 @@ public class RoomController {
         return "accommodation/list";
     }
 
-    //객실 리스트
-    @GetMapping("/accommodation/{accommodationId}/room")
-    public List<RoomResDto> findRooms(@PathVariable Long accommodationId){
-        return roomService.findRooms(accommodationId);
-    }
-
-    //객실 사진 조회
-    @GetMapping("/room/{roomId}/image")
-    public ImageDto images(@PathVariable Long roomId){
-        return roomService.roomImages(roomId);
-    }
-
     //객실 수정
     @PutMapping("/room/{roomId}")
     public void modifyRoom(@PathVariable Long roomId, @RequestBody RoomReqDto dto){

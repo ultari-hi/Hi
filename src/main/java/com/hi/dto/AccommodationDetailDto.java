@@ -14,13 +14,13 @@ public class AccommodationDetailDto {
     private String address;
     private String directions;
     private String introduction;
-    private int numberOfPeople;
-    private Float rating;
+//    private Float rating;
     private String region;
     private String filtering;
     private List<String> imageUrls;
+    private List<RoomResDto> rooms;
 
-    public AccommodationDetailDto(Accommodation acm, ImageDto dto) {
+    public AccommodationDetailDto(Accommodation acm, ImageDto imageDto, List<RoomResDto> roomResDto) {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
@@ -28,10 +28,10 @@ public class AccommodationDetailDto {
         this.address = acm.getAddress();
         this.directions = acm.getDirections();
         this.introduction = acm.getIntroduction();
-        this.numberOfPeople = acm.getNumberPeople();
-        this.rating = acm.getRating();
+//        this.rating = review.getRating();
         this.region = acm.getRegion();
         this.filtering = acm.getFiltering();
-        this.imageUrls = dto.getUrls();
+        this.imageUrls = imageDto.getUrls();
+        this.rooms = roomResDto;
     }
 }

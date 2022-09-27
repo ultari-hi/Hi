@@ -14,14 +14,16 @@ public class AccommodationRepository {
 
     private final EntityManager em;
 
-    public void save(Accommodation accommodation) {
+    public Accommodation save(Accommodation accommodation) {
         em.persist(accommodation);
+        em.refresh(accommodation);
+        return accommodation;
     }
 
     public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberPeople, String region) {
         return em.createQuery("select distinct a from Room r join Accommodation a on r.accommodation = a " +
                         "where r.id not in :roomIds " +
-                        "and a.numberPeople >= :numberPeople " +
+                        "and r.numberPeople >= :numberPeople " +
                         "and a.region = :region", Accommodation.class)
                 .setParameter("roomIds", unAvailableRoomIds)
                 .setParameter("numberPeople", numberPeople)
