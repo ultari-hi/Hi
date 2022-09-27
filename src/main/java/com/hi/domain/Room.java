@@ -26,7 +26,7 @@ public class Room {
     private Accommodation accommodation;
 
     @OneToMany(mappedBy = "room")
-    private final List<RoomImage> roomImage = new ArrayList<>();
+    private final List<RoomImage> roomImages = new ArrayList<>();
 
     @Column(name = "name", columnDefinition = "varchar(20)", nullable = false)
     private String name;
@@ -50,12 +50,12 @@ public class Room {
     @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
-    @Column(name = "isAvailable", columnDefinition = "boolean")
+    @Column(name = "isAvailable", columnDefinition = "boolean", nullable = false)
     @ColumnDefault("TRUE")
     private Boolean isAvailable;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, Boolean isAvailable) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, String type, String filtering, Boolean isAvailable) {
         this.id = id;
         this.accommodation = accommodation;
         this.name = name;
@@ -63,6 +63,8 @@ public class Room {
         this.guide = guide;
         this.priceKor = price;
         this.numberPeople = numberPeople;
+        this.type = type;
+        this.filtering = filtering;
         this.isAvailable = isAvailable;
     }
 
@@ -74,6 +76,9 @@ public class Room {
                 .guide(dto.getGuide())
                 .price(dto.getPrice())
                 .numberPeople(dto.getNumberPeople())
+                .type(dto.getType())
+                .filtering(dto.getFiltering())
+                .isAvailable(dto.getIsAvailable())
                 .build();
     }
 
@@ -83,6 +88,8 @@ public class Room {
         this.guide = dto.getGuide();
         this.priceKor = dto.getPrice();
         this.numberPeople = dto.getNumberPeople();
+        this.type = dto.getType();
+        this.filtering = dto.getFiltering();
         this.isAvailable = dto.getIsAvailable();
     }
 }
