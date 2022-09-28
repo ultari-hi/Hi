@@ -16,7 +16,8 @@
     </select>
 
     <select id="selectList" resultType="com.hi.domain.CommentDto">
-        SELECT * FROM comment;
+        SELECT c.*, u.nickname
+        FROM comment c JOIN user u USING (user_id)
     </select>
 
     <insert id="insert" parameterType="com.hi.domain.CommentDto">

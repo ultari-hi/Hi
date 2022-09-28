@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController
@@ -26,10 +28,12 @@ public class CommentController {
 
     @GetMapping("/{comment_id}")   // 댓글 조회
     public ResponseEntity select(@PathVariable Integer comment_id) {
+        Map mapArr = new HashMap();
         try{
             CommentDto commentDto = commentServiceImpl.select(comment_id);
+            mapArr.put("comment",commentDto);
 
-            return new ResponseEntity<CommentDto>(commentDto, HttpStatus.OK);
+            return new ResponseEntity<>(mapArr, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -37,11 +41,13 @@ public class CommentController {
     }
 
     @GetMapping("/list")      // 댓글 목록 조회
-    public ResponseEntity selectList(@RequestBody JoinBoardDto joinBoardDto) {
+    public ResponseEntity selectList(@RequestParam Integer board_id) {
+        Map mapArr = new HashMap();
         try{
-            List<CommentDto> list = commentServiceImpl.selectList(joinBoardDto.getBoard_id());
+            List<CommentDto> list = commentServiceImpl.selectList(board_id);
+            mapArr.put("comments",list);
 
-            return new ResponseEntity<>(list, HttpStatus.OK);
+            return new ResponseEntity<>(mapArr, HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
