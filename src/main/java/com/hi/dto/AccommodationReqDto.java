@@ -16,6 +16,6 @@ public class AccommodationReqDto {
     private String directions;
     private String introduction;
     private String region;
-    private String filtering;
+    private List<String> filtering;
     List<String> imageUrls;
 }

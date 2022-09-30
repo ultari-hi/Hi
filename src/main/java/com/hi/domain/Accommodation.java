@@ -3,7 +3,6 @@ package com.hi.domain;
 
 import com.hi.dto.AccommodationReqDto;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -78,7 +77,7 @@ public class Accommodation {
                 .directions(dto.getDirections())
                 .introduction(dto.getIntroduction())
                 .region(dto.getRegion())
-                .filtering(dto.getFiltering())
+                .filtering(combineFiltering((dto.getFiltering())))
                 .build();
     }
 
@@ -89,15 +88,32 @@ public class Accommodation {
         this.address = dto.getAddress();
         this.directions = dto.getDirections();
         this.introduction = dto.getIntroduction();
-        this.filtering = dto.getFiltering();
+        this.filtering = combineFiltering((dto.getFiltering()));
     }
 
+    //검색한 조건에 맞는 객실이 포함되어있는지 검증
     public boolean hasRoom() {
         return !this.rooms.isEmpty();
     }
 
+    //숙소에 포함된 최저가 객실
     public Room cheapestRoom(){
         return this.getRooms().get(0);
+    }
+
+    //필터링 한 단어로 만들기
+    public static String combineFiltering(List<String> filtering){
+        Collections.sort(filtering);
+        StringBuilder combinedFiltering = new StringBuilder();
+        for (String keywords: filtering) {
+            combinedFiltering.append(keywords).append(",");
+        }
+        return new String(combinedFiltering);
+    }
+
+    //반정규화해서 넣었던 필터링 분리
+    public List<String> separateLetters(String filtering){
+        return List.of(filtering.split(","));
     }
 }
 

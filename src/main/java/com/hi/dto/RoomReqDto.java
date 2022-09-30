@@ -16,7 +16,7 @@ public class RoomReqDto {
     private Integer price;
     private Integer numberPeople;
     private String type;
-    private String filtering;
+    private List<String> filtering;
     private Boolean isAvailable;
     List<String> imageUrls;
 }

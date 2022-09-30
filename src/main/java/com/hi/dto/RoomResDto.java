@@ -13,7 +13,9 @@ public class RoomResDto {
     private String information;
     private String guide;
     private Integer price;
-    private Integer numberOfPeople;
+    private String type;
+    private Integer numberPeople;
+    private List<String> filtering;
     private List<String> imageUrl;
 
     public RoomResDto(Room room, ImageDto dto){
@@ -22,7 +24,9 @@ public class RoomResDto {
         this.information = room.getInformation();
         this.guide = room.getGuide();
         this.price = room.getPriceKor();
-        this.numberOfPeople = room.getNumberPeople();
+        this.type = room.getType();
+        this.numberPeople = room.getNumberPeople();
+        this.filtering = room.separateLetters(room.getFiltering());
         this.imageUrl = dto.getUrls();
     }
 }

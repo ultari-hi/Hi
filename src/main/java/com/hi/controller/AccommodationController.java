@@ -34,9 +34,11 @@ public class AccommodationController {
     @GetMapping("/accommodation/list")
     public List<AccommodationResDto> findAccommodations(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
-                                                       @RequestParam int numberOfPeople,
-                                                       @RequestParam String region){
-        return accommodationService.findAccommodations(checkInDate, checkOutDate, numberOfPeople, region);
+                                                       @RequestParam int numberPeople,
+                                                       @RequestParam String region,
+                                                       @RequestParam List<String> aFiltering,
+                                                        @RequestParam List<String> rFiltering){
+        return accommodationService.findAccommodations(checkInDate, checkOutDate, numberPeople, region, aFiltering, rFiltering);
     }
 
     //숙소 전체 리스트

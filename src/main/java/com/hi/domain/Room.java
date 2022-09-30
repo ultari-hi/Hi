@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -55,7 +56,7 @@ public class Room {
     private Boolean isAvailable;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, String type, String filtering, Boolean isAvailable) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, String type, List<String> filtering, Boolean isAvailable) {
         this.id = id;
         this.accommodation = accommodation;
         this.name = name;
@@ -64,7 +65,7 @@ public class Room {
         this.priceKor = price;
         this.numberPeople = numberPeople;
         this.type = type;
-        this.filtering = filtering;
+        this.filtering = combineFiltering(filtering);
         this.isAvailable = isAvailable;
     }
 
@@ -89,7 +90,22 @@ public class Room {
         this.priceKor = dto.getPrice();
         this.numberPeople = dto.getNumberPeople();
         this.type = dto.getType();
-        this.filtering = dto.getFiltering();
+        this.filtering = combineFiltering(dto.getFiltering());
         this.isAvailable = dto.getIsAvailable();
+    }
+
+    //필터링 한 단어로 넣기
+    public String combineFiltering(List<String> filtering){
+        Collections.sort(filtering);
+        StringBuilder combinedFiltering = new StringBuilder();
+        for (String keywords: filtering) {
+            combinedFiltering.append(keywords).append(",");
+        }
+        return new String(combinedFiltering);
+    }
+
+    //반정규화해서 넣었던 필터링 분리
+    public List<String> separateLetters(String filtering){
+        return List.of(filtering.split(","));
     }
 }
