@@ -1,7 +1,6 @@
 package com.hi.comtroller;
 
 import com.hi.domain.CommentDto;
-import com.hi.domain.JoinBoardDto;
 import com.hi.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

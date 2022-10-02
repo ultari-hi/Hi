@@ -23,7 +23,7 @@ public class CommentDaoImpl implements CommentDao {
     }
 
     @Override      // 댓글 목록 조회
-    public List<CommentDto> selectList(Integer board_id) {return session.selectList(namespace+"selectList");}
+    public List<CommentDto> selectList(Integer board_id) {return session.selectList(namespace+"selectList", board_id);}
 
     @Override         // 댓글 생성
     public int insert(CommentDto dto) {return session.insert(namespace+"insert" ,dto);}

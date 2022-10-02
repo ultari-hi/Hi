@@ -12,7 +12,6 @@ import lombok.*;
 public class CommentDto {
     private Integer comment_id;
     private Integer board_id;
-    private Integer user_id;
     private String content;
     private String created_at;
     private String updated_at;
