@@ -11,7 +11,7 @@ public class AccommodationResDto {
     private String nameKor;
     private String nameEng;
     private int priceKor;
-    private Float rating;
+    private double rating;
     private String region;
     private List<String> imageUrls;
 
@@ -19,7 +19,7 @@ public class AccommodationResDto {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
-//        this.rating = review.getRating();
+        this.rating = 4.5;
         this.region = acm.getRegion();
         this.imageUrls = dto.getUrls();
         this.priceKor = acm.cheapestRoom().getPriceKor();

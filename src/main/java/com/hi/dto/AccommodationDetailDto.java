@@ -14,7 +14,7 @@ public class AccommodationDetailDto {
     private String address;
     private String directions;
     private String introduction;
-//    private Float rating;
+    private double rating;
     private String region;
     private List<String> filtering;
     private List<String> imageUrls;
@@ -28,7 +28,7 @@ public class AccommodationDetailDto {
         this.address = acm.getAddress();
         this.directions = acm.getDirections();
         this.introduction = acm.getIntroduction();
-//        this.rating = review.getRating();
+        this.rating = 4.5;
         this.region = acm.getRegion();
         this.filtering = acm.separateLetters(acm.getFiltering());
         this.imageUrls = imageDto.getUrls();

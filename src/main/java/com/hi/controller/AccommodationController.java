@@ -36,8 +36,8 @@ public class AccommodationController {
                                                        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
                                                        @RequestParam int numberPeople,
                                                        @RequestParam String region,
-                                                       @RequestParam List<String> aFiltering,
-                                                        @RequestParam List<String> rFiltering){
+                                                       @RequestParam(required = false) List<String> aFiltering,
+                                                        @RequestParam(required = false) List<String> rFiltering){
         return accommodationService.findAccommodations(checkInDate, checkOutDate, numberPeople, region, aFiltering, rFiltering);
     }
 

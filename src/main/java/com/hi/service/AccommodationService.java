@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class AccommodationService {
     }
 
     //필터링 한 숙소 리스트
-    public List<AccommodationResDto> findAccommodations(LocalDate checkInDate, LocalDate checkOutDate, int numberPeople, String region) {
+    public List<AccommodationResDto> findAccommodations(LocalDate checkInDate, LocalDate checkOutDate, int numberPeople, String region, List<String> accommodationFiltering, List<String> roomFiltering) {
         //체크인 날짜부터 체크아웃 날짜까지 리스트로 만들기
         List<LocalDate> selectDates = checkInDate
                 .datesUntil(checkOutDate.plusDays(1))
@@ -66,7 +67,7 @@ public class AccommodationService {
 
         List<Long> unAvailableRoomIds = reservationDateRepository.unAvailableRooms(selectDates);
 
-        List<Accommodation> accommodations = accommodationRepository.findAvailableAccommodations(unAvailableRoomIds, numberPeople, region);
+        List<Accommodation> accommodations = accommodationRepository.findAvailableAccommodations(unAvailableRoomIds, numberPeople, region, accommodationFiltering, roomFiltering);
 
         return accommodations.stream()
                 .map(accommodation -> new AccommodationResDto(accommodation, new ImageDto(accommodation.getAccommodationImages()

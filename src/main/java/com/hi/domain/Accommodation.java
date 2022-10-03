@@ -29,25 +29,25 @@ public class Accommodation {
     @OrderBy("priceKor asc")
     private final List<Room> rooms = new ArrayList<>();
 
-    @Column(name = "name_kor", columnDefinition = "varchar(20)", nullable = false)
+    @Column(name = "name_kor", columnDefinition = "varchar(50)", nullable = false)
     private String nameKor;
 
-    @Column(name = "name_eng", columnDefinition = "varchar(20)", nullable = false)
+    @Column(name = "name_eng", columnDefinition = "varchar(50)", nullable = false)
     private String nameEng;
 
     @Column(name = "postcode", columnDefinition = "varchar(10)")
     private String postcode;
 
-    @Column(name = "address", columnDefinition = "varchar(50)", nullable = false)
+    @Column(name = "address", columnDefinition = "varchar(255)", nullable = false)
     private String address;
 
-    @Column(name = "directions", columnDefinition = "varchar(50)")
+    @Column(name = "directions", columnDefinition = "varchar(255)")
     private String directions;
 
     @Column(name = "introduction", columnDefinition = "text")
     private String introduction;
 
-    @Column(name = "region", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "region", columnDefinition = "varchar(30)", nullable = false)
     private String region;
 
     @Column(name = "filtering", columnDefinition = "text")
