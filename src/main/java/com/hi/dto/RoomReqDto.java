@@ -3,6 +3,7 @@ package com.hi.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import javax.persistence.Column;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -10,12 +11,12 @@ import java.util.List;
 @AllArgsConstructor
 public class RoomReqDto {
     private String name;
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
     private String information;
     private String guide;
     private Integer price;
-    private Integer numberOfPeople;
-    private Boolean available;
-    List<String> urlList;
+    private Integer numberPeople;
+    private String type;
+    private List<String> filtering;
+    private Boolean isAvailable;
+    List<String> imageUrls;
 }

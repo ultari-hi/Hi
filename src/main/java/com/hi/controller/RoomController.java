@@ -17,26 +17,14 @@ public class RoomController {
 
     //객실, 사진 등록
     @PostMapping("/accommodation/{accommodationId}/room/new")
-    public String roomSave(@PathVariable Long accommodationId, @RequestBody RoomReqDto roomReqDto){
-        roomService.saveRoom(accommodationId, roomReqDto);
+    public String createRoom(@PathVariable Long accommodationId, @RequestBody RoomReqDto roomReqDto){
+        roomService.createRoom(accommodationId, roomReqDto);
         return "accommodation/list";
-    }
-
-    //객실 리스트
-    @GetMapping("/accommodation/{accommodationId}/room")
-    public List<RoomResDto> roomList(@PathVariable Long accommodationId){
-        return roomService.findRoom(accommodationId);
-    }
-
-    //객실 사진 조회
-    @GetMapping("/room/{roomId}/image")
-    public ImageDto images(@PathVariable Long roomId){
-        return roomService.roomImages(roomId);
     }
 
     //객실 수정
     @PutMapping("/room/{roomId}")
-    public void modifyAccommodation(@PathVariable Long roomId, @RequestBody RoomReqDto dto){
+    public void modifyRoom(@PathVariable Long roomId, @RequestBody RoomReqDto dto){
         roomService.modifyRoom(roomId, dto);
     }
 }

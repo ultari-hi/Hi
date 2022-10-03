@@ -24,16 +24,16 @@ public class Payment extends BaseTimeEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "total_amount", columnDefinition = "integer", nullable = false)
+    @Column(name = "total_amount", columnDefinition = "int", nullable = false)
     private int totalAmount;
 
-    @Column(name = "point_amount", columnDefinition = "integer", nullable = false)
+    @Column(name = "point_amount", columnDefinition = "int", nullable = false)
     private int pointAmount;
 
-    @Column(name = "cash_amount", columnDefinition = "integer", nullable = false)
+    @Column(name = "cash_amount", columnDefinition = "int", nullable = false)
     private int cashAmount;
 
-    @Column(name = "method", columnDefinition = "varchar(10)", nullable = false)
+    @Column(name = "method", columnDefinition = "varchar(20)", nullable = false)
     private String method;
 
     @Column(name = "status", columnDefinition = "enum", nullable = false)
@@ -42,7 +42,7 @@ public class Payment extends BaseTimeEntity{
     private Status status;
 
     @OneToOne(mappedBy = "payment")
-    private final Reservation reservation = new Reservation();
+    private Reservation reservation;
 
     @OneToMany(mappedBy = "payment")
     private final List<TmpDate> tmpDate = new ArrayList<>();
@@ -72,7 +72,7 @@ public class Payment extends BaseTimeEntity{
     public Status verify(int paidAmount){
         if(paidAmount == this.cashAmount){
             this.status = Status.SUCCESS;
-            Reservation reservation = this.reservation.status(this.status);
+            this.reservation.status(this.status);
         }else {
             this.status = Status.FAIL;
         }

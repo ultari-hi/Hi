@@ -19,21 +19,21 @@ public class RoomImage {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    @Column(name = "room_image_url", columnDefinition = "text", nullable = false)
-    private String roomImageUrl;
+    @Column(name = "url", columnDefinition = "text", nullable = false)
+    private String url;
 
-    public RoomImage(Long id, Room room, String roomImageUrl) {
+    public RoomImage(Long id, Room room, String url) {
         this.id = id;
         this.room = room;
-        this.roomImageUrl = roomImageUrl;
+        this.url = url;
     }
 
-    public RoomImage(Room room, String roomImageUrl) {
+    public RoomImage(Room room, String url) {
         this.room = room;
-        this.roomImageUrl = roomImageUrl;
+        this.url = url;
     }
 
-    public static RoomImage create(Room room, String roomImageUrl){
-        return new RoomImage(room, roomImageUrl);
+    public static RoomImage create(Room room, String url){
+        return new RoomImage(room, url);
     }
 }

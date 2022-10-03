@@ -1,12 +1,12 @@
 package com.hi.repository;
 
 import com.hi.domain.Accommodation;
-import com.hi.domain.Room;
-import com.hi.dto.AccommodationResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Tuple;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,17 +16,42 @@ public class AccommodationRepository {
 
     private final EntityManager em;
 
-    public void save(Accommodation accommodation) {
+    public Accommodation save(Accommodation accommodation) {
         em.persist(accommodation);
+        em.refresh(accommodation);
+        return accommodation;
     }
 
-    public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberOfPeople, String region) {
-        return em.createQuery("select distinct a from Room r join Accommodation a on r.accommodation = a " +
-                        "where r.id not in :roomIds " +
-                        "and a.numberOfPeople >= :numberOfPeople " +
-                        "and a.region = :region", Accommodation.class)
-                .setParameter("roomIds", unAvailableRoomIds)
-                .setParameter("numberOfPeople", numberOfPeople)
+    public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberPeople, String region, List<String> accommodationFiltering, List<String> roomFiltering) {
+
+        String jpql = "select distinct a from Room r join Accommodation a on r.accommodation = a" +
+                " where r.numberPeople >= :numberPeople" +
+                " and a.region = :region";
+
+        if (!unAvailableRoomIds.isEmpty()){
+            jpql += " and r.id not in "+ (Tuple)unAvailableRoomIds;
+        }
+
+        if (accommodationFiltering != null){
+            Collections.sort(accommodationFiltering);
+            jpql += " and a.filtering like "+ "'%" ;
+            for (String keyword : accommodationFiltering) {
+                jpql += keyword +"%";
+            }
+            jpql += "'";
+        }
+
+        if (roomFiltering != null){
+            Collections.sort(roomFiltering);
+            jpql += " and r.filtering like "+ "'%" ;
+            for (String keyword : roomFiltering) {
+                jpql += keyword +"%";
+            }
+            jpql += "'";
+        }
+
+        return em.createQuery(jpql, Accommodation.class)
+                .setParameter("numberPeople", numberPeople)
                 .setParameter("region", region)
                 .getResultList();
     }

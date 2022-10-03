@@ -1,6 +1,5 @@
 package com.hi.repository;
 
-import com.hi.domain.AccommodationImage;
 import com.hi.domain.Point;
 import com.hi.domain.User;
 import lombok.RequiredArgsConstructor;

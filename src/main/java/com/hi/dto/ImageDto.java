@@ -8,5 +8,5 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 public class ImageDto {
-    List<String> urlList;
+    List<String> urls;
 }

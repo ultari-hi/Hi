@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +24,7 @@ public class ReservationRepository {
                 .getSingleResult());
     }
 
-    public List<Reservation> findAllByUserId(Long userId) {
+    public List<Reservation> findHistoryByUserId(Long userId) {
         return em.createQuery("select resv from Reservation resv where resv.user.id = :userId", Reservation.class)
                 .setParameter("userId", userId)
                 .getResultList();

@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +35,8 @@ public class Point {
     @Column(name = "balance", columnDefinition = "int")
     private int balance;
 
-    @Column(name = "contents", columnDefinition = "varchar(20)")
-    @ColumnDefault("0")
-    private String contents;
+    @Column(name = "content", columnDefinition = "varchar(20)")
+    private String content;
 
     @Column(name = "is_latest", columnDefinition = "boolean", nullable = false)
     @ColumnDefault("TRUE")
@@ -48,33 +46,33 @@ public class Point {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Point(Long id, User user, PointType type, int amount, int balance, String contents, Boolean isLatest, LocalDateTime createdAt) {
+    public Point(Long id, User user, PointType type, int amount, int balance, String content, Boolean isLatest, LocalDateTime createdAt) {
         this.id = id;
         this.user = user;
         this.type = type;
         this.amount = amount;
         this.balance = balance;
-        this.contents = contents;
+        this.content = content;
         this.isLatest = isLatest;
         this.createdAt = createdAt;
     }
 
-    public Point(User user, PointType type, int amount, String contents, int userPointBalance) {
+    public Point(User user, PointType type, int amount, String content, int userPointBalance) {
         this.user = user;
         this.type = type;
         this.amount = amount;
-        this.contents = contents;
+        this.content = content;
         this.balance = amount + userPointBalance;
     }
 
-    public static Point newPoint(User user, int amount, String contents, int userPointBalance){
+    public static Point newPoint(User user, int amount, String content, int userPointBalance){
         PointType type;
         if(amount > 0) {
             type = PointType.SAVING;
         } else {
             type = PointType.USING;
         }
-        return new Point(user, type, amount, contents, userPointBalance);
+        return new Point(user, type, amount, content, userPointBalance);
     }
 
     //최신 포인트 내역 새로 쓰면서 기존 포인트 플래그를 FALSE 로 수정하는 로직

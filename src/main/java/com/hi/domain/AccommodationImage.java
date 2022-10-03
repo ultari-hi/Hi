@@ -19,21 +19,21 @@ public class AccommodationImage {
     @JoinColumn(name = "accommodation_id")
     private Accommodation accommodation;
 
-    @Column(name = "acm_image_url", columnDefinition = "text", nullable = false)
-    private String acmImageUrl;
+    @Column(name = "url", columnDefinition = "text", nullable = false)
+    private String url;
 
-    public AccommodationImage(Long id, String acmImageUrl) {
+    public AccommodationImage(Long id, String url) {
         this.id = id;
-        this.acmImageUrl = acmImageUrl;
+        this.url = url;
     }
 
-    public AccommodationImage(Accommodation accommodation, String acmImageUrl) {
+    public AccommodationImage(Accommodation accommodation, String url) {
         this.accommodation = accommodation;
-        this.acmImageUrl = acmImageUrl;
+        this.url = url;
     }
 
 
-    public static AccommodationImage create(Accommodation accommodation, String acmImageUrl){
-        return new AccommodationImage(accommodation, acmImageUrl);
+    public static AccommodationImage newAccommodationImg(Accommodation accommodation, String url){
+        return new AccommodationImage(accommodation, url);
     }
 }

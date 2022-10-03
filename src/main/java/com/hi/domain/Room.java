@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -27,7 +27,7 @@ public class Room {
     private Accommodation accommodation;
 
     @OneToMany(mappedBy = "room")
-    private final List<RoomImage> roomImage = new ArrayList<>();
+    private final List<RoomImage> roomImages = new ArrayList<>();
 
     @Column(name = "name", columnDefinition = "varchar(20)", nullable = false)
     private String name;
@@ -38,16 +38,12 @@ public class Room {
     @Column(name = "guide", columnDefinition = "text")
     private String guide;
 
-    @Column(name = "price", columnDefinition = "varchar(10)", nullable = false)
-    @ColumnDefault("0")
-    private String price;
-
-    @Column(name = "price_kor", columnDefinition = "integer", nullable = false)
+    @Column(name = "price_kor", columnDefinition = "int", nullable = false)
     @ColumnDefault("0")
     private Integer priceKor;
 
-    @Column(name = "number_of_people", columnDefinition = "integer", nullable = false)
-    private Integer numberOfPeople;
+    @Column(name = "number_people", columnDefinition = "int", nullable = false)
+    private Integer numberPeople;
 
     @Column(name = "type", columnDefinition = "varchar(10)", nullable = false)
     private String type;
@@ -55,30 +51,35 @@ public class Room {
     @Column(name = "filtering", columnDefinition = "text")
     private String filtering;
 
-    @Column(name = "available", columnDefinition = "boolean", nullable = false)
-    @ColumnDefault("True")
-    private Boolean available;
+    @Column(name = "isAvailable", columnDefinition = "boolean", nullable = false)
+    @ColumnDefault("TRUE")
+    private Boolean isAvailable;
 
     @Builder
-    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberOfPeople, Boolean available) {
+    public Room(Long id, Accommodation accommodation, String name, String information, String guide, Integer price, Integer numberPeople, String type, List<String> filtering, Boolean isAvailable) {
         this.id = id;
         this.accommodation = accommodation;
         this.name = name;
         this.information = information;
         this.guide = guide;
         this.priceKor = price;
-        this.numberOfPeople = numberOfPeople;
-        this.available = available;
+        this.numberPeople = numberPeople;
+        this.type = type;
+        this.filtering = combineFiltering(filtering);
+        this.isAvailable = isAvailable;
     }
 
-    public static Room createRoom(RoomReqDto dto, Accommodation accommodation){
+    public static Room newRoom(RoomReqDto dto, Accommodation accommodation){
         return Room.builder()
                 .accommodation(accommodation)
                 .name(dto.getName())
                 .information(dto.getInformation())
                 .guide(dto.getGuide())
                 .price(dto.getPrice())
-                .numberOfPeople(dto.getNumberOfPeople())
+                .numberPeople(dto.getNumberPeople())
+                .type(dto.getType())
+                .filtering(dto.getFiltering())
+                .isAvailable(dto.getIsAvailable())
                 .build();
     }
 
@@ -87,7 +88,24 @@ public class Room {
         this.information = dto.getInformation();
         this.guide = dto.getGuide();
         this.priceKor = dto.getPrice();
-        this.numberOfPeople = dto.getNumberOfPeople();
-        this.available = dto.getAvailable();
+        this.numberPeople = dto.getNumberPeople();
+        this.type = dto.getType();
+        this.filtering = combineFiltering(dto.getFiltering());
+        this.isAvailable = dto.getIsAvailable();
+    }
+
+    //필터링 한 단어로 넣기
+    public String combineFiltering(List<String> filtering){
+        Collections.sort(filtering);
+        StringBuilder combinedFiltering = new StringBuilder();
+        for (String keywords: filtering) {
+            combinedFiltering.append(keywords).append(",");
+        }
+        return new String(combinedFiltering);
+    }
+
+    //반정규화해서 넣었던 필터링 분리
+    public List<String> separateLetters(String filtering){
+        return List.of(filtering.split(","));
     }
 }

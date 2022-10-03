@@ -10,28 +10,28 @@ public class AccommodationDetailDto {
     private Long id;
     private String nameKor;
     private String nameEng;
-    private String postCode;
+    private String postcode;
     private String address;
-    private String location;
+    private String directions;
     private String introduction;
-    private int numberOfPeople;
-    private Float rating;
+    private double rating;
     private String region;
-    private String filtering;
-    private List<String> urlList;
+    private List<String> filtering;
+    private List<String> imageUrls;
+    private List<RoomResDto> rooms;
 
-    public AccommodationDetailDto(Accommodation acm, ImageDto dto) {
+    public AccommodationDetailDto(Accommodation acm, ImageDto imageDto, List<RoomResDto> roomResDto) {
         this.id = acm.getId();
         this.nameKor = acm.getNameKor();
         this.nameEng = acm.getNameEng();
-        this.postCode = acm.getPostCode();
+        this.postcode = acm.getPostcode();
         this.address = acm.getAddress();
-        this.location = acm.getLocation();
+        this.directions = acm.getDirections();
         this.introduction = acm.getIntroduction();
-        this.numberOfPeople = acm.getNumberOfPeople();
-        this.rating = acm.getRating();
+        this.rating = 4.5;
         this.region = acm.getRegion();
-        this.filtering = acm.getFiltering();
-        this.urlList = dto.getUrlList();
+        this.filtering = acm.separateLetters(acm.getFiltering());
+        this.imageUrls = imageDto.getUrls();
+        this.rooms = roomResDto;
     }
 }
