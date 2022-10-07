@@ -29,7 +29,7 @@ public class AccommodationRepository {
                 " and a.region = :region";
 
         if (!unAvailableRoomIds.isEmpty()){
-            jpql += " and r.id not in "+ (Tuple)unAvailableRoomIds;
+            jpql += " and r.id not in :unAvailableRoomIds";
         }
 
         if (accommodationFiltering != null){
@@ -50,10 +50,18 @@ public class AccommodationRepository {
             jpql += "'";
         }
 
-        return em.createQuery(jpql, Accommodation.class)
-                .setParameter("numberPeople", numberPeople)
-                .setParameter("region", region)
-                .getResultList();
+        if (!unAvailableRoomIds.isEmpty()) {
+            return em.createQuery(jpql, Accommodation.class)
+                    .setParameter("numberPeople", numberPeople)
+                    .setParameter("region", region)
+                    .setParameter("unAvailableRoomIds", unAvailableRoomIds)
+                    .getResultList();
+        } else {
+            return em.createQuery(jpql, Accommodation.class)
+                    .setParameter("numberPeople", numberPeople)
+                    .setParameter("region", region)
+                    .getResultList();
+        }
     }
 
     public List<Accommodation> findAll() {
