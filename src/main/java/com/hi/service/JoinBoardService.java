@@ -12,9 +12,9 @@ public interface JoinBoardService {
 
     JoinBoardDto writerCheck(Integer board_id, String nickname);
 
-    List<JoinBoardDto> readAll();
+//    List<JoinBoardDto> readAll();
 
-    List<JoinBoardDto> search(int type, String title,String go_with_start, String go_with_end);
+    List<JoinBoardDto> search(String region, String title,String go_with_start, String go_with_end, SearchCondition searchCondition);
 
     int write(JoinBoardDto dto);
 
@@ -23,6 +23,8 @@ public interface JoinBoardService {
     int remove(Integer board_id);
 
     int count();
+
+    int searchCount(String region, String title, String go_with_start, String go_with_end);
 
     int increaseViewCnt(Integer board_id);
 }

@@ -16,9 +16,60 @@ public class JoinBoardDaoImpl implements JoinBoardDao{
     private SqlSession session;
     private static String namespace = "com.hi.dao.JoinBoardMapper.";
 
+    @Override   // 전체 게시글 갯수
+    public int count() {return session.selectOne(namespace+"count");}
+
     @Override
     public JoinBoardDto select(Integer board_id) {      // 동행자 게시글 상세조회
         return session.selectOne(namespace+"select", board_id);
+    }
+
+    @Override      // 게시글 목록 조회 : 페이징 처리
+    public List<JoinBoardDto> selectPage(SearchCondition searchCondition) {
+        return session.selectList(namespace+"selectPage", searchCondition);
+    }
+
+    @Override         // 동행자 게시글 제목+본문+기간 검색
+    public List<JoinBoardDto> search(String region, String title, String go_with_start, String go_with_end, SearchCondition searchCondition) {
+        Map map = new HashMap<>();
+        map.put("region",region);
+        map.put("title",title);
+        map.put("go_with_start",go_with_start);
+        map.put("go_with_end", go_with_end);
+        map.put("offset",searchCondition.getOffset());
+        map.put("pageSize",searchCondition.getPageSize());
+
+        return session.selectList(namespace+"search", map);
+    }
+
+    @Override       // 동행자 게시글 검색 시 조회되는 총 게시글 갯수
+    public int searchCount(String region, String title, String go_with_start, String go_with_end){
+        Map map = new HashMap<>();
+        map.put("region",region);
+        map.put("title",title);
+        map.put("go_with_start",go_with_start);
+        map.put("go_with_end", go_with_end);
+
+        return session.selectOne(namespace+"searchCount",map);
+    }
+
+    @Override         // 동행자 게시글 생성
+    public int insert(JoinBoardDto dto) {
+        System.out.println("\n DAO ======== \n"+dto+"\n");
+        return session.insert(namespace+"insert" ,dto);
+    }
+
+    @Override
+    public int update(JoinBoardDto dto) {         // 동행자 게시글 수정
+        System.out.println("\n DAO ======== \n"+dto+"\n");
+        return session.update(namespace+"update" ,dto);
+    }
+
+    @Override         // 동행자 게시글 삭제
+    public int delete(Integer board_id) {
+        // 게시글 정보와 작성자 정보가 일치해야 삭제 진행
+
+        return session.delete(namespace+"delete", board_id);
     }
 
     @Override
@@ -31,66 +82,24 @@ public class JoinBoardDaoImpl implements JoinBoardDao{
     }
 
     @Override
-    public List<JoinBoardDto> selectPage(SearchCondition searchCondition) {      // 게시글 페이징 처리
-        return session.selectList(namespace+"selectPage", searchCondition);
-    }
-
-    @Override
-    public List<JoinBoardDto> selectAll() {         // 동행자 게시글 목록 조회
-        return session.selectList(namespace+"selectAll");
-    }
-
-    @Override
-    public List<JoinBoardDto> searchTitle(String keyword) {         // 동행자 게시글 제목 검색
-        return session.selectList(namespace+"searchTitle", keyword);
-    }
-
-    @Override
-    public List<JoinBoardDto> searchTitCon(String keyword) {         // 동행자 게시글 제목+본문 검색
-        return session.selectList(namespace+"searchTitCon", keyword);
-    }
-
-    // 추후 업뎃 예정
-    @Override
-    public List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end) {         // 동행자 게시글 제목+본문+기간 검색
-        Map map = new HashMap<>();
-        map.put("type",type);
-        map.put("keyword",keyword);
-        map.put("go_with_start",go_with_start);
-        map.put("go_with_end", go_with_end);
-        return session.selectList(namespace+"search", map);
-    }
-
-    @Override
-    public int insert(JoinBoardDto dto) {         // 동행자 게시글 생성
-        System.out.println("\n DAO ======== "+dto+"\n");
-        return session.insert(namespace+"insert" ,dto);
-    }
-
-    @Override
-    public int update(JoinBoardDto dto) {         // 동행자 게시글 수정
-        return session.update(namespace+"update" ,dto);
-    }
-
-    @Override
-    public int delete(Integer board_id) {         // 동행자 게시글 삭제
-        // 게시글 정보와 작성자 정보가 일치해야 삭제 진행
-
-        return session.delete(namespace+"delete", board_id);
-    }
-
-
-
-    @Override
-    public int count() {         // 전체 동행자 게시글 갯수 조회
-        return session.selectOne(namespace+"count");
-    }
-
-    @Override
     public int increaseViewCnt(Integer board_id) {         // 조회수 증가
         return session.update(namespace+"increaseViewCnt", board_id);
     }
 
 
+//    @Override
+//    public List<JoinBoardDto> selectAll() {         // 동행자 게시글 목록 조회
+//        return session.selectList(namespace+"selectAll");
+//    }
+
+//    @Override
+//    public List<JoinBoardDto> searchTitle(String keyword) {         // 동행자 게시글 제목 검색
+//        return session.selectList(namespace+"searchTitle", keyword);
+//    }
+//
+//    @Override
+//    public List<JoinBoardDto> searchTitCon(String keyword) {         // 동행자 게시글 제목+본문 검색
+//        return session.selectList(namespace+"searchTitCon", keyword);
+//    }
 
 }

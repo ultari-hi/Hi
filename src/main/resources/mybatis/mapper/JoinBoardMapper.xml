@@ -6,14 +6,9 @@
 <!--namespace를 통해 DAO와 연결 -->
 <mapper namespace="com.hi.dao.JoinBoardMapper">
 
-
     <select id="select" parameterType="int" resultType="com.hi.domain.JoinBoardDto">
         select b.*, u.nickname, u.gender
         from board b join user u using (user_id) where board_id = #{board_id};
-    </select>
-
-    <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">
-        SELECT * FROM board;
     </select>
 
     <select id="selectPage" parameterType="com.hi.domain.SearchCondition" resultType="com.hi.domain.JoinBoardDto">
@@ -27,60 +22,146 @@
         SELECT * FROM board WHERE board_id = #{board_id} AND user_id = #{nickname};
     </delete>
 
-    <select id="searchTitle" parameterType="String" resultType="com.hi.domain.JoinBoardDto">
-        select b.*, u.nickname, u.gender
-        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%');
-    </select>
-
-    <select id="searchTitCon" parameterType="String" resultType="com.hi.domain.JoinBoardDto">
-        select b.*, u.nickname, u.gender
-        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');
-    </select>
-
     <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
     SELECT b.*, u.nickname, u.gender
     FROM board b JOIN user u USING (user_id)
-    WHERE (title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%'))
-    AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end}) OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
---     WHERE true
-<!--        <include refid="searchType"/><include refid="searchDate"/>-->
+    WHERE (title LIKE CONCAT('%',#{title},'%') AND region LIKE CONCAT('%',#{region},'%'))
+            AND ((go_with_start BETWEEN #{go_with_start} AND #{go_with_end}) AND (go_with_end BETWEEN #{go_with_start} AND #{go_with_end}))
+    ORDER BY updated_at DESC, board_id DESC
+        LIMIT #{offset}, #{pageSize};
     </select>
 
+    <select id="count" resultType="int">
+        SELECT count(*) FROM board;
+    </select>
+
+    <select id="searchCount" parameterType="map" resultType="int">
+        SELECT count(*) FROM board
+        WHERE (title LIKE CONCAT('%',#{title},'%') AND region LIKE CONCAT('%',#{region},'%'))
+          AND ((go_with_start BETWEEN #{go_with_start} AND #{go_with_end})
+            AND (go_with_end BETWEEN #{go_with_start} AND #{go_with_end}));
+    </select>
+
+    <insert id="insert" parameterType="com.hi.domain.JoinBoardDto">
+        INSERT INTO board
+        (user_id, title, created_at, updated_at, region, go_with_start, go_with_end, content, together)
+        VALUES
+            ((select user_id from user where nickname = #{nickname})
+            ,#{title},now(), now(), #{region},#{go_with_start},#{go_with_end},#{content},#{together})
+    </insert>
+
+    <update id="update" parameterType="com.hi.domain.JoinBoardDto">
+        UPDATE board
+        SET   title = #{title}
+          , updated_at = now()
+          , region = #{region}
+          , go_with_start = #{go_with_start}
+          , go_with_end = #{go_with_end}
+          , content = #{content}
+          , together = #{together}
+        WHERE board_id = #{board_id};
+    </update>
+
+    <delete id="delete" parameterType="map">
+        DELETE FROM board WHERE board_id = #{board_id};
+    </delete>
+
+<!--    <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">-->
+<!--        SELECT * FROM board;-->
+<!--    </select>-->
+
+    <!--    <select id="searchTitle" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+    <!--        select b.*, u.nickname, u.gender-->
+    <!--        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%');-->
+    <!--    </select>-->
+
+    <!--    <select id="searchTitCon" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+    <!--        select b.*, u.nickname, u.gender-->
+    <!--        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');-->
+    <!--    </select>-->
+
+    <!--    <sql id="searchDate">-->
+    <!--        <choose>-->
+    <!--            <when test='go_with_start=="" and go_with_end==""'>-->
+    <!--                AND (go_with_start BETWEEN now() AND '9999-12-31')-->
+    <!--                OR (go_with_end BETWEEN now() AND '9999-12-31');-->
+    <!--            </when>-->
+    <!--            <when test='go_with_start==""'>-->
+    <!--                AND (go_with_start BETWEEN now() AND #{go_with_end})-->
+    <!--                OR (go_with_end BETWEEN now() AND #{go_with_end});-->
+    <!--            </when>-->
+    <!--            <when test='go_with_end==""'>-->
+    <!--                AND (go_with_start BETWEEN #{go_with_start} AND '9999-12-31')-->
+    <!--                OR (go_with_end BETWEEN #{go_with_start} AND '9999-12-31');-->
+    <!--            </when>-->
+    <!--            <otherwise>-->
+    <!--                AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})-->
+    <!--                OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});-->
+    <!--            </otherwise>-->
+    <!--        </choose>-->
+    <!--    </sql>-->
+    <!--    -->
+
+<!--    <select id="searchDate" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+<!--        select b.*, u.nickname, u.gender-->
+<!--        from board b join user u using (user_id) WHERE (go_with_start BETWEEN #{go_with_start} AND '9999-12-31')-->
+<!--    </select>-->
+
     <!-- SQL 중복으로 별도 SQL문 생성-->
-    <sql id="searchType">
-        <choose>
-            <when test='type==1'>
-                AND title LIKE concat('%', #{keyword}, '%')
-            </when>
-            <when test='type==2'>
-                AND content LIKE concat('%', #{keyword}, '%')
-            </when>
-            <otherwise>
-                AND (title LIKE concat('%', #{keyword}, '%')
-                OR content LIKE concat('%', #{keyword}, '%'))
-            </otherwise>
-        </choose>
-    </sql>
-    <sql id="searchDate">
-        <choose>
-            <when test='go_with_start=="" and go_with_end==""'>
-                AND (go_with_start BETWEEN now() AND 9999-12-31)
-                OR (go_with_end BETWEEN now() AND 9999-12-31);
-            </when>
-            <when test='go_with_start==""'>
-                AND (go_with_start BETWEEN now() AND #{go_with_end})
-                OR (go_with_end BETWEEN now() AND #{go_with_end});
-            </when>
-            <when test='go_with_end==""'>
-                AND (go_with_start BETWEEN #{go_with_start} AND 9999-12-31)
-                OR (go_with_end BETWEEN #{go_with_start} AND 9999-12-31);
-            </when>
-            <otherwise>
-                AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})
-                OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});
-            </otherwise>
-        </choose>
-    </sql>
+<!--    <sql id="searchType">-->
+<!--&lt;!&ndash;        <trim prefix="WHERE" prefixOverrides="AND|OR">&ndash;&gt;-->
+<!--            <choose>-->
+<!--                <when test='region==""'> &lt;!&ndash; region 조건이 All일 경우 키워드로 제목만 조건 검색 &ndash;&gt;-->
+<!--                    <if test='keyword==""'>return</if> &lt;!&ndash; region, keyword 둘다 없을 경우 조건문 미작성 &ndash;&gt;-->
+<!--                    title LIKE concat('%', #{keyword}, '%')-->
+<!--                </when>-->
+
+<!--                <when test='keyword==""'> &lt;!&ndash; keyword 조건이 All일 경우 region으로 지역만 조건 검색 &ndash;&gt;-->
+<!--                    <if test='region==""'>return</if> &lt;!&ndash; region, keyword 둘다 없을 경우 조건문 미작성 &ndash;&gt;-->
+<!--                    AND region LIKE concat('%', #{region}, '%')-->
+<!--                </when>-->
+
+<!--                <otherwise> &lt;!&ndash; region, keywork 모두 값이 있을 경우 &ndash;&gt;-->
+<!--                    AND (region LIKE concat('%', #{region}, '%') OR title LIKE concat('%', #{keyword}, '%'))-->
+<!--                </otherwise>-->
+<!--            </choose>-->
+<!--&lt;!&ndash;        </trim>&ndash;&gt;-->
+<!--    </sql>-->
+
+<!--    <sql id="searchType">-->
+<!--        <choose>-->
+<!--            <when test='type==1'>-->
+<!--                AND title LIKE concat('%', #{keyword}, '%')-->
+<!--            </when>-->
+<!--            <when test='type==2'>-->
+<!--                AND content LIKE concat('%', #{keyword}, '%')-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                AND (title LIKE concat('%', #{keyword}, '%')-->
+<!--                OR content LIKE concat('%', #{keyword}, '%'))-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--    </sql>-->
+<!--    <sql id="searchDate">-->
+<!--        <choose>-->
+<!--            <when test='go_with_start=="" and go_with_end==""'>-->
+<!--                AND (go_with_start BETWEEN now() AND 9999-12-31)-->
+<!--                OR (go_with_end BETWEEN now() AND 9999-12-31);-->
+<!--            </when>-->
+<!--            <when test='go_with_start==""'>-->
+<!--                AND (go_with_start BETWEEN now() AND #{go_with_end})-->
+<!--                OR (go_with_end BETWEEN now() AND #{go_with_end});-->
+<!--            </when>-->
+<!--            <when test='go_with_end==""'>-->
+<!--                AND (go_with_start BETWEEN #{go_with_start} AND 9999-12-31)-->
+<!--                OR (go_with_end BETWEEN #{go_with_start} AND 9999-12-31);-->
+<!--            </when>-->
+<!--            <otherwise>-->
+<!--                AND (go_with_start BETWEEN #{go_with_start} AND #{go_with_end})-->
+<!--                OR (go_with_end BETWEEN #{go_with_start} AND #{go_with_end});-->
+<!--            </otherwise>-->
+<!--        </choose>-->
+<!--    </sql>-->
 
 <!--    <select id="searchSelectPage" parameterType="SearchCondition" resultType="BoardDto">-->
 <!--        SELECT bno, title, content, writer, view_cnt, comment_cnt, reg_date-->
@@ -98,37 +179,4 @@
 <!--        <include refid="searchCondition"/>-->
 <!--    </select>-->
 <!--&lt;!&ndash;    ===&ndash;&gt;-->
-
-    <select id="count" resultType="int">
-        SELECT count(*) FROM board;
-    </select>
-
-
-    <insert id="insert" parameterType="com.hi.domain.JoinBoardDto">
-        INSERT INTO board
-            (user_id, title, created_at, updated_at, region, go_with_start, go_with_end, content, together)
-        VALUES
-            ((select user_id from user where nickname = #{nickname})
-            ,#{title},now(), now(), #{region},#{go_with_start},#{go_with_end},#{content},#{together})
-    </insert>
-
-
-    <update id="update" parameterType="com.hi.domain.JoinBoardDto">
-        UPDATE board
-        SET   title = #{title}
-          , updated_at = now()
-          , region = #{region}
-          , go_with_start = #{go_with_start}
-          , go_with_end = #{go_with_end}
-          , content = #{content}
-          , together = #{together}
-        WHERE board_id = #{board_id} AND user_id = (select user_id from user where nickname = #{nickname})
-    </update>
-
-
-    <delete id="delete" parameterType="map">
-        DELETE FROM board WHERE board_id = #{board_id};
-    </delete>
-
-
 </mapper>

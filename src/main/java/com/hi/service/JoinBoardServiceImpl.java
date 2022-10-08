@@ -29,16 +29,17 @@ public class JoinBoardServiceImpl implements JoinBoardService{
         return joinBoardDaoImpl.writerCheck(board_id, nickname);
     }
 
-   @Override
-    public List<JoinBoardDto> readAll() {         // 동행자 게시글 목록 조회
-        return joinBoardDaoImpl.selectAll();
-    }
+//   @Override
+//    public List<JoinBoardDto> readAll() {         // 동행자 게시글 목록 조회
+//        return joinBoardDaoImpl.selectAll();
+//    }
 
     @Override
-    public List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end){
-        if(type==1) return joinBoardDaoImpl.searchTitle(keyword);
-        else if (type==2) return joinBoardDaoImpl.searchTitCon(keyword);
-        else return joinBoardDaoImpl.search(type, keyword, go_with_start, go_with_end);
+    public List<JoinBoardDto> search(String region, String title, String go_with_start, String go_with_end, SearchCondition searchCondition){
+//        if(type==1) return joinBoardDaoImpl.searchTitle(keyword);
+//        else if (type==2) return joinBoardDaoImpl.searchTitCon(keyword);
+//        else return joinBoardDaoImpl.search(type, keyword, go_with_start, go_with_end);
+        return joinBoardDaoImpl.search(region, title, go_with_start, go_with_end,searchCondition);
     }
 
     @Override
@@ -60,6 +61,11 @@ public class JoinBoardServiceImpl implements JoinBoardService{
     @Override
     public int count() {         // 전체 동행자 게시글 갯수 조회
         return joinBoardDaoImpl.count();
+    }
+
+    @Override
+    public int searchCount(String region, String title, String go_with_start, String go_with_end) {
+        return joinBoardDaoImpl.searchCount(region, title, go_with_start, go_with_end);
     }
 
     @Override

@@ -12,13 +12,13 @@ public interface JoinBoardDao {
 
     JoinBoardDto writerCheck(Integer board_id, String nickname);
 
-    List<JoinBoardDto> selectAll();
+//    List<JoinBoardDto> selectAll();
 
-    List<JoinBoardDto> searchTitle(String keyword);
+//    List<JoinBoardDto> searchTitle(String keyword);
+//
+//    List<JoinBoardDto> searchTitCon(String keyword);
 
-    List<JoinBoardDto> searchTitCon(String keyword);
-
-    List<JoinBoardDto> search(int type, String keyword, String go_with_start, String go_with_end);
+    List<JoinBoardDto> search(String region, String title, String go_with_start, String go_with_end, SearchCondition searchCondition);
 
     int insert(JoinBoardDto dto);
 
@@ -27,6 +27,8 @@ public interface JoinBoardDao {
     int delete(Integer board_id);
 
     int count();
+
+    int searchCount(String region, String keyword, String go_with_start, String go_with_end);
 
     int increaseViewCnt(Integer board_id) ;
 

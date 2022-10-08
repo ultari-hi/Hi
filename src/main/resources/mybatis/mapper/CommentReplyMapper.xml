@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--namespace를 통해 DAO와 연결 -->
+<mapper namespace="com.hi.dao.CommentReplyMapper">
+
+    <select id="count" resultType="int">
+        SELECT count(*) FROM comment;
+    </select>
+
+    <select id="select" parameterType="int" resultType="com.hi.domain.CommentReplyDto">
+        SELECT r.*, u.nickname
+        FROM reply r JOIN user u USING (user_id)
+        WHERE reply_id = #{reply_id};
+    </select>
+
+    <select id="selectList" parameterType="int" resultType="com.hi.domain.CommentReplyDto">
+        SELECT r.*, u.nickname
+        FROM reply r JOIN user u USING (user_id)
+        WHERE comment_id = #{comment_id};
+    </select>
+
+    <insert id="insert" parameterType="com.hi.domain.CommentReplyDto">
+        INSERT INTO reply
+        (comment_id, user_id, content, created_at, updated_at)
+        VALUES
+            (#{comment_id}, (SELECT user_id FROM user WHERE nickname = #{nickname})
+            ,#{content},now(), now())
+    </insert>
+
+    <update id="update" parameterType="com.hi.domain.CommentReplyDto">
+        UPDATE reply
+        SET   content = #{content}
+          , updated_at = now()
+        WHERE reply_id = #{reply_id};
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM reply WHERE reply_id = #{reply_id};
+    </delete>
+
+    <delete id="deleteAll" parameterType="int">
+        DELETE FROM reply WHERE comment_id = #{comment_id};
+    </delete>
+</mapper>
