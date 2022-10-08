@@ -1,4 +1,4 @@
-package com.hi.comtroller;
+package com.hi.controller;
 
 import com.hi.domain.TestDto;
 import com.hi.service.TestService;
