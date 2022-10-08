@@ -30,7 +30,7 @@ class JoinBoardDaoImplTest {
 
     @Test
     public void searchTest() throws Exception {
-        SearchCondition searchCondition = new SearchCondition(1,5,"","");
+        SearchCondition searchCondition = new SearchCondition(1,5);
         List<JoinBoardDto> list = boardDao.search("스위스","","2022-06-10","2022-08-18",searchCondition);
 
         System.out.println();
@@ -47,7 +47,7 @@ class JoinBoardDaoImplTest {
 
     @Test
     public void searchCountTest() throws Exception {
-        SearchCondition searchCondition = new SearchCondition(1,5,"","");
+        SearchCondition searchCondition = new SearchCondition(1,5);
         int result = boardDao.searchCount("","","2022-06-10","2022-08-18");
 
         System.out.println();
