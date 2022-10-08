@@ -1,7 +1,6 @@
 package com.hi.comtroller;
 
 import com.hi.domain.CommentDto;
-import com.hi.domain.CommentReplyDto;
 import com.hi.service.CommentReplyServiceImpl;
 import com.hi.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController
