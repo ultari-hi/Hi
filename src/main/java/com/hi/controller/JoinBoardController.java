@@ -66,11 +66,11 @@ public class JoinBoardController {
         PageHandler pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
 
         if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
-        {
-            page=pageHandler.getTotalPage();
-            searchCondition = new SearchCondition(page,pageSize);
-            pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
-        }
+            {
+                page=pageHandler.getTotalPage();
+                searchCondition = new SearchCondition(page,pageSize);
+                pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
+            }
 
         Map mapArr = new HashMap();
         try{
@@ -106,11 +106,11 @@ public class JoinBoardController {
         System.out.println("=========== "+joinBoardService.searchCount(region,title,go_with_start,go_with_end));
 
         if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
-        {
-            page=pageHandler.getTotalPage();
-            searchCondition = new SearchCondition(page,pageSize);
-            pageHandler = new PageHandler(joinBoardService.searchCount(region,title,go_with_start,go_with_end),searchCondition);
-        }
+            {
+                page=pageHandler.getTotalPage();
+                searchCondition = new SearchCondition(page,pageSize);
+                pageHandler = new PageHandler(joinBoardService.searchCount(region,title,go_with_start,go_with_end),searchCondition);
+            }
 
         Map mapArr = new HashMap();
         try {
