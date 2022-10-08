@@ -1,4 +1,4 @@
-package com.hi.domain;
+package com.hi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.hi.service;
 
-import com.hi.domain.JoinBoardDto;
+import com.hi.dto.JoinBoardDto;
 import com.hi.domain.SearchCondition;
 
 import java.util.List;

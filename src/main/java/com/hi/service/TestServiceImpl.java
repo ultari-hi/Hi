@@ -1,7 +1,7 @@
 package com.hi.service;
 
 import com.hi.dao.TestDao;
-import com.hi.domain.TestDto;
+import com.hi.dto.TestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

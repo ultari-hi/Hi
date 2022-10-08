@@ -1,6 +1,6 @@
 package com.hi.controller;
 
-import com.hi.domain.CommentDto;
+import com.hi.dto.CommentDto;
 import com.hi.service.CommentReplyServiceImpl;
 import com.hi.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

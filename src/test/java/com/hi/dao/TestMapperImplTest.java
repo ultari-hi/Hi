@@ -1,7 +1,6 @@
 package com.hi.dao;
 
-import com.hi.dao.TestDao;
-import com.hi.domain.TestDto;
+import com.hi.dto.TestDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

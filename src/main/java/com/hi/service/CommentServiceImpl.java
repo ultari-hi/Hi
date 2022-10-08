@@ -1,8 +1,7 @@
 package com.hi.service;
 
 import com.hi.dao.CommentDaoImpl;
-import com.hi.domain.CommentDto;
-import com.hi.domain.JoinBoardDto;
+import com.hi.dto.CommentDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

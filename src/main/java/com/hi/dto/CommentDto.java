@@ -1,10 +1,7 @@
-package com.hi.domain;
+package com.hi.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.hi.service.CommentReplyServiceImpl;
-import com.hi.service.CommentServiceImpl;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

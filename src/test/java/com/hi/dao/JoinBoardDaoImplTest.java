@@ -1,15 +1,13 @@
 package com.hi.dao;
 
-import com.hi.domain.JoinBoardDto;
 import com.hi.domain.SearchCondition;
+import com.hi.dto.JoinBoardDto;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 class JoinBoardDaoImplTest {
@@ -30,7 +28,7 @@ class JoinBoardDaoImplTest {
 
     @Test
     public void searchTest() throws Exception {
-        SearchCondition searchCondition = new SearchCondition(1,5,"","");
+        SearchCondition searchCondition = new SearchCondition(1,5);
         List<JoinBoardDto> list = boardDao.search("스위스","","2022-06-10","2022-08-18",searchCondition);
 
         System.out.println();
@@ -47,7 +45,7 @@ class JoinBoardDaoImplTest {
 
     @Test
     public void searchCountTest() throws Exception {
-        SearchCondition searchCondition = new SearchCondition(1,5,"","");
+        SearchCondition searchCondition = new SearchCondition(1,5);
         int result = boardDao.searchCount("","","2022-06-10","2022-08-18");
 
         System.out.println();

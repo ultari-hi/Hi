@@ -1,7 +1,7 @@
 package com.hi.service;
 
 import com.hi.dao.CommentReplyDaoImpl;
-import com.hi.domain.CommentReplyDto;
+import com.hi.dto.CommentReplyDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

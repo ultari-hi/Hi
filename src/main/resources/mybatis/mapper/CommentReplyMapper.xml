@@ -10,19 +10,19 @@
         SELECT count(*) FROM comment;
     </select>
 
-    <select id="select" parameterType="int" resultType="com.hi.domain.CommentReplyDto">
+    <select id="select" parameterType="int" resultType="com.hi.dto.CommentReplyDto">
         SELECT r.*, u.nickname
         FROM reply r JOIN user u USING (user_id)
         WHERE reply_id = #{reply_id};
     </select>
 
-    <select id="selectList" parameterType="int" resultType="com.hi.domain.CommentReplyDto">
+    <select id="selectList" parameterType="int" resultType="com.hi.dto.CommentReplyDto">
         SELECT r.*, u.nickname
         FROM reply r JOIN user u USING (user_id)
         WHERE comment_id = #{comment_id};
     </select>
 
-    <insert id="insert" parameterType="com.hi.domain.CommentReplyDto">
+    <insert id="insert" parameterType="com.hi.dto.CommentReplyDto">
         INSERT INTO reply
         (comment_id, user_id, content, created_at, updated_at)
         VALUES
@@ -30,7 +30,7 @@
             ,#{content},now(), now())
     </insert>
 
-    <update id="update" parameterType="com.hi.domain.CommentReplyDto">
+    <update id="update" parameterType="com.hi.dto.CommentReplyDto">
         UPDATE reply
         SET   content = #{content}
           , updated_at = now()

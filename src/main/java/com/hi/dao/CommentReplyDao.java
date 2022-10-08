@@ -1,7 +1,6 @@
 package com.hi.dao;
 
-import com.hi.domain.CommentDto;
-import com.hi.domain.CommentReplyDto;
+import com.hi.dto.CommentReplyDto;
 
 import java.util.List;
 

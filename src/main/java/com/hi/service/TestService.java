@@ -1,6 +1,6 @@
 package com.hi.service;
 
-import com.hi.domain.TestDto;
+import com.hi.dto.TestDto;
 
 import java.util.List;
 
