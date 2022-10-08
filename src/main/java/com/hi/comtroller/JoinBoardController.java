@@ -62,13 +62,13 @@ public class JoinBoardController {
             @RequestParam(required = false, defaultValue = "10") Integer pageSize
     ) {
         // 페이징 처리
-        SearchCondition searchCondition = new SearchCondition(page,pageSize,"","");
+        SearchCondition searchCondition = new SearchCondition(page,pageSize);
         PageHandler pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
 
         if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
             {
                 page=pageHandler.getTotalPage();
-                searchCondition = new SearchCondition(page,pageSize,"","");
+                searchCondition = new SearchCondition(page,pageSize);
                 pageHandler = new PageHandler(joinBoardService.count(),searchCondition);
             }
 
@@ -99,7 +99,7 @@ public class JoinBoardController {
             @RequestParam(required = false, defaultValue = "10") Integer pageSize){
 
         // 페이징 처리
-        SearchCondition searchCondition = new SearchCondition(page,pageSize,"","");
+        SearchCondition searchCondition = new SearchCondition(page,pageSize);
         PageHandler pageHandler = new PageHandler(joinBoardService.searchCount(region,title,go_with_start,go_with_end),searchCondition);
 
 
@@ -108,7 +108,7 @@ public class JoinBoardController {
         if(pageHandler.getTotalPage() < page) // page 값이 TotalPage값보다 큰 값이 입력될 경우 page값을 총 페이지 값으로 변경 (에러 방지)
             {
                 page=pageHandler.getTotalPage();
-                searchCondition = new SearchCondition(page,pageSize,"","");
+                searchCondition = new SearchCondition(page,pageSize);
                 pageHandler = new PageHandler(joinBoardService.searchCount(region,title,go_with_start,go_with_end),searchCondition);
             }
 
@@ -144,7 +144,7 @@ public class JoinBoardController {
             System.out.println("================== "+result+" =====================");
 
             resultSet(result);
-            URI redirectUri = new URI("/board/join/list");
+            URI redirectUri = new URI("/api/board/join/list");
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);   // 리다이렉션 경로 입력
 
@@ -200,7 +200,7 @@ public class JoinBoardController {
             }
 
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setLocation(new URI("/board/join/list"));   // 리다이렉션 경로 입력
+            httpHeaders.setLocation(new URI("/api/board/join/list"));   // 리다이렉션 경로 입력
 
             return new ResponseEntity<>(httpHeaders,HttpStatus.MOVED_PERMANENTLY);
         }catch (Exception e){

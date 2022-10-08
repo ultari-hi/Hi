@@ -1,7 +1,12 @@
 package com.hi.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.hi.service.CommentReplyServiceImpl;
+import com.hi.service.CommentServiceImpl;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,5 +21,5 @@ public class CommentDto {
     private String created_at;
     private String updated_at;
     private String nickname;
-    private CommentReplyDto commentReplyDto;
+    private List<CommentReplyDto> reply;
 }

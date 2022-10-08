@@ -33,4 +33,6 @@ public class CommentReplyDaoImpl implements CommentReplyDao{
     @Override         // 대댓글 삭제
     public int delete(Integer reply_id) {return session.delete(namespace+"delete", reply_id);}
 
+    @Override         // 대댓글 삭제
+    public int deleteAll(Integer comment_id) {return session.delete(namespace+"deleteAll", comment_id);}
 }

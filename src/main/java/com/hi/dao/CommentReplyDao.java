@@ -18,4 +18,6 @@ public interface CommentReplyDao {
     int update(CommentReplyDto dto);        // 대댓글 수정
 
     int delete(Integer reply_id);         // 대댓글 삭제
+
+    int deleteAll(Integer comment_id);         // 대댓글 그룹(댓글) 삭제
 }

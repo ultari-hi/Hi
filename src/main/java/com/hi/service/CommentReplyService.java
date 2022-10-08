@@ -18,4 +18,6 @@ public interface CommentReplyService {
     int modify(CommentReplyDto dto);         // 대댓글 수정
 
     int remove(Integer reply_id);         // 대댓글 삭제
+
+    int removeAll(Integer comment_id);         // 대댓글 그룹(댓글) 삭제
 }

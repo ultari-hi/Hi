@@ -33,4 +33,7 @@ public class CommentReplyServiceImpl implements CommentReplyService {
 
     @Override         // 대댓글 삭제
     public int remove(Integer reply_id) {return commentReplyDaoImpl.delete(reply_id);}
+
+    @Override         // 대댓글 그룹(댓글) 삭제
+    public int removeAll(Integer comment_id) {return commentReplyDaoImpl.deleteAll(comment_id);}
 }

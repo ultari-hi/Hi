@@ -40,4 +40,8 @@
     <delete id="delete" parameterType="int">
         DELETE FROM reply WHERE reply_id = #{reply_id};
     </delete>
+
+    <delete id="deleteAll" parameterType="int">
+        DELETE FROM reply WHERE comment_id = #{comment_id};
+    </delete>
 </mapper>
