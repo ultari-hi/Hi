@@ -7,6 +7,6 @@
     </mappers>
 
 <!--    <typeAliases>-->
-<!--        <typeAlias alias="TestDto" type="com.hi.domain.TestDto"/>-->
+<!--        <typeAlias alias="TestDto" type="com.hi.dto.TestDto"/>-->
 <!--    </typeAliases>-->
 </configuration>
