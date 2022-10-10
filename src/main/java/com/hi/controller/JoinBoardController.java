@@ -1,8 +1,11 @@
 package com.hi.controller;
 
+import com.hi.dto.CommentDto;
 import com.hi.dto.JoinBoardDto;
 import com.hi.domain.PageHandler;
 import com.hi.domain.SearchCondition;
+import com.hi.service.CommentReplyServiceImpl;
+import com.hi.service.CommentServiceImpl;
 import com.hi.service.JoinBoardServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +25,11 @@ import java.util.Map;
 public class JoinBoardController {
     @Autowired
     JoinBoardServiceImpl joinBoardService;
+    @Autowired
+    CommentServiceImpl commentServiceImpl;
+    @Autowired
+    CommentReplyServiceImpl commentReplyService;
+
     String success="true";
     String error=null;
     JoinBoardDto data=null;
@@ -43,11 +51,19 @@ public class JoinBoardController {
     }
 
     @GetMapping("/join/{board_id}")        // 동행자 게시글 상세 조회
-    public ResponseEntity<JoinBoardDto> read(@PathVariable Integer board_id) {
+    public ResponseEntity read(@PathVariable Integer board_id) {
+        Map mapArr = new HashMap();
         try {
             JoinBoardDto joinBoardDto = joinBoardService.read(board_id);
+            List<CommentDto> comments = commentServiceImpl.selectList(board_id);    // 댓글 객체들 불러옴
 
-            return new ResponseEntity<JoinBoardDto>(joinBoardDto, HttpStatus.OK);
+            for(int i=0;i<comments.size();i++)
+                comments.get(i).setReply(commentReplyService.selectList(comments.get(i).getComment_id())); // 각 댓글에 있는 대댓글 객체를 입력
+
+            mapArr.put("board",joinBoardDto);
+            mapArr.put("comments",comments);
+
+            return new ResponseEntity<>(mapArr, HttpStatus.OK);
 
         } catch (Exception e) {
             e.printStackTrace();
