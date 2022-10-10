@@ -6,7 +6,7 @@
 <!--namespace를 통해 DAO와 연결 -->
 <mapper namespace="com.hi.dao.TestMapper">
 
-    <select id="selectAll" resultType="com.hi.domain.TestDto">
+    <select id="selectAll" resultType="com.hi.dto.TestDto">
         SELECT * FROM test;
     </select>
 

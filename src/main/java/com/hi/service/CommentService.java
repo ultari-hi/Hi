@@ -1,7 +1,6 @@
 package com.hi.service;
 
-import com.hi.domain.CommentDto;
-import com.hi.domain.JoinBoardDto;
+import com.hi.dto.CommentDto;
 
 import java.util.List;
 

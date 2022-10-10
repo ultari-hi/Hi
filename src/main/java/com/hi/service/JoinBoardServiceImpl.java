@@ -1,7 +1,7 @@
 package com.hi.service;
 
 import com.hi.dao.JoinBoardDaoImpl;
-import com.hi.domain.JoinBoardDto;
+import com.hi.dto.JoinBoardDto;
 import com.hi.domain.SearchCondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

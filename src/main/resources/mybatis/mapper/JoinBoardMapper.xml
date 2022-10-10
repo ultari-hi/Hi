@@ -6,12 +6,12 @@
 <!--namespace를 통해 DAO와 연결 -->
 <mapper namespace="com.hi.dao.JoinBoardMapper">
 
-    <select id="select" parameterType="int" resultType="com.hi.domain.JoinBoardDto">
+    <select id="select" parameterType="int" resultType="com.hi.dto.JoinBoardDto">
         select b.*, u.nickname, u.gender
         from board b join user u using (user_id) where board_id = #{board_id};
     </select>
 
-    <select id="selectPage" parameterType="com.hi.domain.SearchCondition" resultType="com.hi.domain.JoinBoardDto">
+    <select id="selectPage" parameterType="com.hi.domain.SearchCondition" resultType="com.hi.dto.JoinBoardDto">
         select b.*, u.nickname, u.gender
         from board b join user u using (user_id)
         ORDER BY updated_at DESC, board_id DESC
@@ -22,7 +22,7 @@
         SELECT * FROM board WHERE board_id = #{board_id} AND user_id = #{nickname};
     </delete>
 
-    <select id="search" parameterType="map" resultType="com.hi.domain.JoinBoardDto">
+    <select id="search" parameterType="map" resultType="com.hi.dto.JoinBoardDto">
     SELECT b.*, u.nickname, u.gender
     FROM board b JOIN user u USING (user_id)
     WHERE (title LIKE CONCAT('%',#{title},'%') AND region LIKE CONCAT('%',#{region},'%'))
@@ -42,7 +42,7 @@
             AND (go_with_end BETWEEN #{go_with_start} AND #{go_with_end}));
     </select>
 
-    <insert id="insert" parameterType="com.hi.domain.JoinBoardDto">
+    <insert id="insert" parameterType="com.hi.dto.JoinBoardDto">
         INSERT INTO board
         (user_id, title, created_at, updated_at, region, go_with_start, go_with_end, content, together)
         VALUES
@@ -50,7 +50,7 @@
             ,#{title},now(), now(), #{region},#{go_with_start},#{go_with_end},#{content},#{together})
     </insert>
 
-    <update id="update" parameterType="com.hi.domain.JoinBoardDto">
+    <update id="update" parameterType="com.hi.dto.JoinBoardDto">
         UPDATE board
         SET   title = #{title}
           , updated_at = now()
@@ -66,16 +66,16 @@
         DELETE FROM board WHERE board_id = #{board_id};
     </delete>
 
-<!--    <select id="selectAll" resultType="com.hi.domain.JoinBoardDto">-->
+<!--    <select id="selectAll" resultType="com.hi.dto.JoinBoardDto">-->
 <!--        SELECT * FROM board;-->
 <!--    </select>-->
 
-    <!--    <select id="searchTitle" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+    <!--    <select id="searchTitle" parameterType="String" resultType="com.hi.dto.JoinBoardDto">-->
     <!--        select b.*, u.nickname, u.gender-->
     <!--        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%');-->
     <!--    </select>-->
 
-    <!--    <select id="searchTitCon" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+    <!--    <select id="searchTitCon" parameterType="String" resultType="com.hi.dto.JoinBoardDto">-->
     <!--        select b.*, u.nickname, u.gender-->
     <!--        from board b join user u using (user_id) WHERE title LIKE CONCAT('%',#{keyword},'%') OR content LIKE CONCAT('%',#{keyword},'%');-->
     <!--    </select>-->
@@ -102,7 +102,7 @@
     <!--    </sql>-->
     <!--    -->
 
-<!--    <select id="searchDate" parameterType="String" resultType="com.hi.domain.JoinBoardDto">-->
+<!--    <select id="searchDate" parameterType="String" resultType="com.hi.dto.JoinBoardDto">-->
 <!--        select b.*, u.nickname, u.gender-->
 <!--        from board b join user u using (user_id) WHERE (go_with_start BETWEEN #{go_with_start} AND '9999-12-31')-->
 <!--    </select>-->

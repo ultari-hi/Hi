@@ -1,7 +1,6 @@
 package com.hi.dao;
 
-import com.hi.domain.CommentDto;
-import com.hi.domain.JoinBoardDto;
+import com.hi.dto.CommentDto;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

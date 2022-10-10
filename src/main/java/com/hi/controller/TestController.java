@@ -1,6 +1,6 @@
 package com.hi.controller;
 
-import com.hi.domain.TestDto;
+import com.hi.dto.TestDto;
 import com.hi.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
