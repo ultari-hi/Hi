@@ -26,7 +26,7 @@ public class CommentController {
         return count;
     }
 
-    @GetMapping("/{comment_id}")   // 댓글 조회
+    @GetMapping("/test/{comment_id}")      // 댓글 하나만 조회 (내부 확인용도)
     public ResponseEntity select(@PathVariable Integer comment_id) {
         try{
             CommentDto commentDto = commentServiceImpl.select(comment_id);  // 댓글 객체 조회
@@ -39,8 +39,8 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/list")      // 댓글 목록 조회
-    public ResponseEntity selectList(@RequestParam Integer board_id) {
+    @GetMapping("/{board_id}")   // 댓글 조회
+    public ResponseEntity selectList(@PathVariable Integer board_id) {
         try{
             List<CommentDto> comments = commentServiceImpl.selectList(board_id);    // 댓글 객체들 불러옴
 
