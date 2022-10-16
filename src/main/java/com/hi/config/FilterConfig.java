@@ -11,7 +11,7 @@ public class FilterConfig {
     public FilterRegistrationBean<JwtFilter> filter(){
         FilterRegistrationBean<JwtFilter> bean = new FilterRegistrationBean<>(new JwtFilter());
         bean.addUrlPatterns("/**");
-        bean.setOrder(0); // 핉터중에서 가장 먼저 실행 되도록 함
+        bean.setOrder(0); //필터중에서 가장 먼저 실행 되도록 함
         return bean;
     }
 }
