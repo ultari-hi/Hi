@@ -1,5 +1,5 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.0'
+	id 'org.springframework.boot' version '2.6.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
@@ -50,6 +50,9 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.4'
+	implementation 'com.auth0:java-jwt:4.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 dependencyManagement {
