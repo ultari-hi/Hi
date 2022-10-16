@@ -1,8 +1,10 @@
 package com.hi.domain;
 
+import com.hi.dto.JoinReqDto;
 import com.hi.enums.Gender;
 import com.hi.enums.Role;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -68,8 +70,43 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    public User(String name,String pwd){
-        this.username = name;
-        this.password = pwd;
+    @Builder
+    public User(String username, String password, String nickname, String email, String phoneNumber, String postcode, String address, String detailedAddress, String lastNameKor, String firstNameKor, String lastNameEng, String firstNameEng, Gender gender) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.postcode = postcode;
+        this.address = address;
+        this.detailedAddress = detailedAddress;
+        this.lastNameKor = lastNameKor;
+        this.firstNameKor = firstNameKor;
+        this.lastNameEng = lastNameEng;
+        this.firstNameEng = firstNameEng;
+        this.gender = gender;
+        this.role = Role.USER;
+    }
+
+    public static User newUser(JoinReqDto dto){
+        return User.builder()
+                .username(dto.getUsername())
+                .password(dto.getPassword())
+                .nickname(dto.getNickname())
+                .email(dto.getEmail())
+                .phoneNumber(dto.getPhoneNumber())
+                .postcode(dto.getPostcode())
+                .address(dto.getAddress())
+                .detailedAddress(dto.getDetailedAddress())
+                .lastNameKor(dto.getLastNameKor())
+                .firstNameKor(dto.getFirstNameKor())
+                .lastNameEng(dto.getLastNameEng())
+                .firstNameEng(dto.getFirstNameEng())
+                .gender(dto.getGender())
+                .build();
+    }
+
+    public String getRole(){
+        return role.name();
     }
 }

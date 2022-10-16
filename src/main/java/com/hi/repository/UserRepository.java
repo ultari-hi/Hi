@@ -29,4 +29,10 @@ public class UserRepository {
         return em.createQuery("select u from User u", User.class)
                 .getResultList();
     }
+
+    public Optional<User> findByUsername(String username){
+        return Optional.ofNullable(em.createQuery("select u from User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResult());
+    }
 }

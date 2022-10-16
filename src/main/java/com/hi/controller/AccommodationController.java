@@ -6,12 +6,12 @@ import com.hi.dto.AccommodationResDto;
 import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController
 @RequiredArgsConstructor
 public class AccommodationController {
@@ -19,7 +19,7 @@ public class AccommodationController {
 
     //숙소, 사진 등록
     @PostMapping("/accommodation/new")
-    public String createAccommodation(@RequestBody AccommodationReqDto accommodationReqDto){
+    public String createAccommodation(@AuthenticationPrincipal @RequestBody AccommodationReqDto accommodationReqDto){
         accommodationService.createAccommodation(accommodationReqDto);
         return "accommodation/list";
     }
