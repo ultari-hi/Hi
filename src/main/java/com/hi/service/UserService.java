@@ -2,8 +2,9 @@ package com.hi.service;
 
 import com.hi.domain.Point;
 import com.hi.domain.User;
-import com.hi.dto.JoinReqDto;
+import com.hi.dto.UserJoinReqDto;
 import com.hi.dto.PaymentResDto;
+import com.hi.dto.UserUpdateReqDto;
 import com.hi.repository.PointRepository;
 import com.hi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,26 @@ public class UserService {
     }
 
     //회원가입
-    public void join(JoinReqDto dto){
+    public void join(UserJoinReqDto dto){
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         User user = User.newUser(dto);
         userRepository.save(user);
+    }
+
+    //회원정보 수정
+    public void update(UserUpdateReqDto dto, Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(()-> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+        dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+        user.modify(dto);
+    }
+
+    //회원탈퇴
+    public void delete(Long id){
+        userRepository.delete(id);
+    }
+
+    public boolean nicknameDuplicateCheck(String nickname) {
+        return userRepository.findNickname(nickname).isEmpty();
     }
 }

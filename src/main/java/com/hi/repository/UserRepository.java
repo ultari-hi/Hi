@@ -35,4 +35,18 @@ public class UserRepository {
                 .setParameter("username", username)
                 .getSingleResult());
     }
+
+    //회원탈퇴
+    public String delete(Long id){
+        em.createQuery("delete from User u where u.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        return "회원탈퇴";
+    }
+
+    public Optional<String> findNickname(String nickname){
+        return Optional.ofNullable(em.createQuery("select u.nickname from User u where u.nickname = :nickname", String.class)
+                .setParameter("nickname", nickname)
+                .getSingleResult());
+    }
 }

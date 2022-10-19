@@ -44,8 +44,7 @@ public class Reservation extends BaseTimeEntity{
     @Column(name = "price_kor", columnDefinition = "int", nullable = false)
     private int priceKor;
 
-    @Column(name = "status", columnDefinition = "enum", nullable = false)
-    @ColumnDefault("IN_PROGRESS")
+    @Column(name = "status", columnDefinition = "enum('SUCCESS', 'FAIL', 'IN_PROGRESS', 'CANCEL')", nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
 

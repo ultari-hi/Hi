@@ -36,9 +36,8 @@ public class Payment extends BaseTimeEntity{
     @Column(name = "method", columnDefinition = "varchar(20)", nullable = false)
     private String method;
 
-    @Column(name = "status", columnDefinition = "enum", nullable = false)
+    @Column(name = "status", columnDefinition = "enum('SUCCESS', 'FAIL', 'IN_PROGRESS', 'CANCEL')", nullable = false)
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("IN_PROGRESS")
     private Status status;
 
     @OneToOne(mappedBy = "payment")

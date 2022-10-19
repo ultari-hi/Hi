@@ -1,6 +1,7 @@
 package com.hi.domain;
 
-import com.hi.dto.JoinReqDto;
+import com.hi.dto.UserJoinReqDto;
+import com.hi.dto.UserUpdateReqDto;
 import com.hi.enums.Gender;
 import com.hi.enums.Role;
 import lombok.AccessLevel;
@@ -49,9 +50,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "nickname", columnDefinition = "varchar(16)", nullable = false)
     private String nickname;
 
-    @Column(name = "role", columnDefinition = "enum", nullable = false)
+    @Column(name = "role", columnDefinition = "enum('ADMIN', 'MANAGER', 'USER')", nullable = false)
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("USER")
     private Role role;
 
     @Column(name = "last_name_kor", columnDefinition = "varchar(10)", nullable = false)
@@ -66,7 +66,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "first_name_eng", columnDefinition = "varchar(10)", nullable = false)
     private String firstNameEng;
 
-    @Column(name = "gender", columnDefinition = "enum", nullable = false)
+    @Column(name = "gender", columnDefinition = "enum('MALE', 'FEMALE')", nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
@@ -88,7 +88,7 @@ public class User extends BaseTimeEntity {
         this.role = Role.USER;
     }
 
-    public static User newUser(JoinReqDto dto){
+    public static User newUser(UserJoinReqDto dto){
         return User.builder()
                 .username(dto.getUsername())
                 .password(dto.getPassword())
@@ -108,5 +108,15 @@ public class User extends BaseTimeEntity {
 
     public String getRole(){
         return role.name();
+    }
+
+    public void modify(UserUpdateReqDto dto){
+        this.password = dto.getPassword();
+        this.nickname = dto.getNickname();
+        this.email = dto.getEmail();
+        this.phoneNumber = dto.getPhoneNumber();
+        this.postcode = dto.getPostcode();
+        this.address = dto.getAddress();
+        this.detailedAddress = dto.getDetailedAddress();
     }
 }

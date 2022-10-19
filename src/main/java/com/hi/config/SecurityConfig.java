@@ -37,6 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
                 .authorizeRequests()
                 .antMatchers("/**/new/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/**/modify/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/**/delete/**").access("hasRole('ROLE_USER')")
                 .anyRequest().permitAll();
     }
 }
