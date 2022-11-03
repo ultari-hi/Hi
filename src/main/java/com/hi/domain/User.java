@@ -70,8 +70,11 @@ public class User extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    @Column(name = "birth_date", columnDefinition = "varchar(8)", nullable = false)
+    private String birthDate;
+
     @Builder
-    public User(String username, String password, String nickname, String email, String phoneNumber, String postcode, String address, String detailedAddress, String lastNameKor, String firstNameKor, String lastNameEng, String firstNameEng, Gender gender) {
+    public User(String username, String password, String nickname, String email, String phoneNumber, String postcode, String address, String detailedAddress, String lastNameKor, String firstNameKor, String lastNameEng, String firstNameEng, Gender gender, String birthDate) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -86,9 +89,10 @@ public class User extends BaseTimeEntity {
         this.firstNameEng = firstNameEng;
         this.gender = gender;
         this.role = Role.USER;
+        this.birthDate = birthDate;
     }
 
-    public static User newUser(UserJoinReqDto dto){
+    public static User newUser(UserJoinReqDto dto) {
         return User.builder()
                 .username(dto.getUsername())
                 .password(dto.getPassword())
@@ -103,14 +107,15 @@ public class User extends BaseTimeEntity {
                 .lastNameEng(dto.getLastNameEng())
                 .firstNameEng(dto.getFirstNameEng())
                 .gender(dto.getGender())
+                .birthDate(dto.getBirthDate())
                 .build();
     }
 
-    public String getRole(){
+    public String getRole() {
         return role.name();
     }
 
-    public void modify(UserUpdateReqDto dto){
+    public void modify(UserUpdateReqDto dto) {
         this.password = dto.getPassword();
         this.nickname = dto.getNickname();
         this.email = dto.getEmail();

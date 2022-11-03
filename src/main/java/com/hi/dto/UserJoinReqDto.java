@@ -20,4 +20,5 @@ public class UserJoinReqDto {
     private String lastNameEng;
     private String firstNameEng;
     private Gender gender;
+    private String birthDate;
 }
