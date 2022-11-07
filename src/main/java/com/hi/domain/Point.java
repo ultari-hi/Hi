@@ -25,7 +25,7 @@ public class Point {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "type", columnDefinition = "enum", nullable = false)
+    @Column(name = "type", columnDefinition = "enum('USING','SAVING')", nullable = false)
     @Enumerated(EnumType.STRING)
     private PointType type;
 

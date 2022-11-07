@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hi.config.auth.CustomUserDetails;
-import com.hi.dto.LoginReqDto;
+import com.hi.dto.UserLoginReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,17 +29,17 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         ObjectMapper objectMapper = new ObjectMapper();
-        LoginReqDto loginReqDto = null;
+        UserLoginReqDto userLoginReqDto = null;
 
         try {
-            loginReqDto = objectMapper.readValue(request.getInputStream(), LoginReqDto.class);
+            userLoginReqDto = objectMapper.readValue(request.getInputStream(), UserLoginReqDto.class);
         } catch (IOException e){
             e.printStackTrace();
         }
 
         //유저네임 패스워드 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginReqDto.getUsername(), loginReqDto.getPassword());
+                new UsernamePasswordAuthenticationToken(userLoginReqDto.getUsername(), userLoginReqDto.getPassword());
 
         //authenticate() 호출시 AuthenticationProvider 가 UserDetailsService 의 loadUserByUsername()(첫 번째 파라미터) 함수 실행
         //UserDetails 를 리턴 받아서 위의 두번째 파라미터와 UserDetails 의 getPassword() 함수로 비교

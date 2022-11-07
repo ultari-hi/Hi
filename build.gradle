@@ -53,6 +53,7 @@ dependencies {
 	implementation 'com.auth0:java-jwt:4.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.4'
 }
 
 dependencyManagement {
