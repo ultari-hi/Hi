@@ -35,9 +35,15 @@ public class UserRepository {
         return "회원탈퇴";
     }
 
-    //아이디 중복검사
-    public Optional<User> checkDuplicateUsername(String username){
+    public Optional<User> findByUsername(String username){
         return Optional.ofNullable(em.createQuery("select u from User u where u.username = :username", User.class)
+                .setParameter("username", username)
+                .getSingleResult());
+    }
+
+    //아이디 중복검사
+    public Optional<String> findUsername(String username){
+        return Optional.ofNullable(em.createQuery("select u.username from User u where u.username = :username", String.class)
                 .setParameter("username", username)
                 .getSingleResult());
     }
@@ -58,5 +64,25 @@ public class UserRepository {
         } catch (NoResultException nre) {
             return Optional.empty();
         }
+    }
+
+    //아이디 찾기
+    public Optional<String> findUsernameByEmail(FindUsernameReqDto dto){
+        return Optional.ofNullable(em.createQuery("select u.username from User u where u.email = :email" +
+                " and u.birthDate = :birthDate",String.class)
+                .setParameter("email", dto.getEmail())
+                .setParameter("birthDate", dto.getBirthDate())
+                .getSingleResult());
+    }
+
+    //비밀번호 찾기
+    public Optional<User> findPassword(FindPasswordReqDto dto){
+        return Optional.ofNullable(em.createQuery("select u from User u where u.email = : :email" +
+                " and u.username = :username" +
+                " and u.birthDate = :birthDate", User.class)
+                .setParameter("email", dto.getEmail())
+                .setParameter("username", dto.getUsername())
+                .setParameter("birthDate", dto.getBirthDate())
+                .getSingleResult());
     }
 }

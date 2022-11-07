@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -123,5 +122,10 @@ public class User extends BaseTimeEntity {
         this.postcode = dto.getPostcode();
         this.address = dto.getAddress();
         this.detailedAddress = dto.getDetailedAddress();
+    }
+
+    //비밀번호 찾기 후 비밀번호 변경
+    public void modifyPassword(String password){
+        this.password = password;
     }
 }

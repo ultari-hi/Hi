@@ -21,7 +21,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -63,6 +62,12 @@ public class UserService {
         userRepository.delete(id);
     }
 
+    //아이디 중복검사
+    public boolean checkDuplicateUsername(String username) {
+        return userRepository.findUsername(username).isEmpty();
+    }
+
+    //닉네임 중복검사
     public boolean checkDuplicateNickname(String nickname) {
         return userRepository.findNickname(nickname).isEmpty();
     }
@@ -100,7 +105,7 @@ public class UserService {
             EmailAuthentication emailAuthentication = EmailAuthentication.newEmailAuthentication(email, checkNum, beforeData);
             emailAuthenticationRepository.save(emailAuthentication);
 
-            result = "인증번호가 발송되었습니다.";
+            result = "인증번호 전송";
         } else {
             System.out.println(email);
             result = "이미 가입 되어있는 이메일입니다.";
@@ -134,4 +139,26 @@ public class UserService {
         return result;
     }
 
+    //아이디 찾기
+    public FindUsernameResDto findUsername(FindUsernameReqDto dto){
+        return new FindUsernameResDto(userRepository.findUsernameByEmail(dto)
+                .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다.")));
+    }
+
+    //비밀번호 찾기 회원정보 확인
+    public Long findPassword(FindPasswordReqDto dto){
+        User user = userRepository.findPassword(dto)
+                .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다."));
+        return user.getId();
+    }
+
+    //비밀번호 찾기 후 비밀번호 변경
+    public String changePassword(ChangePasswordReqDto dto){
+        User user = userRepository.findById(dto.getUserId())
+                .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다."));
+
+        user.modifyPassword(dto.hashPassword(dto.getPassword()));
+
+        return "success";
+    }
 }
