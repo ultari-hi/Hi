@@ -108,4 +108,8 @@ public class Room {
     public List<String> separateLetters(String filtering){
         return List.of(filtering.split(","));
     }
+
+    public void setIsAvailable(Boolean isAvailable){
+        this.isAvailable = isAvailable;
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -23,8 +24,8 @@ public class ReservationDateRepository {
     }
 
     public List<Long> unAvailableRooms(List<LocalDate> selectDates){
-        return em.createQuery("select distinct resvDate.room.id from ReservationDate resvDate " +
-                        "where resvDate.date in :selectDates", Long.class)
+        return em.createQuery("select distinct resvDate.room.id from ReservationDate resvDate" +
+                        " where resvDate.date in :selectDates", Long.class)
                 .setParameter("selectDates", selectDates)
                 .getResultList();
     }

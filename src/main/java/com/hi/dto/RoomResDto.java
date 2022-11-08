@@ -17,8 +17,9 @@ public class RoomResDto {
     private Integer numberPeople;
     private List<String> filtering;
     private List<String> imageUrl;
+    private Boolean isAvailable;
 
-    public RoomResDto(Room room, ImageDto dto){
+    public RoomResDto(Room room, boolean isAvailable, ImageDto dto){
         this.id = room.getId();
         this.name = room.getName();
         this.information = room.getInformation();
@@ -28,5 +29,6 @@ public class RoomResDto {
         this.numberPeople = room.getNumberPeople();
         this.filtering = room.separateLetters(room.getFiltering());
         this.imageUrl = dto.getUrls();
+        this.isAvailable = isAvailable;
     }
 }
