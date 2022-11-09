@@ -1,4 +1,4 @@
-package com.hi.dto;
+package com.hi.dto.accommodation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,8 +1,6 @@
 package com.hi.repository;
 
-import com.hi.domain.Accommodation;
 import com.hi.domain.Room;
-import com.hi.dto.AccommodationResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
 package com.hi.controller;
 
-import com.hi.dto.AccommodationDetailDto;
-import com.hi.dto.AccommodationReqDto;
-import com.hi.dto.AccommodationResDto;
+import com.hi.dto.accommodation.AccommodationDetailDto;
+import com.hi.dto.accommodation.AccommodationReqDto;
+import com.hi.dto.accommodation.AccommodationResDto;
 import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;

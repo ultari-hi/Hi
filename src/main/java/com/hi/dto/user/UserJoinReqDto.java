@@ -1,4 +1,4 @@
-package com.hi.dto;
+package com.hi.dto.user;
 
 import com.hi.enums.Gender;
 import lombok.AllArgsConstructor;

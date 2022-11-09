@@ -1,6 +1,6 @@
 package com.hi.domain;
 
-import com.hi.dto.RoomReqDto;
+import com.hi.dto.accommodation.RoomReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

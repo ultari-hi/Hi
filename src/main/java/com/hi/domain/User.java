@@ -1,7 +1,7 @@
 package com.hi.domain;
 
-import com.hi.dto.UserJoinReqDto;
-import com.hi.dto.UserUpdateReqDto;
+import com.hi.dto.user.UserJoinReqDto;
+import com.hi.dto.user.UserUpdateReqDto;
 import com.hi.enums.Gender;
 import com.hi.enums.Role;
 import lombok.AccessLevel;

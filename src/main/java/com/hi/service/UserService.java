@@ -5,6 +5,7 @@ import com.hi.domain.Point;
 import com.hi.domain.SendEmailData;
 import com.hi.domain.User;
 import com.hi.dto.*;
+import com.hi.dto.user.*;
 import com.hi.repository.EmailAuthenticationRepository;
 import com.hi.repository.PointRepository;
 import com.hi.repository.SendEmailDataRepository;
@@ -38,7 +39,7 @@ public class UserService {
     //유저와 포인트 조회
     public PaymentResDto findUserData(Long userId){
         User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Point point = pointRepository.findBalance(user);
+        Point point = pointRepository.findLatest(user);
         return new PaymentResDto(user, point);
     }
 
@@ -47,6 +48,9 @@ public class UserService {
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         User user = User.newUser(dto);
         userRepository.save(user);
+
+        Point point = Point.newUserPoint(user);
+        pointRepository.save(point);
     }
 
     //회원정보 수정

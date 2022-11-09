@@ -1,13 +1,15 @@
 package com.hi.repository;
 
+import com.hi.domain.Reservation;
 import com.hi.domain.ReservationDate;
+import com.hi.domain.Room;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -28,5 +30,19 @@ public class ReservationDateRepository {
                         " where resvDate.date in :selectDates", Long.class)
                 .setParameter("selectDates", selectDates)
                 .getResultList();
+    }
+
+    public List<LocalDate> unAvailableDates(Room room, List<LocalDate> dates) {
+        return em.createQuery("select resvDate.date from ReservationDate resvDate" +
+                " where resvDate.date in :dates" +
+                " and resvDate.room = :room", LocalDate.class)
+                .setParameter("dates", dates)
+                .setParameter("room", room)
+                .getResultList();
+    }
+
+    public void cancelReservation(Reservation reservation) {
+        em.createQuery("delete from ReservationDate resvDate where resvDate.reservation = :reservation")
+                .setParameter("reservation", reservation);
     }
 }

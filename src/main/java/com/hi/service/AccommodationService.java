@@ -2,6 +2,10 @@ package com.hi.service;
 
 import com.hi.domain.*;
 import com.hi.dto.*;
+import com.hi.dto.accommodation.AccommodationDetailDto;
+import com.hi.dto.accommodation.AccommodationReqDto;
+import com.hi.dto.accommodation.AccommodationResDto;
+import com.hi.dto.accommodation.RoomResDto;
 import com.hi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.StreamUtils;
@@ -10,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,8 +106,7 @@ public class AccommodationService {
     //숙소 전체 리스트
     public List<AccommodationResDto> findAllAccommodation() {
         List<Accommodation> accommodations = accommodationRepository.findAll();
-        return accommodations
-                .stream()
+        return accommodations.stream()
                 .filter(Accommodation::hasRoom)
                 .map(accommodation -> new AccommodationResDto(accommodation, new ImageDto(accommodation.getAccommodationImages()
                         .stream()

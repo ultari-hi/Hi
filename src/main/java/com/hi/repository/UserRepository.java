@@ -1,8 +1,8 @@
 package com.hi.repository;
 
 import com.hi.domain.User;
-import com.hi.dto.FindPasswordReqDto;
-import com.hi.dto.FindUsernameReqDto;
+import com.hi.dto.user.FindPasswordReqDto;
+import com.hi.dto.user.FindUsernameReqDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

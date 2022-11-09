@@ -73,17 +73,9 @@ public class AccommodationRepository {
 
     //숙소 조회
     public Optional<Accommodation> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a" +
+        return Optional.ofNullable(em.createQuery("select a from Accommodation a join Room r on r.accommodation = a" +
                         " where a.id = :id",Accommodation.class)
                 .setParameter("id", id)
-                .getSingleResult());
-    }
-
-    //숙소 상세조회
-    public Optional<Accommodation> findByCondition(Long accommodationId) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a join Room r on r.accommodation = a" +
-                " where a.id = :accommodationId", Accommodation.class)
-                .setParameter("accommodationId", accommodationId)
                 .getSingleResult());
     }
 }

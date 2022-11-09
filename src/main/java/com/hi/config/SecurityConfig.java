@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**/new/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/**/modify/**").access("hasRole('ROLE_USER')")
                 .antMatchers("/**/delete/**").access("hasRole('ROLE_USER')")
+                .antMatchers("/**/cancel/**").access("hasRole('ROLE_USER')")
                 .anyRequest().permitAll();
     }
 }
