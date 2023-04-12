@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Tuple;
+import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +22,7 @@ public class AccommodationRepository {
         return accommodation;
     }
 
+    //필터링 조건에 맞는 숙소 리스트
     public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberPeople, String region, List<String> accommodationFiltering, List<String> roomFiltering) {
 
         String jpql = "select distinct a from Room r join Accommodation a on r.accommodation = a" +
@@ -64,16 +65,17 @@ public class AccommodationRepository {
         }
     }
 
+    //숙소 전체 조회
     public List<Accommodation> findAll() {
         return em.createQuery("select a from Accommodation a ", Accommodation.class)
                 .getResultList();
     }
 
+    //숙소 조회
     public Optional<Accommodation> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a " +
-                        "where a.id = :id",Accommodation.class)
+        return Optional.ofNullable(em.createQuery("select a from Accommodation a join Room r on r.accommodation = a" +
+                        " where a.id = :id",Accommodation.class)
                 .setParameter("id", id)
-                .getSingleResult()
-        );
+                .getSingleResult());
     }
 }

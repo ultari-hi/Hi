@@ -1,13 +1,9 @@
 package com.hi.controller;
 
-import com.hi.dto.ImageDto;
-import com.hi.dto.RoomReqDto;
-import com.hi.dto.RoomResDto;
+import com.hi.dto.accommodation.RoomReqDto;
 import com.hi.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*") // CORS 에러 처리 용도
 @RestController

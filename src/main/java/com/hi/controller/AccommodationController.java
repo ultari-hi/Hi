@@ -1,8 +1,8 @@
 package com.hi.controller;
 
-import com.hi.dto.AccommodationDetailDto;
-import com.hi.dto.AccommodationReqDto;
-import com.hi.dto.AccommodationResDto;
+import com.hi.dto.accommodation.AccommodationDetailDto;
+import com.hi.dto.accommodation.AccommodationReqDto;
+import com.hi.dto.accommodation.AccommodationResDto;
 import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,8 +26,11 @@ public class AccommodationController {
 
     //숙소 상세 조회
     @GetMapping("/accommodation/{accommodationId}")
-    public AccommodationDetailDto findAccommodationDetail(@PathVariable Long accommodationId){
-        return accommodationService.findAccommodationDetail(accommodationId);
+    public AccommodationDetailDto findAccommodationDetail(@PathVariable Long accommodationId,
+                                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkInDate,
+                                                          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOutDate,
+                                                          @RequestParam(required = false, defaultValue = "1") Integer numberPeople){
+        return accommodationService.findAccommodationDetail(accommodationId, checkInDate, checkOutDate, numberPeople);
     }
 
     //필터링 한 숙소 리스트

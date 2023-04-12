@@ -2,6 +2,7 @@ package com.hi.controller;
 
 import com.hi.config.auth.CustomUserDetails;
 import com.hi.dto.*;
+import com.hi.dto.user.*;
 import com.hi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

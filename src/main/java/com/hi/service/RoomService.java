@@ -3,9 +3,7 @@ package com.hi.service;
 import com.hi.domain.Accommodation;
 import com.hi.domain.Room;
 import com.hi.domain.RoomImage;
-import com.hi.dto.ImageDto;
-import com.hi.dto.RoomReqDto;
-import com.hi.dto.RoomResDto;
+import com.hi.dto.accommodation.RoomReqDto;
 import com.hi.repository.AccommodationRepository;
 import com.hi.repository.RoomImageRepository;
 import com.hi.repository.RoomRepository;
@@ -15,8 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toUnmodifiableList;
 
 @Service
 @Transactional

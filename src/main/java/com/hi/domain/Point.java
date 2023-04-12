@@ -4,18 +4,15 @@ import com.hi.enums.PointType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Point {
+public class Point extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "point_id", columnDefinition = "bigint")
@@ -39,12 +36,7 @@ public class Point {
     private String content;
 
     @Column(name = "is_latest", columnDefinition = "boolean", nullable = false)
-    @ColumnDefault("TRUE")
     private boolean isLatest;
-
-    @Column(name = "created_at", columnDefinition = "datetime", nullable = false)
-    @CreatedDate
-    private LocalDateTime createdAt;
 
     public Point(Long id, User user, PointType type, int amount, int balance, String content, Boolean isLatest, LocalDateTime createdAt) {
         this.id = id;
@@ -63,16 +55,21 @@ public class Point {
         this.amount = amount;
         this.content = content;
         this.balance = amount + userPointBalance;
+        this.isLatest = Boolean.TRUE;
     }
 
-    public static Point newPoint(User user, int amount, String content, int userPointBalance){
-        PointType type;
-        if(amount > 0) {
-            type = PointType.SAVING;
-        } else {
-            type = PointType.USING;
-        }
-        return new Point(user, type, amount, content, userPointBalance);
+    //포인트 사용
+    public static Point usePoint(User user, int amount, String content, Point userPoint){
+        PointType type = PointType.USING;
+        userPoint.setIsLatest();
+        return new Point(user, type, -amount, content, userPoint.getBalance());
+    }
+
+    //포인트 적립
+    public static Point savePoint(User user, int amount, String content, Point userPoint) {
+        PointType type = PointType.SAVING;
+        userPoint.setIsLatest();
+        return new Point(user, type, amount, content, userPoint.getBalance());
     }
 
     //최신 포인트 내역 새로 쓰면서 기존 포인트 플래그를 FALSE 로 수정하는 로직
@@ -80,28 +77,40 @@ public class Point {
         this.isLatest = Boolean.FALSE;
     }
 
+    public Point(User user) {
+        this.user = user;
+        this.type = PointType.SAVING;
+        this.balance = 100000;
+        this.content = "새 회원 체험 포인트";
+        this.isLatest = Boolean.TRUE;
+    }
+
+    public static Point newUserPoint(User user){
+        return new Point(user);
+    }
+
     //포인트 적립 비율
     public static int savingPointAmount(int cashAmount){
         return (int) (cashAmount * 0.05);
     }
 
-    public static List<Point> newPoint(Payment payment, Point latestPoint) {
-
-        latestPoint.setIsLatest();
-
-        ArrayList<Point> points = new ArrayList<Point>();
-
-        if (payment.getPointAmount() != 0) {
-            Point pointUsing = Point.newPoint(payment.getUser(), payment.getPointAmount(), "포인트 결제", latestPoint.getBalance());
-            pointUsing.setIsLatest();
-            Point pointSaving = Point.newPoint(payment.getUser(), savingPointAmount(payment.getCashAmount()), "포인트 적립", pointUsing.getBalance());
-
-            points.set(0, pointUsing);
-            points.set(1, pointSaving);
-        } else {
-            Point pointSaving = Point.newPoint(payment.getUser(), payment.getCashAmount(), "포인트 적립", latestPoint.getBalance());
-            points.set(0, pointSaving);
-        }
-        return points;
-    }
+//    public static List<Point> newPoint(Payment payment, Point latestPoint) {
+//
+//        latestPoint.setIsLatest();
+//
+//        ArrayList<Point> points = new ArrayList<>();
+//
+//        if (payment.getPointAmount() != 0) {
+//            Point pointUsing = Point.newPoint(payment.getUser(), payment.getPointAmount(), "포인트 결제", latestPoint.getBalance());
+//            pointUsing.setIsLatest();
+//            Point pointSaving = Point.newPoint(payment.getUser(), savingPointAmount(payment.getCashAmount()), "포인트 적립", pointUsing.getBalance());
+//
+//            points.set(0, pointUsing);
+//            points.set(1, pointSaving);
+//        } else {
+//            Point pointSaving = Point.newPoint(payment.getUser(), payment.getCashAmount(), "포인트 적립", latestPoint.getBalance());
+//            points.set(0, pointSaving);
+//        }
+//        return points;
+//    }
 }

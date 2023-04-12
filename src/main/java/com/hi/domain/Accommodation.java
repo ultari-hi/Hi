@@ -1,7 +1,7 @@
 package com.hi.domain;
 
 
-import com.hi.dto.AccommodationReqDto;
+import com.hi.dto.accommodation.AccommodationReqDto;
 import lombok.*;
 
 import javax.persistence.*;

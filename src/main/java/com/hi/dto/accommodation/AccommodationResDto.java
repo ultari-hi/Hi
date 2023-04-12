@@ -1,6 +1,7 @@
-package com.hi.dto;
+package com.hi.dto.accommodation;
 
 import com.hi.domain.Accommodation;
+import com.hi.dto.ImageDto;
 import lombok.Data;
 
 import java.util.List;

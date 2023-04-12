@@ -14,8 +14,9 @@ public class PointRepository {
 
     private final EntityManager em;
 
-    public void save(Point point){
+    public Point save(Point point){
         em.persist(point);
+        return point;
     }
 
     public List<Point> findByUserId(Long userId){
@@ -24,7 +25,7 @@ public class PointRepository {
                 .getResultList();
     }
 
-    public Point findBalance(User user){
+    public Point findLatest(User user){
         return em.createQuery("select p from Point p where p.user = :user " +
                         "and p.isLatest = true", Point.class)
                 .setParameter("user", user)

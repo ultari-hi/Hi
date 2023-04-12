@@ -1,12 +1,12 @@
 package com.hi.domain;
 
 import com.hi.dto.PaymentReqDto;
+import com.hi.dto.ReservationReqDto;
 import com.hi.enums.Status;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -27,16 +27,19 @@ public class Reservation extends BaseTimeEntity{
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "accommodation_id")
-    private Accommodation accommodation;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")
     private Room room;
 
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "payment_id")
+//    private Payment payment;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
+    @JoinColumn(name = "point_id")
+    private Point point;
+
+    @Column(name = "total_amount", columnDefinition = "int", nullable = false)
+    private int totalAmount;
 
     @Column(name = "enquiry", columnDefinition = "text")
     private String enquiry;
@@ -52,29 +55,36 @@ public class Reservation extends BaseTimeEntity{
     private final List<ReservationDate> reservationDates = new ArrayList<>();
 
     @Builder
-    public Reservation(Long id, User user, Accommodation accommodation, Room room, Payment payment, String enquiry, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
+    public Reservation(Long id, User user, Room room /*, Payment payment*/ , Point point, int totalAmount, String enquiry, int priceKor, Status status, LocalDateTime createdAt, LocalDateTime updatedAt){
         this.id = id;
         this.user = user;
-        this.accommodation = accommodation;
         this.room = room;
-        this.payment = payment;
+//        this.payment = payment;
+        this.point = point;
+        this.totalAmount = totalAmount;
         this.enquiry = enquiry;
         this.priceKor = priceKor;
         this.status = status;
     }
 
-    public static Reservation newReservation(User user, Accommodation accommodation , Room room, PaymentReqDto dto){
+    public static Reservation newReservation(User user, Room room, Point point, ReservationReqDto dto){
         return Reservation.builder()
                 .user(user)
-                .accommodation(accommodation)
                 .room(room)
+                .point(point)
+                .totalAmount(dto.getTotalAmount())
                 .enquiry(dto.getEnquiry())
                 .priceKor(room.getPriceKor())
+                .status(Status.SUCCESS)
                 .build();
     }
 
     public Reservation status(Status result) {
         this.status = result;
         return this;
+    }
+
+    public void cancel(Reservation reservation) {
+        reservation.status = Status.CANCEL;
     }
 }

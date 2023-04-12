@@ -1,8 +1,6 @@
 package com.hi.repository;
 
-import com.hi.domain.Accommodation;
 import com.hi.domain.Room;
-import com.hi.dto.AccommodationResDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +28,13 @@ public class RoomRepository {
     public Optional<Room> findById(Long id) {
         return Optional.ofNullable(em.createQuery("select r from Room r where r.id =:id",Room.class)
                 .setParameter("id",id)
+                .getSingleResult());
+    }
+
+    public Optional<Room> findWithAccommodationById(Long id) {
+        return Optional.ofNullable(em.createQuery("select r from Room r join Accommodation a on r.accommodation = a" +
+                " where r.id = :id", Room.class)
+                .setParameter("id", id)
                 .getSingleResult());
     }
 }

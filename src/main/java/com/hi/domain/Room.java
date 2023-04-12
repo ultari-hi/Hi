@@ -1,6 +1,6 @@
 package com.hi.domain;
 
-import com.hi.dto.RoomReqDto;
+import com.hi.dto.accommodation.RoomReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -107,5 +107,9 @@ public class Room {
     //반정규화해서 넣었던 필터링 분리
     public List<String> separateLetters(String filtering){
         return List.of(filtering.split(","));
+    }
+
+    public void setIsAvailable(Boolean isAvailable){
+        this.isAvailable = isAvailable;
     }
 }

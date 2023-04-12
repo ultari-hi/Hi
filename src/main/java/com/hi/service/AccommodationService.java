@@ -2,6 +2,10 @@ package com.hi.service;
 
 import com.hi.domain.*;
 import com.hi.dto.*;
+import com.hi.dto.accommodation.AccommodationDetailDto;
+import com.hi.dto.accommodation.AccommodationReqDto;
+import com.hi.dto.accommodation.AccommodationResDto;
+import com.hi.dto.accommodation.RoomResDto;
 import com.hi.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.StreamUtils;
@@ -9,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +44,15 @@ public class AccommodationService {
     }
 
     //숙소 상세 조회
-    public AccommodationDetailDto findAccommodationDetail(Long accommodationId) {
+    public AccommodationDetailDto findAccommodationDetail(Long accommodationId, LocalDate checkInDate, LocalDate checkOutDate, Integer numberPeople) {
+        final List<Long> unAvailableRoomIds = new ArrayList<>();
+        if (!(checkInDate == null)) {
+            List<LocalDate> selectDates = checkInDate
+                    .datesUntil(checkOutDate.plusDays(1))
+                    .collect(StreamUtils.toUnmodifiableList());
+            unAvailableRoomIds.addAll(reservationDateRepository.unAvailableRooms(selectDates));
+        }
+
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
                 .orElseThrow(() -> new IllegalArgumentException("숙소를 찾을 수 없습니다."));
 
@@ -49,12 +61,26 @@ public class AccommodationService {
                 .map(AccommodationImage::getUrl)
                 .collect(Collectors.toUnmodifiableList()));
 
-        //숙소에 포함된 객실들
-        List<RoomResDto> roomResDto = accommodation.getRooms().stream()
-                .map(room -> new RoomResDto(room, new ImageDto(room.getRoomImages().stream()
+        //숙소에 포함된 조건에 안맞는 객실들
+        List<RoomResDto> unAvailableRoomResDto = accommodation.getRooms().stream()
+                .filter(room -> unAvailableRoomIds.contains(room.getId()) | room.getNumberPeople() < numberPeople)
+                .map(room -> new RoomResDto(room, false, new ImageDto(room.getRoomImages().stream()
                         .map(RoomImage::getUrl)
                         .collect(toUnmodifiableList()))))
                 .collect(toUnmodifiableList());
+
+        //숙소에 포함된 조건에 맞는 객실들
+        List<RoomResDto> availableRoomResDto = accommodation.getRooms().stream()
+                .filter(room -> !unAvailableRoomIds.contains(room.getId()) & room.getNumberPeople() >= numberPeople)
+                .map(room -> new RoomResDto(room, true, new ImageDto(room.getRoomImages().stream()
+                        .map(RoomImage::getUrl)
+                        .collect(toUnmodifiableList()))))
+                .collect(toUnmodifiableList());
+
+        List<RoomResDto> roomResDto = new ArrayList<>();
+        roomResDto.addAll(unAvailableRoomResDto);
+        roomResDto.addAll(availableRoomResDto);
+
         return new AccommodationDetailDto(accommodation, urls, roomResDto);
     }
 
@@ -80,8 +106,7 @@ public class AccommodationService {
     //숙소 전체 리스트
     public List<AccommodationResDto> findAllAccommodation() {
         List<Accommodation> accommodations = accommodationRepository.findAll();
-        return accommodations
-                .stream()
+        return accommodations.stream()
                 .filter(Accommodation::hasRoom)
                 .map(accommodation -> new AccommodationResDto(accommodation, new ImageDto(accommodation.getAccommodationImages()
                         .stream()
