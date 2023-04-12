@@ -30,4 +30,11 @@ public class RoomRepository {
                 .setParameter("id",id)
                 .getSingleResult());
     }
+
+    public Optional<Room> findWithAccommodationById(Long id) {
+        return Optional.ofNullable(em.createQuery("select r from Room r join Accommodation a on r.accommodation = a" +
+                " where r.id = :id", Room.class)
+                .setParameter("id", id)
+                .getSingleResult());
+    }
 }

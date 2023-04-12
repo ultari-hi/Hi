@@ -3,6 +3,7 @@ package com.hi.service;
 import com.hi.domain.*;
 import com.hi.dto.ReservationDto;
 import com.hi.dto.ReservationReqDto;
+import com.hi.dto.ReservationResDto;
 import com.hi.repository.PointRepository;
 import com.hi.repository.ReservationDateRepository;
 import com.hi.repository.ReservationRepository;
@@ -53,6 +54,12 @@ public class ReservationService {
         return "이미 예약된 객실입니다. \n이용 불가 날짜 : " + unAvailableDates;
     }
 
+    //예약 상세보기
+    public ReservationResDto reservationPage(User user, Long roomId) {
+        Room room = roomRepository.findWithAccommodationById(roomId).orElseThrow(()-> new IllegalArgumentException("객실을 찾을 수 없습니다."));
+        return new ReservationResDto(user, room);
+    }
+
     //예약 내역
     public List<ReservationDto> findHistory(Long userId) {
         List<Reservation> reservations = reservationRepository.findHistoryByUserId(userId);
@@ -76,6 +83,6 @@ public class ReservationService {
         Point afterPoint = Point.savePoint(user, reservation.getTotalAmount(), content, beforePoint);
         pointRepository.save(afterPoint);
 
-        return "예약 취소 성공";
+        return "예약 취소 완료";
     }
 }
