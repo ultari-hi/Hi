@@ -29,11 +29,11 @@ public class ReservationController {
         return reservationService.reservationPage(user.getUser(), roomId);
     }
 
-    //예약 상세 조회
-    @GetMapping("/reservation")
-    public ReservationResDto reservationDetail(@AuthenticationPrincipal CustomUserDetails user) {
-        return reservationService.
-    }
+//    //예약 상세 조회
+//    @GetMapping("/reservation")
+//    public ReservationResDto reservationDetail(@AuthenticationPrincipal CustomUserDetails user) {
+//        return reservationService.
+//    }
 
     //예약 내역 조회
     @GetMapping("/reservation/history")

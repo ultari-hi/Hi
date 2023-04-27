@@ -5,17 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Random;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 // 로직으로 메세지를 작성해놓으면 메세지가 바뀌어야 할 경우 재배포를 해야한다.
 // DB에 저장해놓으면 재배포를 할 필요가 없기 때문에 DB에 저장
-public class SendEmailData {
+public class SendEmailForm {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "send_email_data_id", columnDefinition = "int", nullable = false)
+    @Column(name = "send_email_form_id", columnDefinition = "int", nullable = false)
     private int id;
 
     @Column(name = "sender", columnDefinition = "varchar(50)")

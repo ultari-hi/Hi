@@ -38,7 +38,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java - 크롤링 셀레니움
 	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.4'
 
-	compileOnly 'org.projectlombok:lombok'
+    compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
@@ -54,6 +54,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.4'
+
+	// lombok, Slf4j
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {

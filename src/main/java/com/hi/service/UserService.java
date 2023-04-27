@@ -2,13 +2,13 @@ package com.hi.service;
 
 import com.hi.domain.EmailAuthentication;
 import com.hi.domain.Point;
-import com.hi.domain.SendEmailData;
+import com.hi.domain.SendEmailForm;
 import com.hi.domain.User;
 import com.hi.dto.*;
 import com.hi.dto.user.*;
 import com.hi.repository.EmailAuthenticationRepository;
 import com.hi.repository.PointRepository;
-import com.hi.repository.SendEmailDataRepository;
+import com.hi.repository.SendEmailFormRepository;
 import com.hi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,6 +20,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.persistence.NoResultException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.Random;
@@ -34,7 +35,7 @@ public class UserService {
     private final EmailAuthenticationRepository emailAuthenticationRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JavaMailSender javaMailSender;
-    private final SendEmailDataRepository sendEmailDataRepository;
+    private final SendEmailFormRepository sendEmailFormRepository;
 
     //유저와 포인트 조회
     public PaymentResDto findUserData(Long userId){
@@ -45,12 +46,13 @@ public class UserService {
 
     //회원가입
     public void join(UserJoinReqDto dto){
+        // 비밀번호 암호화
         dto.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
         User user = User.newUser(dto);
         userRepository.save(user);
 
-        Point point = Point.newUserPoint(user);
-        pointRepository.save(point);
+//        Point point = Point.newUserPoint(user);
+//        pointRepository.save(point);
     }
 
     //회원정보 수정
@@ -62,8 +64,12 @@ public class UserService {
     }
 
     //회원탈퇴
-    public void delete(Long id){
+    public String delete(Long id){
         userRepository.delete(id);
+        if (userRepository.findById(id).isEmpty()) {
+            return "success";
+        }
+        return "fail";
     }
 
     //아이디 중복검사
@@ -80,41 +86,43 @@ public class UserService {
     public String sendKey(String email) {
         String result;
         if (userRepository.checkDuplicateEmail(email).isEmpty()) {
-            Random random = new Random();
-            StringBuilder randomNum = new StringBuilder();
-            for (int i=0; i<6; i++){
-                randomNum.append(random.nextInt(10));
-            }
+            //난수 생성
+            String checkNum = randomNumberGenerate();
 
-            String checkNum = randomNum.toString();
-
-            SendEmailData sendEmailData = sendEmailDataRepository.findData();
+            //DB에 저장된 이메일 양식
+            SendEmailForm sendEmailForm = sendEmailFormRepository.findData();
 
             MimeMessage message = javaMailSender.createMimeMessage();
             try {
                 message.addRecipients(Message.RecipientType.TO, email);
-                message.setFrom(new InternetAddress(sendEmailData.getSender(), sendEmailData.getSenderCustom(), "utf-8"));
-                message.setSubject(sendEmailData.getTitle());
-                message.setText(sendEmailData.getNewContent(checkNum), "utf-8", "html");
+                message.setFrom(new InternetAddress(sendEmailForm.getSender(), sendEmailForm.getSenderCustom(), "utf-8"));
+                message.setSubject(sendEmailForm.getTitle());
+                message.setText(sendEmailForm.getNewContent(checkNum), "utf-8", "html");
             } catch (MessagingException e) {
-                e.printStackTrace();
-                throw new IllegalArgumentException("인증코드 전송 실패");
+                throw new IllegalArgumentException("인증코드 전송 실패: " + e.getMessage());
             } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException("인터넷 주소 인코딩 실패");
+                throw new RuntimeException("인터넷 주소 인코딩 실패: " + e.getMessage());
             }
-
             javaMailSender.send(message);
 
             EmailAuthentication beforeData = emailAuthenticationRepository.findByEmail(email);
             EmailAuthentication emailAuthentication = EmailAuthentication.newEmailAuthentication(email, checkNum, beforeData);
             emailAuthenticationRepository.save(emailAuthentication);
-
             result = "인증번호 전송";
         } else {
-            System.out.println(email);
             result = "이미 가입 되어있는 이메일입니다.";
         }
         return result;
+    }
+
+    //난수 생성 메서드
+    public String randomNumberGenerate() {
+        Random random = new Random();
+        StringBuilder randomNum = new StringBuilder();
+        for (int i=0; i<6; i++){
+            randomNum.append(random.nextInt(10));
+        }
+        return randomNum.toString();
     }
 
     //이메일 인증번호 확인
@@ -125,7 +133,8 @@ public class UserService {
             return "인증번호를 요청해주세요";
         }
 
-        String result;
+        String result = null;
+
         if (emailAuthentication.getEmail().equals(dto.getEmail())
                 & emailAuthentication.getCheckNum().equals(dto.getCheckNum())){
             if (LocalDateTime.now().isAfter(emailAuthentication.getCreatedAt().plusMinutes(10))){
@@ -137,22 +146,20 @@ public class UserService {
         } else if (emailAuthentication.getEmail().equals(dto.getEmail())
                 & !emailAuthentication.getCheckNum().equals(dto.getCheckNum()) ){
             result = "인증번호가 틀립니다.";
-        } else {
-            result = "먼저 인증번호를 요청해주세요";
         }
         return result;
     }
 
     //아이디 찾기
-    public FindUsernameResDto findUsername(FindUsernameReqDto dto){
-        return new FindUsernameResDto(userRepository.findUsernameByEmail(dto)
-                .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다.")));
+    public String findUsername(FindUsernameReqDto dto){
+        return userRepository.findUsernameByEmail(dto)
+                .orElseThrow(()-> new NoResultException("회원정보를 찾을 수 없습니다."));
     }
 
     //비밀번호 찾기 회원정보 확인
     public Long findPassword(FindPasswordReqDto dto){
         User user = userRepository.findPassword(dto)
-                .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다."));
+                .orElseThrow(()-> new NoResultException("회원정보를 찾을 수 없습니다."));
         return user.getId();
     }
 

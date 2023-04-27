@@ -22,9 +22,13 @@ public class UserRepository {
     }
 
     public Optional<User> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select u from User u where u.id = :id",User.class)
-                .setParameter("id",id)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select u from User u where u.id = :id",User.class)
+                    .setParameter("id",id)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     //회원탈퇴
@@ -43,16 +47,24 @@ public class UserRepository {
 
     //아이디 중복검사
     public Optional<String> findUsername(String username){
-        return Optional.ofNullable(em.createQuery("select u.username from User u where u.username = :username", String.class)
-                .setParameter("username", username)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select u.username from User u where u.username = :username", String.class)
+                    .setParameter("username", username)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     //닉네임 중복검사
     public Optional<String> findNickname(String nickname){
-        return Optional.ofNullable(em.createQuery("select u.nickname from User u where u.nickname = :nickname", String.class)
-                .setParameter("nickname", nickname)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select u.nickname from User u where u.nickname = :nickname", String.class)
+                    .setParameter("nickname", nickname)
+                    .getSingleResult());
+        } catch (NoResultException nre) {
+            return Optional.empty();
+        }
     }
 
     //이메일 중복검사
@@ -68,21 +80,29 @@ public class UserRepository {
 
     //아이디 찾기
     public Optional<String> findUsernameByEmail(FindUsernameReqDto dto){
-        return Optional.ofNullable(em.createQuery("select u.username from User u where u.email = :email" +
-                " and u.birthDate = :birthDate",String.class)
-                .setParameter("email", dto.getEmail())
-                .setParameter("birthDate", dto.getBirthDate())
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select u.username from User u where u.email = :email" +
+                            " and u.birthDate = :birthDate",String.class)
+                    .setParameter("email", dto.getEmail())
+                    .setParameter("birthDate", dto.getBirthDate())
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     //비밀번호 찾기
     public Optional<User> findPassword(FindPasswordReqDto dto){
-        return Optional.ofNullable(em.createQuery("select u from User u where u.email = : :email" +
-                " and u.username = :username" +
-                " and u.birthDate = :birthDate", User.class)
-                .setParameter("email", dto.getEmail())
-                .setParameter("username", dto.getUsername())
-                .setParameter("birthDate", dto.getBirthDate())
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select u from User u where u.email = :email" +
+                            " and u.username = :username" +
+                            " and u.birthDate = :birthDate", User.class)
+                    .setParameter("email", dto.getEmail())
+                    .setParameter("username", dto.getUsername())
+                    .setParameter("birthDate", dto.getBirthDate())
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
