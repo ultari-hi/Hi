@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("api/v1/user")
 public class UserController {
 
     private final UserService userService;
@@ -33,9 +33,8 @@ public class UserController {
 
     //회원탈퇴
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@AuthenticationPrincipal CustomUserDetails user){
-        userService.delete(user.getUserId());
-        return ResponseEntity.ok().build();
+    public String delete(@AuthenticationPrincipal CustomUserDetails user){
+        return userService.delete(user.getUserId());
     }
 
     //아이디 중복검사
@@ -51,9 +50,9 @@ public class UserController {
     }
 
     //이메일 인증 메일 전송
-    @PostMapping("/email")
-    public String sendEmailKey(@RequestBody EmailReqDto email){
-        return userService.sendKey(email.getEmail());
+    @PostMapping("/email/{email}")
+    public String sendEmailKey(@PathVariable String email){
+        return userService.sendKey(email);
     }
 
     //이메일 인증번호 확인
@@ -64,14 +63,13 @@ public class UserController {
 
     //아이디 찾기
     @PostMapping("/findUsername")
-    public FindUsernameResDto findUsername(@RequestBody FindUsernameReqDto dto){
-        return userService.findUsername(dto);
+    public ResponseEntity<String> findUsername(@RequestBody FindUsernameReqDto dto){
+        return new ResponseEntity<>(userService.findUsername(dto), HttpStatus.OK);
     }
 
     //비밀번호 찾기
     @PostMapping("/findPassword")
     public ResponseEntity<Object> findPassword(@RequestBody FindPasswordReqDto dto){
-        userService.findPassword(dto);
         return new ResponseEntity<>(userService.findPassword(dto),HttpStatus.OK);
     }
 
