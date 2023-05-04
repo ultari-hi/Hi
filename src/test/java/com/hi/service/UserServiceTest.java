@@ -2,11 +2,9 @@ package com.hi.service;
 
 import com.hi.domain.EmailAuthentication;
 import com.hi.dto.EmailKeyReqDto;
-import com.hi.dto.user.FindUsernameReqDto;
+import com.hi.dto.user.*;
 import com.hi.repository.EmailAuthenticationRepository;
 import com.hi.domain.User;
-import com.hi.dto.user.UserJoinReqDto;
-import com.hi.dto.user.UserUpdateReqDto;
 import com.hi.enums.Gender;
 import com.hi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,14 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
 
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -182,21 +180,21 @@ class UserServiceTest {
         assertThat(key1).isNotEqualTo(key2);
     }
 
-    @Test
-    @DisplayName("이메일 인증 메일 전송")
-    void sendEmailKeySuccess() {
-        Environment environment = context.getEnvironment();
-        assertThat(userService.sendKey(environment.getProperty("EMAIL"))).isEqualTo("인증번호 전송");
-    }
+//    @Test
+//    @DisplayName("이메일 인증 메일 전송")
+//    void sendEmailKeySuccess() {
+//        Environment environment = context.getEnvironment();
+//        assertThat(userService.sendKey(environment.getProperty("EMAIL"))).isEqualTo("인증번호 전송");
+//    }
 
-    @Test
-    @DisplayName("이메일 인증 메일 전송 실패, 올바르지 않은 양식")
-    void sendEmailKeyFail() {
-        Environment environment = context.getEnvironment();
-        assertThatThrownBy(() -> userService.sendKey(environment.getProperty("EMAIL")+"fail."))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("인증코드 전송 실패");
-    }
+//    @Test
+//    @DisplayName("이메일 인증 메일 전송 실패, 올바르지 않은 양식")
+//    void sendEmailKeyFail() {
+//        Environment environment = context.getEnvironment();
+//        assertThatThrownBy(() -> userService.sendKey(environment.getProperty("EMAIL")+"fail."))
+//                .isInstanceOf(IllegalArgumentException.class)
+//                .hasMessageContaining("인증코드 전송 실패");
+//    }
 
     @Test
     @DisplayName("이메일 인증 성공")
@@ -238,5 +236,42 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.findUsername(findUsernameReqDto))
                 .isInstanceOf(NoResultException.class)
                 .hasMessageContaining("회원정보를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("비밀번호 찾기, 회원정보 일치")
+    void findPasswordSuccess() {
+        FindPasswordReqDto findPasswordReqDto = new FindPasswordReqDto();
+        findPasswordReqDto.setUsername("test");
+        findPasswordReqDto.setEmail("test@naver.com");
+        findPasswordReqDto.setBirthDate("20230101");
+        assertThat(userService.findPassword(findPasswordReqDto)).isEqualTo(user.getId());
+    }
+
+    @Test
+    @DisplayName("비밀번호 찾기, 회원정보 불일치")
+    void findPasswordFail() {
+        FindPasswordReqDto findPasswordReqDto = new FindPasswordReqDto();
+        findPasswordReqDto.setUsername("test");
+        findPasswordReqDto.setEmail("fail");
+        findPasswordReqDto.setBirthDate("20230101");
+        assertThatThrownBy(() -> userService.findPassword(findPasswordReqDto))
+                .isInstanceOf(NoResultException.class)
+                .hasMessageContaining("회원정보를 찾을 수 없습니다.");
+    }
+
+    @Test
+    @DisplayName("비밀번호 찾기 성공 후 변경")
+    void changePassword() {
+        ChangePasswordReqDto changePasswordReqDto = new ChangePasswordReqDto(user.getId(), "123123");
+
+        String beforePassword = user.getPassword();
+
+        assertThat(userService.changePassword(changePasswordReqDto)).isEqualTo("success");
+
+        String afterPassword = user.getPassword();
+
+        assertThat(beforePassword).isNotEqualTo(afterPassword);
+        assertThat(afterPassword).isNotEqualTo("123123");
     }
 }

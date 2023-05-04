@@ -168,7 +168,7 @@ public class UserService {
         User user = userRepository.findById(dto.getUserId())
                 .orElseThrow(()-> new IllegalArgumentException("회원정보를 찾을 수 없습니다."));
 
-        user.modifyPassword(dto.hashPassword(dto.getPassword()));
+        user.modifyPassword(dto.getPassword());
 
         return "success";
     }
