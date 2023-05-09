@@ -36,7 +36,7 @@ public class UserRepository {
         em.createQuery("delete from User u where u.id = :id")
                 .setParameter("id", id)
                 .executeUpdate();
-        return "회원탈퇴";
+        return "success";
     }
 
     public Optional<User> findByUsername(String username){
