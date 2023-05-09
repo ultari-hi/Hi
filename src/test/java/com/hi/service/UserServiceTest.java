@@ -1,11 +1,11 @@
 package com.hi.service;
 
 import com.hi.domain.EmailAuthentication;
+import com.hi.domain.User;
 import com.hi.dto.EmailKeyReqDto;
 import com.hi.dto.user.*;
-import com.hi.repository.EmailAuthenticationRepository;
-import com.hi.domain.User;
 import com.hi.enums.Gender;
+import com.hi.repository.EmailAuthenticationRepository;
 import com.hi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,14 +14,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -186,7 +187,7 @@ class UserServiceTest {
 //        Environment environment = context.getEnvironment();
 //        assertThat(userService.sendKey(environment.getProperty("EMAIL"))).isEqualTo("인증번호 전송");
 //    }
-
+//
 //    @Test
 //    @DisplayName("이메일 인증 메일 전송 실패, 올바르지 않은 양식")
 //    void sendEmailKeyFail() {
@@ -263,15 +264,21 @@ class UserServiceTest {
     @Test
     @DisplayName("비밀번호 찾기 성공 후 변경")
     void changePassword() {
-        ChangePasswordReqDto changePasswordReqDto = new ChangePasswordReqDto(user.getId(), "123123");
-
+        ChangePasswordReqDto changePasswordReqDto = new ChangePasswordReqDto();
+        changePasswordReqDto.setUserId(user.getId());
+        changePasswordReqDto.setPassword("123123");
         String beforePassword = user.getPassword();
 
         assertThat(userService.changePassword(changePasswordReqDto)).isEqualTo("success");
 
+        user = userRepository.findById(user.getId()).orElseThrow(() -> new NoResultException("회원 찾을 수 없음"));
         String afterPassword = user.getPassword();
 
         assertThat(beforePassword).isNotEqualTo(afterPassword);
         assertThat(afterPassword).isNotEqualTo("123123");
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        assertThat(bCryptPasswordEncoder.matches("123123", afterPassword)).isTrue();
+        assertThat(bCryptPasswordEncoder.matches("12312", afterPassword)).isFalse();
     }
 }

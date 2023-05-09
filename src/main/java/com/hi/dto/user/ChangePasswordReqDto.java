@@ -9,9 +9,8 @@ public class ChangePasswordReqDto {
     private Long userId;
     private String password;
 
-    public ChangePasswordReqDto(Long userId, String password) {
+    public String getPassword() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        this.userId = userId;
-        this.password = bCryptPasswordEncoder.encode(password);
+        return bCryptPasswordEncoder.encode(password);
     }
 }
