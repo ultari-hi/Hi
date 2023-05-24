@@ -1,5 +1,6 @@
 package com.hi.domain;
 
+import com.google.common.collect.ImmutableList;
 import com.hi.dto.accommodation.RoomReqDto;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -96,15 +97,14 @@ public class Room {
 
     //필터링 한 단어로 넣기
     public String combineFiltering(List<String> filtering){
-        Collections.sort(filtering);
         StringBuilder combinedFiltering = new StringBuilder();
-        for (String keywords: filtering) {
+        for (String keywords: ImmutableList.sortedCopyOf(filtering)) {
             combinedFiltering.append(keywords).append(",");
         }
         return new String(combinedFiltering);
     }
 
-    //반정규화해서 넣었던 필터링 분리
+    //한 단어로 넣었던 필터링 분리
     public List<String> separateLetters(String filtering){
         return List.of(filtering.split(","));
     }

@@ -22,18 +22,13 @@ public class AccommodationImage {
     @Column(name = "url", columnDefinition = "text", nullable = false)
     private String url;
 
-    public AccommodationImage(Long id, String url) {
-        this.id = id;
-        this.url = url;
-    }
-
     public AccommodationImage(Accommodation accommodation, String url) {
         this.accommodation = accommodation;
         this.url = url;
     }
 
 
-    public static AccommodationImage newAccommodationImg(Accommodation accommodation, String url){
+    public static AccommodationImage newAccommodationImage(Accommodation accommodation, String url){
         return new AccommodationImage(accommodation, url);
     }
 }

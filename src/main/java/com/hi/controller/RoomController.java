@@ -14,8 +14,7 @@ public class RoomController {
     //객실, 사진 등록
     @PostMapping("/accommodation/{accommodationId}/room/new")
     public String createRoom(@PathVariable Long accommodationId, @RequestBody RoomReqDto roomReqDto){
-        roomService.createRoom(accommodationId, roomReqDto);
-        return "accommodation/list";
+        return roomService.registerRoom(accommodationId, roomReqDto);
     }
 
     //객실 수정

@@ -15,7 +15,6 @@ public class RoomRepository {
 
     public Room save(Room room) {
         em.persist(room);
-        em.refresh(room);
         return room;
     }
 

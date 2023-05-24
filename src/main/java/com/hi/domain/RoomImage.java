@@ -22,18 +22,12 @@ public class RoomImage {
     @Column(name = "url", columnDefinition = "text", nullable = false)
     private String url;
 
-    public RoomImage(Long id, Room room, String url) {
-        this.id = id;
-        this.room = room;
-        this.url = url;
-    }
-
     public RoomImage(Room room, String url) {
         this.room = room;
         this.url = url;
     }
 
-    public static RoomImage create(Room room, String url){
+    public static RoomImage newRoomImage(Room room, String url){
         return new RoomImage(room, url);
     }
 }
