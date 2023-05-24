@@ -1,10 +1,12 @@
 package com.hi.repository;
 
+import com.google.common.collect.ImmutableList;
 import com.hi.domain.Accommodation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.Collections;
 import java.util.List;
@@ -18,47 +20,45 @@ public class AccommodationRepository {
 
     public Accommodation save(Accommodation accommodation) {
         em.persist(accommodation);
-        em.refresh(accommodation);
         return accommodation;
     }
 
     //필터링 조건에 맞는 숙소 리스트
     public List<Accommodation> findAvailableAccommodations(List<Long> unAvailableRoomIds, int numberPeople, String region, List<String> accommodationFiltering, List<String> roomFiltering) {
 
-        String jpql = "select distinct a from Room r join Accommodation a on r.accommodation = a" +
+        StringBuilder jpql = new StringBuilder("select distinct a from Room r join Accommodation a on r.accommodation = a" +
                 " where r.numberPeople >= :numberPeople" +
-                " and a.region = :region";
+                " and a.region = :region");
 
         if (!unAvailableRoomIds.isEmpty()){
-            jpql += " and r.id not in :unAvailableRoomIds";
+            jpql.append(" and r.id not in :unAvailableRoomIds");
         }
 
         if (accommodationFiltering != null){
-            Collections.sort(accommodationFiltering);
-            jpql += " and a.filtering like "+ "'%" ;
-            for (String keyword : accommodationFiltering) {
-                jpql += keyword +"%";
+
+            jpql.append(" and a.filtering like " + "'%");
+            for (String keyword : ImmutableList.sortedCopyOf(accommodationFiltering)) {
+                jpql.append(keyword).append("%");
             }
-            jpql += "'";
+            jpql.append("'");
         }
 
         if (roomFiltering != null){
-            Collections.sort(roomFiltering);
-            jpql += " and r.filtering like "+ "'%" ;
-            for (String keyword : roomFiltering) {
-                jpql += keyword +"%";
+            jpql.append(" and r.filtering like " + "'%");
+            for (String keyword : ImmutableList.sortedCopyOf(roomFiltering)) {
+                jpql.append(keyword).append("%");
             }
-            jpql += "'";
+            jpql.append("'");
         }
 
         if (!unAvailableRoomIds.isEmpty()) {
-            return em.createQuery(jpql, Accommodation.class)
+            return em.createQuery(jpql.toString(), Accommodation.class)
                     .setParameter("numberPeople", numberPeople)
                     .setParameter("region", region)
                     .setParameter("unAvailableRoomIds", unAvailableRoomIds)
                     .getResultList();
         } else {
-            return em.createQuery(jpql, Accommodation.class)
+            return em.createQuery(jpql.toString(), Accommodation.class)
                     .setParameter("numberPeople", numberPeople)
                     .setParameter("region", region)
                     .getResultList();
@@ -73,9 +73,13 @@ public class AccommodationRepository {
 
     //숙소 조회
     public Optional<Accommodation> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select a from Accommodation a join Room r on r.accommodation = a" +
-                        " where a.id = :id",Accommodation.class)
-                .setParameter("id", id)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select a from Accommodation a join Room r on r.accommodation = a" +
+                            " where a.id = :id", Accommodation.class)
+                    .setParameter("id", id)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

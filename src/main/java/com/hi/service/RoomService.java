@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,17 +25,20 @@ public class RoomService {
     private final RoomImageRepository roomImageRepository;
 
     //객실, 사진 등록
-    public void createRoom(Long accommodationId, RoomReqDto dto) {
+    public String registerRoom(Long accommodationId, RoomReqDto dto) {
         Accommodation accommodation = accommodationRepository.findById(accommodationId)
-                .orElseThrow(()->new IllegalArgumentException("숙소를 찾을 수 없습니다."));
-
+                .orElseThrow(()->new NoResultException("숙소를 찾을 수 없습니다."));
+//
         Room room = roomRepository.save(Room.newRoom(dto,accommodation));
 
-        List<RoomImage> images = dto.getImageUrls()
-                .stream()
-                .map(url -> RoomImage.create(room, url))
-                .collect(Collectors.toUnmodifiableList());
-        roomImageRepository.saveAll(images);
+        if (dto.getImageUrls() != null) {
+            List<RoomImage> images = dto.getImageUrls()
+                    .stream()
+                    .map(url -> RoomImage.newRoomImage(room, url))
+                    .collect(Collectors.toUnmodifiableList());
+            roomImageRepository.saveAll(images);
+        }
+        return "success";
     }
 
     //객실 수정

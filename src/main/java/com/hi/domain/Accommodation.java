@@ -1,12 +1,12 @@
 package com.hi.domain;
 
 
+import com.google.common.collect.ImmutableList;
 import com.hi.dto.accommodation.AccommodationReqDto;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -54,7 +54,7 @@ public class Accommodation {
     private String filtering;
 
     @Builder
-    public Accommodation(Long id, User user, String nameKor, String nameEng, String postcode, String address, String directions, String introduction, String region, String filtering) {
+    public Accommodation(Long id, User user, String nameKor, String nameEng, String postcode, String address, String directions, String introduction, String region, List<String> filtering) {
         this.id = id;
         this.user = user;
         this.nameKor = nameKor;
@@ -64,7 +64,7 @@ public class Accommodation {
         this.directions = directions;
         this.introduction = introduction;
         this.region = region;
-        this.filtering = filtering;
+        this.filtering = combineFiltering(filtering);
     }
 
     public static Accommodation newAccommodation(AccommodationReqDto dto, User user){
@@ -77,7 +77,7 @@ public class Accommodation {
                 .directions(dto.getDirections())
                 .introduction(dto.getIntroduction())
                 .region(dto.getRegion())
-                .filtering(combineFiltering((dto.getFiltering())))
+                .filtering(dto.getFiltering())
                 .build();
     }
 
@@ -91,7 +91,7 @@ public class Accommodation {
         this.filtering = combineFiltering((dto.getFiltering()));
     }
 
-    //검색한 조건에 맞는 객실이 포함되어있는지 검증
+    //객실이 포함되어있는지 검증
     public boolean hasRoom() {
         return !this.rooms.isEmpty();
     }
@@ -102,16 +102,15 @@ public class Accommodation {
     }
 
     //필터링 한 단어로 만들기
-    public static String combineFiltering(List<String> filtering){
-        Collections.sort(filtering);
+    public String combineFiltering(List<String> filtering){
         StringBuilder combinedFiltering = new StringBuilder();
-        for (String keywords: filtering) {
+        for (String keywords: ImmutableList.sortedCopyOf(filtering)) {
             combinedFiltering.append(keywords).append(",");
         }
         return new String(combinedFiltering);
     }
 
-    //반정규화해서 넣었던 필터링 분리
+    //한 단어로 합쳐서 넣었던 필터링 분리
     public List<String> separateLetters(String filtering){
         return List.of(filtering.split(","));
     }

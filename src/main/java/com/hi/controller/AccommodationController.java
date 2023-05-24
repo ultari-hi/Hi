@@ -1,5 +1,6 @@
 package com.hi.controller;
 
+import com.hi.config.auth.CustomUserDetails;
 import com.hi.dto.accommodation.AccommodationDetailDto;
 import com.hi.dto.accommodation.AccommodationReqDto;
 import com.hi.dto.accommodation.AccommodationResDto;
@@ -19,9 +20,8 @@ public class AccommodationController {
 
     //숙소, 사진 등록
     @PostMapping("/accommodation/new")
-    public String createAccommodation(@AuthenticationPrincipal @RequestBody AccommodationReqDto accommodationReqDto){
-        accommodationService.createAccommodation(accommodationReqDto);
-        return "accommodation/list";
+    public String createAccommodation(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody AccommodationReqDto accommodationReqDto){
+        return accommodationService.registerAccommodation(userDetails.getUser(), accommodationReqDto);
     }
 
     //숙소 상세 조회
@@ -41,7 +41,7 @@ public class AccommodationController {
                                                        @RequestParam String region,
                                                        @RequestParam(required = false) List<String> aFiltering,
                                                         @RequestParam(required = false) List<String> rFiltering){
-        return accommodationService.findAccommodations(checkInDate, checkOutDate, numberPeople, region, aFiltering, rFiltering);
+        return accommodationService.findAccommodationsFiltering(checkInDate, checkOutDate, numberPeople, region, aFiltering, rFiltering);
     }
 
     //숙소 전체 리스트
