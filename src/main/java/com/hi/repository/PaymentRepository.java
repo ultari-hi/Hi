@@ -2,9 +2,11 @@ package com.hi.repository;
 
 import com.hi.domain.Payment;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ public class PaymentRepository {
         return payment;
     }
 
+    @Lock(LockModeType.WRITE)
     public Optional<Payment> findById(Long paymentId){
         try {
             return Optional.ofNullable(em.createQuery("select p from Payment p" +

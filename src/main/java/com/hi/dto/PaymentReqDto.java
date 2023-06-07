@@ -24,6 +24,8 @@ public class PaymentReqDto {
         this.roomId = roomId;
         this.enquiry = enquiry;
         this.checkInDate = checkInDate;
-        this.checkOutDate = checkOutDate;
+        // 퇴실 날짜와 다른 사람의 입실 날짜가 겹쳐도 상관 없으므로 -1일
+        // 최소 1박 2일이므로 1일만 저장해도 상관없음
+        this.checkOutDate = checkOutDate.minusDays(1);
     }
 }

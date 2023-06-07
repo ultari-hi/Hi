@@ -4,9 +4,11 @@ import com.hi.domain.Reservation;
 import com.hi.domain.ReservationDate;
 import com.hi.domain.Room;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,7 @@ public class ReservationDateRepository {
         em.persist(reservationDate);
     }
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void saveAll(List<ReservationDate> dates) {
         dates.forEach(this::save);
     }
@@ -29,15 +32,6 @@ public class ReservationDateRepository {
         return em.createQuery("select distinct resvDate.room.id from ReservationDate resvDate" +
                         " where resvDate.date in :selectDates", Long.class)
                 .setParameter("selectDates", selectDates)
-                .getResultList();
-    }
-
-    public List<LocalDate> unAvailableDates(Room room, List<LocalDate> dates) {
-        return em.createQuery("select resvDate.date from ReservationDate resvDate" +
-                " where resvDate.date in :dates" +
-                " and resvDate.room = :room", LocalDate.class)
-                .setParameter("dates", dates)
-                .setParameter("room", room)
                 .getResultList();
     }
 
