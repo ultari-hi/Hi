@@ -60,6 +60,12 @@ dependencies {
 	// lombok, Slf4j
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// https://mvnrepository.com/artifact/com.github.iamport/iamport-rest-client-java
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.21'
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
 }
 
 dependencyManagement {

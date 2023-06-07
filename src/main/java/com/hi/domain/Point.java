@@ -2,12 +2,11 @@ package com.hi.domain;
 
 import com.hi.enums.PointType;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,38 +37,49 @@ public class Point extends BaseTimeEntity{
     @Column(name = "is_latest", columnDefinition = "boolean", nullable = false)
     private boolean isLatest;
 
-    public Point(Long id, User user, PointType type, int amount, int balance, String content, Boolean isLatest, LocalDateTime createdAt) {
-        this.id = id;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id")
+    private Payment payment;
+
+    @Builder
+    public Point(User user, PointType type, int amount, int balance, String content, Payment payment) {
         this.user = user;
         this.type = type;
         this.amount = amount;
         this.balance = balance;
         this.content = content;
-        this.isLatest = isLatest;
-        this.createdAt = createdAt;
-    }
-
-    public Point(User user, PointType type, int amount, String content, int userPointBalance) {
-        this.user = user;
-        this.type = type;
-        this.amount = amount;
-        this.content = content;
-        this.balance = amount + userPointBalance;
         this.isLatest = Boolean.TRUE;
+        if (balance < 0) {
+            throw new IllegalArgumentException("포인트 잔액이 부족합니다.");
+        }
+        this.payment = payment;
     }
 
     //포인트 사용
-    public static Point usePoint(User user, int amount, String content, Point userPoint){
-        PointType type = PointType.USING;
+    public static Point usePoint(User user, int amount, Point userPoint, Payment payment, String content){
         userPoint.setIsLatest();
-        return new Point(user, type, -amount, content, userPoint.getBalance());
+        return Point.builder()
+                .user(user)
+                .type(PointType.USING)
+                .amount(amount)
+                .balance(amount - userPoint.getBalance())
+                .content(content)
+                .payment(payment)
+                .build();
     }
 
     //포인트 적립
-    public static Point savePoint(User user, int amount, String content, Point userPoint) {
-        PointType type = PointType.SAVING;
+    public static Point savePoint(User user, int cashAmount, Point userPoint, Payment payment, String content) {
         userPoint.setIsLatest();
-        return new Point(user, type, amount, content, userPoint.getBalance());
+        int savingPoint = savingPointPercent(cashAmount);
+        return Point.builder()
+                .user(user)
+                .type(PointType.SAVING)
+                .amount(savingPoint)
+                .balance(userPoint.getBalance() + savingPoint)
+                .content(content)
+                .payment(payment)
+                .build();
     }
 
     //최신 포인트 내역 새로 쓰면서 기존 포인트 플래그를 FALSE 로 수정하는 로직
@@ -90,7 +100,7 @@ public class Point extends BaseTimeEntity{
     }
 
     //포인트 적립 비율
-    public static int savingPointAmount(int cashAmount){
+    public static int savingPointPercent(int cashAmount){
         return (int) (cashAmount * 0.05);
     }
 
@@ -103,7 +113,7 @@ public class Point extends BaseTimeEntity{
 //        if (payment.getPointAmount() != 0) {
 //            Point pointUsing = Point.newPoint(payment.getUser(), payment.getPointAmount(), "포인트 결제", latestPoint.getBalance());
 //            pointUsing.setIsLatest();
-//            Point pointSaving = Point.newPoint(payment.getUser(), savingPointAmount(payment.getCashAmount()), "포인트 적립", pointUsing.getBalance());
+//            Point pointSaving = Point.newPoint(payment.getUser(), savingPointPercent(payment.getCashAmount()), "포인트 적립", pointUsing.getBalance());
 //
 //            points.set(0, pointUsing);
 //            points.set(1, pointSaving);

@@ -1,6 +1,5 @@
 package com.hi.dto;
 
-import com.hi.domain.Reservation;
 import com.hi.domain.Room;
 import com.hi.domain.User;
 import lombok.Data;
@@ -21,14 +20,5 @@ public class ReservationResDto {
         this.roomName = room.getName();
         this.phoneNumber = user.getPhoneNumber();
         this.price = room.getPriceKor();
-    }
-
-    public ReservationResDto(Reservation reservation) {
-        this.roomId = reservation.getRoom().getId();
-        this.userNameKor = reservation.getUser().getLastNameKor()+reservation.getUser().getFirstNameKor();
-        this.accommodationName = reservation.getRoom().getAccommodation().getNameKor();
-        this.roomName = reservation.getRoom().getName();
-        this.phoneNumber = reservation.getUser().getPhoneNumber();
-        this.price = reservation.getTotalAmount();
     }
 }
