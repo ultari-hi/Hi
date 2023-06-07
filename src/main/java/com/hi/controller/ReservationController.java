@@ -2,12 +2,13 @@ package com.hi.controller;
 
 import com.hi.config.auth.CustomUserDetails;
 import com.hi.dto.ReservationDto;
-import com.hi.dto.ReservationReqDto;
 import com.hi.dto.ReservationResDto;
 import com.hi.service.ReservationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -16,12 +17,6 @@ import java.util.List;
 public class ReservationController {
 
     private final ReservationService reservationService;
-
-    //숙소 예약하기
-    @PostMapping("/reservation/new")
-    public String reserveRoom(@AuthenticationPrincipal CustomUserDetails user, @RequestBody ReservationReqDto dto) {
-        return reservationService.reserveRoom(user.getUser(), dto);
-    }
 
     //예약 페이지 데이터
     @GetMapping("/reservation/{roomId}")

@@ -37,13 +37,6 @@ public class UserService {
     private final JavaMailSender javaMailSender;
     private final SendEmailFormRepository sendEmailFormRepository;
 
-    //유저와 포인트 조회
-    public PaymentResDto findUserData(Long userId){
-        User user = userRepository.findById(userId).orElseThrow(()-> new IllegalArgumentException("유저를 찾을 수 없습니다."));
-        Point point = pointRepository.findLatest(user);
-        return new PaymentResDto(user, point);
-    }
-
     //회원가입
     public void join(UserJoinReqDto dto){
         // 비밀번호 암호화
@@ -51,8 +44,8 @@ public class UserService {
         User user = User.newUser(dto);
         userRepository.save(user);
 
-//        Point point = Point.newUserPoint(user);
-//        pointRepository.save(point);
+        Point point = Point.newUserPoint(user);
+        pointRepository.save(point);
     }
 
     //회원정보 수정

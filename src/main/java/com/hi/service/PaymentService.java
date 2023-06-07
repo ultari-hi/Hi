@@ -1,86 +1,128 @@
-//package com.hi.service;
-//
-//import com.hi.domain.*;
-//import com.hi.dto.PaymentReqDto;
-//import com.hi.enums.Status;
-//import com.hi.repository.*;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import java.time.LocalDate;
-//import java.util.List;
-//
-//import static org.springframework.data.util.StreamUtils.toUnmodifiableList;
-//
-//@Service
-//@Transactional
-//@RequiredArgsConstructor
-//public class PaymentService {
-//
-//    private final PaymentRepository paymentRepository;
-//    private final ReservationRepository reservationRepository;
-//    private final UserRepository userRepository;
-//    private final AccommodationRepository accommodationRepository;
-//    private final RoomRepository roomRepository;
-//    private final PointRepository pointRepository;
-//    private final ReservationDateRepository reservationDateRepository;
-//    private final TmpDateRepository tmpDateRepository;
-//
-//    //결제,예약 생성
-//    public String createPayment(PaymentReqDto dto){
-//        User user = userRepository.findById(dto.getUserId())
-//                .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
-//
-//        Room room = roomRepository.findById(dto.getRoomId())
-//                .orElseThrow(() -> new IllegalArgumentException("객실을 찾을 수 없습니다."));
-//
-//        Accommodation accommodation = accommodationRepository.findById(room.getAccommodation().getId())
-//                .orElseThrow(() -> new IllegalArgumentException("숙소를 찾을 수 없습니다."));
-//
-//        Payment payment = Payment.newPayment(dto, user);
-//        paymentRepository.save(payment);
-//
-//        Reservation reservation = Reservation.newReservation(user, accommodation, room, dto);
-//        reservationRepository.save(reservation);
-//
-//        List<LocalDate> selectDates = dto.getCheckInDate()
-//                    .datesUntil(dto.getCheckOutDate().plusDays(1))
-//                    .collect(toUnmodifiableList());
-//
-//        List<TmpDate> tmpDates = selectDates
-//                .stream()
-//                .map(date -> new TmpDate(payment, date))
-//                .collect(toUnmodifiableList());
-//
-//        tmpDateRepository.saveAll(tmpDates);
-//
-//        return "success";
-//    }
-//
-//    //결제 결과에 따른 상태 수정
-//    public Status paymentResult(PaymentReqDto dto){
-//        Payment payment = paymentRepository.findById(dto.getPaymentId())
-//                .orElseThrow(() -> new IllegalArgumentException("결제 정보를 찾을 수 없습니다."));
-//
-//        //결제된 금액 검증
-//        Status result = payment.verify(dto.getAmountPaid());
-//
-//        //포인트 사용/적립
-//        if(result.equals(Status.SUCCESS)) {
-//            if(payment.getPointAmount() > 0){
-//                Point latestPoint = pointRepository.findLatest(payment.getUser());
-//                List<Point> point = Point.newPoint(payment, latestPoint);
-//                pointRepository.saveAll(point);
-//
-//                List<LocalDate> dates = tmpDateRepository.findAllById(payment);
-//                List<ReservationDate> reservationDates = dates
-//                        .stream()
-//                        .map(date -> new ReservationDate(payment.getReservation(), payment.getReservation().getRoom(), date))
-//                        .collect(toUnmodifiableList());
-//                reservationDateRepository.saveAll(reservationDates);
-//            }
-//        }
-//        return result;
-//    }
-//}
+package com.hi.service;
+
+import com.hi.domain.*;
+import com.hi.dto.IamPortWebhookDto;
+import com.hi.dto.PaymentReqDto;
+import com.hi.dto.PaymentResDto;
+import com.hi.enums.Status;
+import com.hi.repository.*;
+import com.siot.IamportRestClient.IamportClient;
+import com.siot.IamportRestClient.exception.IamportResponseException;
+import com.siot.IamportRestClient.response.IamportResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.NoResultException;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+
+import static org.springframework.data.util.StreamUtils.toUnmodifiableList;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+@Slf4j
+public class PaymentService {
+
+    private final PaymentRepository paymentRepository;
+    private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
+    private final PointRepository pointRepository;
+    private final ReservationDateRepository reservationDateRepository;
+    private final TmpDateRepository tmpDateRepository;
+    // 토큰
+    private final IamportClient iamportClient = new IamportClient("${API_KEY}", "${API_SECRET}");
+
+    //결제, 예약 생성
+    public PaymentResDto createPayment(User user, PaymentReqDto dto){
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new NoResultException("객실을 찾을 수 없습니다."));
+
+        Accommodation accommodation = room.getAccommodation();
+
+        Payment newPayment = Payment.newPayment(dto, user);
+        Payment payment = paymentRepository.save(newPayment);
+
+        Reservation reservation = Reservation.newReservation(user, accommodation, room, payment, dto);
+        reservationRepository.save(reservation);
+
+        List<LocalDate> selectDates = dto.getCheckInDate()
+                    .datesUntil(dto.getCheckOutDate())
+                    .collect(toUnmodifiableList());
+
+        List<TmpDate> tmpDates = selectDates
+                .stream()
+                .map(date -> new TmpDate(payment, date))
+                .collect(toUnmodifiableList());
+
+        tmpDateRepository.saveAll(tmpDates);
+
+        return new PaymentResDto(payment, room, user);
+    }
+
+    /**
+     * 결제가 승인되었을 때(모든 결제 수단) - (status : paid)
+     * 가상계좌가 발급되었을 때 - (status : ready)
+     * 가상계좌에 결제 금액이 입금되었을 때 - (status : paid)
+     * 예약결제가 시도되었을 때 - (status : paid or failed)
+     * 관리자 콘솔에서 결제 취소되었을 때 - (status : cancelled)
+     * hi 서비스에서는 카드 결제만 구현 ( 결제 승인 or 관리자 콘솔에서 결제 취소 )
+     */
+    public Status verifyPayment(IamPortWebhookDto dto) {
+        log.info("start");
+        log.info("{}", dto.getMerchantUid());
+        String paymentState = dto.getState();
+        Status result;
+
+        Payment payment = paymentRepository.findById(Long.valueOf(dto.getMerchantUid()))
+                .orElseThrow(() -> new NoResultException("결제 정보를 찾을 수 없습니다."));
+        Reservation reservation = payment.getReservation();
+        if (paymentState.equals("paid")) {
+            try {
+                // ImpUid 로 아임포트에 단건 조회 요청
+                IamportResponse<com.siot.IamportRestClient.response.Payment> paymentResponse = iamportClient.paymentByImpUid(dto.getImpUid());
+                if (Objects.nonNull(paymentResponse.getResponse())) {
+                    com.siot.IamportRestClient.response.Payment paymentData = paymentResponse.getResponse();
+                    result = payment.paid(paymentData);
+                    reservation.status(result);
+
+                    // 포인트 결제 금액이 있을 시
+                    if (payment.getPointAmount() > 0) {
+                        User user = payment.getUser();
+                        Point latestPoint;
+                        latestPoint = pointRepository.findLatest(user);
+
+                        //포인트 사용
+                        Point usePoint = Point.usePoint(user, payment.getPointAmount(), latestPoint, payment, "숙소 예약");
+                        latestPoint = pointRepository.save(usePoint);
+
+                        // 포인트 적립
+                        Point savePoint = Point.savePoint(user, payment.getCashAmount(), latestPoint, payment, "숙소 예약");
+                        pointRepository.save(savePoint);
+                    }
+                    List<LocalDate> dates = tmpDateRepository.findAllByPayment(payment);
+                    List<ReservationDate> reservationDates = dates
+                            .stream()
+                            .map(date -> new ReservationDate(reservation, reservation.getRoom(), date))
+                            .collect(toUnmodifiableList());
+                    reservationDateRepository.saveAll(reservationDates);
+                } else {
+                    result = payment.cancel();
+                    reservation.status(result);
+                }
+            } catch (IamportResponseException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            result = payment.cancel();
+            reservation.status(result);
+        }
+        return result;
+    }
+}

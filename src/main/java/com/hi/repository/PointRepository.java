@@ -32,7 +32,7 @@ public class PointRepository {
                 .getSingleResult();
     }
 
-    public void saveAll(List<Point> points) {
-        points.forEach(this::save);
-    }
+//    public void saveAll(List<Point> points) {
+//        points.forEach(this::save);
+//    }
 }

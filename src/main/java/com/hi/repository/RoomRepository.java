@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +26,13 @@ public class RoomRepository {
     }
 
     public Optional<Room> findById(Long id) {
-        return Optional.ofNullable(em.createQuery("select r from Room r where r.id =:id",Room.class)
-                .setParameter("id",id)
-                .getSingleResult());
+        try {
+            return Optional.ofNullable(em.createQuery("select r from Room r where r.id = :id",Room.class)
+                    .setParameter("id",id)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     public Optional<Room> findWithAccommodationById(Long id) {
