@@ -6,6 +6,7 @@ import com.hi.dto.accommodation.AccommodationReqDto;
 import com.hi.dto.accommodation.AccommodationResDto;
 import com.hi.service.AccommodationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,7 @@ public class AccommodationController {
     }
 
     //숙소 전체 리스트
+    @Cacheable(value = "accommodationCache")
     @GetMapping("/accommodation")
     public List<AccommodationResDto> findAllAccommodation(){
         return accommodationService.findAllAccommodation();

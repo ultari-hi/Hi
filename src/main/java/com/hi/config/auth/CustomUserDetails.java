@@ -1,12 +1,14 @@
 package com.hi.config.auth;
 
 import com.hi.domain.User;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+@Cacheable(value = "userCache")
 public class CustomUserDetails implements UserDetails {
 
     private final User user;

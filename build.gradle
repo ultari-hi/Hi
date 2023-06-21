@@ -66,6 +66,9 @@ dependencies {
 	repositories {
 		maven { url 'https://jitpack.io' }
 	}
+
+	// Redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
 dependencyManagement {
